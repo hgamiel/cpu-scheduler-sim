@@ -1,2 +1,2 @@
-# spu-scheduler-sim
+# cpu-scheduler-sim
 A simulation of a CPU Scheduler.
