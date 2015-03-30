@@ -14,7 +14,7 @@ namespace CPU_Scheduler_Simulation
         public Algorithm() { }
 
         //first-come-first-serve algorithm
-        public List<PCB> FCFS(Queue<PCB> processes) 
+        public List<PCB> fcfs(Queue<PCB> processes) 
         {
             //foreach (var process in processes)
             //    processes.Dequeue();
@@ -22,14 +22,14 @@ namespace CPU_Scheduler_Simulation
         }
 
         //shortest-process-next algorithm
-        public List<PCB> SPN(Queue<PCB> processes)
+        public List<PCB> spn(Queue<PCB> processes)
         { 
             //after a process has completed, observe all processes that have arrived and use shortest service time
             return null; 
         }
 
         //shortest-remaining-time algorithm
-        public List<PCB> SRT(Queue<PCB> processes)
+        public List<PCB> srt(Queue<PCB> processes)
         { 
             //as processes arrive, compute service time
             //after computing, observe all processes that have arrived and use the one with the shortest service time
@@ -37,14 +37,14 @@ namespace CPU_Scheduler_Simulation
         }
 
         //highest-response-radio-next algorithm
-        public List<PCB> HRRN(Queue<PCB> processes)
+        public List<PCB> hrrn(Queue<PCB> processes)
         { 
             //ration = (wait time + service time) / service time
             return null; 
         }
 
         //round robin algorithm
-        public List<PCB> RR(Queue<PCB> processes, int quantum)
+        public List<PCB> rr(Queue<PCB> processes, int quantum)
         { 
             //create an empty queue
             //as quantums deplete the service time, match with arrival time
@@ -54,7 +54,7 @@ namespace CPU_Scheduler_Simulation
         }
 
         //priority algorithm
-        public List<PCB> Priority(Queue<PCB> processes)
+        public List<PCB> priority(Queue<PCB> processes)
         { 
             //lowest interger priority number has highest priority
             return null; 
