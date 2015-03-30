@@ -9,7 +9,7 @@ namespace CPU_Scheduler_Simulation
     public class Simulation
     {
         public int quantum;
-        public List<PCB> processTable;
+        public List<PCB> processTable = new List<PCB>();
         public Scheduler SimScheduler = new Scheduler();
 
         public Simulation() { }
