@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPU_Scheduler_Simulation
 {
-    public struct PCB
+    public class PCB
     {
         public int PID;                 //unique id to a PCB
         //public int serviceTime;         //time required by a process -- same as CPU burst time (see list below)
@@ -16,7 +16,7 @@ namespace CPU_Scheduler_Simulation
         public double waitTime;         //time process must wait during it execution - accumulated
         public double responseTime;     //time from submission utnil response begins to be received - accumulated
         public double executionTime;    //time of completion
-        public List<int> CPU;               //array of CPU 
-        public List<int> IO;                //array of IOs
+        public List<int> CPU = new List<int>();              //array of CPU 
+        public List<int> IO = new List<int>();                //array of IOs
     }
 }

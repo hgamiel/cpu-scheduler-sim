@@ -21,7 +21,7 @@ namespace CPU_Scheduler_Simulation
 
             filename = "processes.dat";
 
-            filepath = "C:\\Users\\hgamiel15\\Documents\\git\\cpuscheduler\\";
+            filepath = "C:\\Users\\hgamiel15\\Documents\\cpu-scheduler-sim\\";
 
             Console.WriteLine("File + Path: {0}", filepath + filename);
 
@@ -41,16 +41,17 @@ namespace CPU_Scheduler_Simulation
                     process.arrivalTime = Convert.ToDouble(values[2]);
                     for (int i = 3; i < values.Length; i++)
                     {
+                        //var burst = Convert.ToInt32(values[i]);
                         //if (i % 2 != 0)
                         //{
-                        //    process.CPU.Add(Convert.ToInt32(values[i]));
+                        //    process.CPU.Add(burst);
                         //}
                         //else
                         //{
-                        //    process.IO.Add(Convert.ToInt32(values[i]));
+                        //    process.IO.Add(burst);
                         //}
                     }
-                    //processTable.Add(process);
+                    processTable.Add(process);
                     Console.WriteLine("Process with PID {0} added.", process.PID);
                 }
             }
