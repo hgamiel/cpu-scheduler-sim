@@ -35,13 +35,14 @@ namespace CPU_Scheduler_Simulation
                     var values = line.Split(new string[] {"\t"}, StringSplitOptions.RemoveEmptyEntries); // creates array of values in line
                     addProcess(values); // calls function that adds process to process table
                 }
+
+                Console.WriteLine("File read completed.");
             }
             else
             {
                 Console.WriteLine("File {0} not found.", filename);
             }
         }        //pushes info from lines on .dat files into processTable as a PCB
-
         public void addProcess(string [] values) {
             PCB process = new PCB(); // the new process we will add to our list
             process.PID = Convert.ToInt32(values[0]); // process PID
@@ -62,12 +63,15 @@ namespace CPU_Scheduler_Simulation
             }
             processTable.Add(process); // adds process to process table
             Console.WriteLine("Process with PID {0} added.", process.PID);
-        }
-
+        } // adds a process onto the process table. called from readDataFiles().
         public void startSim(int quantum) {
             this.quantum = quantum; // sets quantum for the simulation (should be 1 or 2; some very small number)
             readDataFiles(); // reads in processes in the .dat file
+            //SimScheduler.loadBalance(processTable); // load balances the processes. Will uncomment when it's ready
+            endSim();
         }  //sets up the scheduler and runs the simulation
-        public void endSim() { }               //ends the simulation
+        public void endSim() {
+            Console.WriteLine("Simulation complete.");
+        }               //ends the simulation
     }
 }
