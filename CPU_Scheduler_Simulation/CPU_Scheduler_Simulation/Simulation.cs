@@ -19,15 +19,16 @@ namespace CPU_Scheduler_Simulation
         public void readDataFiles()
         {
             filename = "processes.dat";
-            filepath = "C:\\Users\\hgamiel15\\Documents\\cpu-scheduler-sim\\";
+            Directory.SetCurrentDirectory(@"..\..\..\");
+            filepath = Path.Combine(Environment.CurrentDirectory, filename);
 
-            Console.WriteLine("File + Path: {0}", filepath + filename);
+            Console.WriteLine("File + Path: {0}", filepath);
 
-            if (File.Exists(filepath + filename))
+            if (File.Exists(filepath))
             {
-                Console.WriteLine("{0} exists. File will be processed.", filepath + filename); // debugging purposes
+                Console.WriteLine("{0} exists. File will be processed.", filepath); // debugging purposes
 
-                var reader = new StreamReader(File.OpenRead(filepath + filename)); // opens the read stream
+                var reader = new StreamReader(File.OpenRead(filepath)); // opens the read stream
 
                 while (!reader.EndOfStream) // loops until end of file
                 {
