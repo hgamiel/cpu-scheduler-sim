@@ -63,7 +63,8 @@ namespace CPU_Scheduler_Simulation
         }        //pushes info from lines on .dat files into processTable as a PCB
 
         public void startSim(int quantum) {
-            readDataFiles();
+            this.quantum = quantum; // sets quantum for the simulation (should be 1 or 2; some very small number)
+            readDataFiles(); // reads in processes in the .dat file
         }  //sets up the scheduler and runs the simulation
         public void endSim() { }               //ends the simulation
     }
