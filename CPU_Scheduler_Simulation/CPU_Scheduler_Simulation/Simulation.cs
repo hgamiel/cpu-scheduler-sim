@@ -34,22 +34,22 @@ namespace CPU_Scheduler_Simulation
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    var values = line.Split('\t');
+                    var values = line.Split(new string[] {"\t"}, StringSplitOptions.RemoveEmptyEntries);
                     PCB process = new PCB();
                     process.PID = Convert.ToInt32(values[0]);
                     process.priorityNumber = Convert.ToInt32(values[1]);
                     process.arrivalTime = Convert.ToDouble(values[2]);
                     for (int i = 3; i < values.Length; i++)
                     {
-                        //var burst = Convert.ToInt32(values[i]);
-                        //if (i % 2 != 0)
-                        //{
-                        //    process.CPU.Add(burst);
-                        //}
-                        //else
-                        //{
-                        //    process.IO.Add(burst);
-                        //}
+                        var burst = Convert.ToInt32(values[i]);
+                        if (i % 2 != 0)
+                        {
+                            process.CPU.Add(burst);
+                        }
+                        else
+                        {
+                            process.IO.Add(burst);
+                        }
                     }
                     processTable.Add(process);
                     Console.WriteLine("Process with PID {0} added.", process.PID);
