@@ -19,7 +19,7 @@ namespace CPU_Scheduler_Simulation
         public void readDataFiles()
         {
             filename = "processes.dat";
-            Directory.SetCurrentDirectory(@"..\..\..\");
+            Directory.SetCurrentDirectory(@"..\..\..\"); //default is \bin\Debug -> this sets the current directory up a few folders
             filepath = Path.Combine(Environment.CurrentDirectory, filename);
 
             Console.WriteLine("File + Path: {0}", filepath);
@@ -68,11 +68,13 @@ namespace CPU_Scheduler_Simulation
         public void startSim(int quantum) {
             this.quantum = quantum; // sets quantum for the simulation (should be 1 or 2; some very small number)
             readDataFiles(); // reads in processes in the .dat file
-            //SimScheduler.loadBalance(processTable); // load balances the processes. Will uncomment when it's ready
+            //Scheduler.loadSharing(processTable); // load balances the processes. Will uncomment when it's ready
             endSim();
         }  //sets up the scheduler and runs the simulation
         public void endSim() {
             Console.WriteLine("Simulation complete.");
-        }               //ends the simulation
+            //ends the simulation
+            Console.ReadKey();
+        }               
     }
 }
