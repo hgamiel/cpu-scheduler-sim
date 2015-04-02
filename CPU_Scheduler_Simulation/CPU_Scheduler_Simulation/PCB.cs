@@ -11,7 +11,7 @@ namespace CPU_Scheduler_Simulation
         public int PID;                 //unique id to a PCB
         //public int serviceTime;         //time required by a process -- same as CPU burst time (see list below)
         public int priorityNumber;      //lowest interger -> higher priority
-        public double arrivalTime;      //when processes arrive
+        public int arrivalTime;      //when processes arrive
         public double turnaroundTime;   //executionTime - arrivalTime
         public double waitTime;         //time process must wait during it execution - accumulated
         public double responseTime;     //time from submission utnil response begins to be received - accumulated
