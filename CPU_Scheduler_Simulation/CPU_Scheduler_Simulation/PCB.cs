@@ -17,7 +17,7 @@ namespace CPU_Scheduler_Simulation
         public double responseTime;     //time from submission utnil response begins to be received - accumulated
         public double executionTime;    //time of completion
 
-        public List<int> CPU = new List<int>();               //array of CPU 
-        public List<int> IO = new List<int>();                //array of IOs
+        public List<int> CPU = new List<int>();     //array of CPU 
+        public List<int> IO = new List<int>();      //array of IOs
     }
 }

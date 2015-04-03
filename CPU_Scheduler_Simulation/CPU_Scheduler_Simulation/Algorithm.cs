@@ -14,6 +14,8 @@ namespace CPU_Scheduler_Simulation
 
         public Algorithm() { }
 
+        //TODO: beingAlgorithms(); 
+
         //first-come-first-serve algorithm - Hannh
         public List<PCB> fcfs(Queue<PCB> processes) 
         {

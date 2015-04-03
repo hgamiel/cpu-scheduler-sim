@@ -10,9 +10,10 @@ namespace CPU_Scheduler_Simulation
     {
         static void Main(string[] args)
         {
-            int quantum = 0;
-            Simulation simulation = new Simulation();
-            simulation.startSim(quantum);
+            int quantum = 0;    //we can either have user input or hard-code
+            Simulation simulation = new Simulation();   //create a simulation object
+            //start the simulation
+            simulation.startSim(quantum);  
         }
     }
 }
