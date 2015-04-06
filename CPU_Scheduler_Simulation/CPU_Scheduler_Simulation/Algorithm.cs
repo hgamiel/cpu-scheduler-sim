@@ -33,27 +33,34 @@ namespace CPU_Scheduler_Simulation
         //first-come-first-serve algorithm - Hannh
         public List<PCB> fcfs(Queue<PCB> processes) 
         {
+            Console.WriteLine("--BEGIN FIRST COME FIRST SERVE--");
             //foreach (var process in processes)
             //    processes.Dequeue();
             int quantum = 1;
+            int contextswitch = 1;
             bool finished = false;   //when algorithm is complete
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
             List<PCB> finishedProcesses = new List<PCB>();
 
-            do
+            do // assuming the processes in the queue are ordered by arrival time...
             {
-                while (counter != sample.Peek().arrivalTime)
+                counter += contextswitch; // context switch time
+                while (counter < sample.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                 {
-
+                    counter++;
                 }
+                process = sample.Dequeue();
+                Console.WriteLine("Process " + process.name + " has been serviced " + process.serviceTime + ".");
+                counter += process.serviceTime; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
+                finishedProcesses.Add(process);
             } while (sample.Count != 0);
 
-            while (counter != sample.Peek().arrivalTime)
-            {
-                counter++;
-                Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum));
-            }
+            finished = true;
+
+            Console.WriteLine("--END FIRST COME FIRST SERVE--");
+
+            Console.WriteLine(counter);
 
             return finishedProcesses; 
         }
