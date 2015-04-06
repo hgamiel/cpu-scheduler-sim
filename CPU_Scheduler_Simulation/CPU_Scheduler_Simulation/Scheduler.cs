@@ -52,34 +52,34 @@ namespace CPU_Scheduler_Simulation
         {
             int switchAlg = 0;
             bool CPUburst = true;
-            List<PCB> finishedProcesses = new List<PCB>(); // TEST
+            List<PCB> nonEmptyProcesses = new List<PCB>(); // TEST
             do
             {
                 if (CPUburst) // if it's time to process the CPU bursts of processes
                 {
                     switch (switchAlg)
                     {
-                        case 0: finishedProcesses = currCPU.algorithms.fcfs(currCPU.waitingCPU, CPUburst); break;
-                        //case 1: finishedProcesses = currCPU.algorithms.spn(currCPU.waitingCPU); break; // uncomment when done
-                        //case 2: finishedProcesses = currCPU.algorithms.srt(currCPU.waitingCPU); break; // uncomment when done
-                        //case 3: finishedProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
-                        //case 4: finishedProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, quantum); break; // uncomment when done
-                        //case 6: finishedProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
-                        case 7: finishedProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break;
-                        case 8: finishedProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break;
+                        case 0: nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingCPU, CPUburst); break;
+                        //case 1: nonEmptyProcesses = currCPU.algorithms.spn(currCPU.waitingCPU); break; // uncomment when done
+                        //case 2: nonEmptyProcesses = currCPU.algorithms.srt(currCPU.waitingCPU); break; // uncomment when done
+                        //case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
+                        //case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, quantum); break; // uncomment when done
+                        //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
+                        case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break;
+                        case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break;
                     }
-                    for (int i = 0; i < finishedProcesses.Count; i++)
+                    for (int i = 0; i < nonEmptyProcesses.Count; i++)
                     {
-                        currCPU.waitingIO.Enqueue(finishedProcesses[i]);
+                        currCPU.waitingIO.Enqueue(nonEmptyProcesses[i]);
                     }
                     //switchAlg += 1 % 8; uncomment when other algs are done! This is a counter for the switch case
                 }
                 else // if it's time to process the IO bursts of processes
                 {
-                    finishedProcesses = currCPU.algorithms.fcfs(currCPU.waitingIO, CPUburst); // will always run FCFS in IO burst
-                    for (int i = 0; i < finishedProcesses.Count; i++)
+                    nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingIO, CPUburst); // will always run FCFS in IO burst
+                    for (int i = 0; i < nonEmptyProcesses.Count; i++)
                     {
-                        currCPU.waitingCPU.Enqueue(finishedProcesses[i]);
+                        currCPU.waitingCPU.Enqueue(nonEmptyProcesses[i]);
                     }
                 }
                 CPUburst = !CPUburst;

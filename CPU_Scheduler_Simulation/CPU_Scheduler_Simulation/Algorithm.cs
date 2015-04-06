@@ -38,7 +38,7 @@ namespace CPU_Scheduler_Simulation
 
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
-            List<PCB> finishedProcesses = new List<PCB>();
+            List<PCB> nonEmptyProcesses = new List<PCB>();
 
             do // assuming the processes in the queue are ordered by arrival time...
             {
@@ -51,20 +51,24 @@ namespace CPU_Scheduler_Simulation
                 int service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
                 //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
                 counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
-                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
+                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
                 {
-                    finishedProcesses.Add(process);
+                    nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
+                }
+                else
+                {
+                    finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
                 }
             } while (processes.Count != 0);
 
             timeCounter += counter; // update our total time
             Console.WriteLine("--Time spent in this round of FCFS: " + counter);
-            Console.WriteLine("--Amount of processes left in FCFS: " + finishedProcesses.Count);
+            Console.WriteLine("--Amount of processes left in FCFS: " + nonEmptyProcesses.Count);
             Console.WriteLine("--Total time accumulated so far: " + timeCounter);
             Console.WriteLine("--END FIRST COME FIRST SERVE\n");
 
 
-            return finishedProcesses; 
+            return nonEmptyProcesses; 
         }
 
         //shortest-process-next algorithm - Wilo
