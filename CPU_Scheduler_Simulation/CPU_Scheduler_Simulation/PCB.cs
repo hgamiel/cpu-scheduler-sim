@@ -22,8 +22,8 @@ namespace CPU_Scheduler_Simulation
         //public Boolean waiting = false;
         public Boolean finished = false;
 
-        public Queue<int> CPU = new Queue<int>; // queue of CPU bursts
-        public Queue<int> IO = new Queue<int>; // queue of IO bursts
+        public Queue<int> CPU = new Queue<int>(); // queue of CPU bursts
+        public Queue<int> IO = new Queue<int>(); // queue of IO bursts
 
         public PCB() { }
 
