@@ -39,7 +39,7 @@ namespace CPU_Scheduler_Simulation
                     addProcess(values); // calls function that adds process to process table
                 }
 
-                Console.WriteLine("File read completed.");
+                Console.WriteLine("File read completed.\n");
             }
             else
             {
