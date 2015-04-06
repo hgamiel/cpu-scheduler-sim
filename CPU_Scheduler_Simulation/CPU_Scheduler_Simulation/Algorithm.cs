@@ -12,6 +12,17 @@ namespace CPU_Scheduler_Simulation
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
 
+        //create some sample data
+        public Queue<PCB> sample = new Queue<PCB>
+        (
+            new[]{ 
+                    new PCB(){name = 'A', arrivalTime = 0, serviceTime = 3},
+                    new PCB(){name = 'B', arrivalTime = 2, serviceTime = 6},
+                    new PCB(){name = 'C', arrivalTime = 4, serviceTime = 4},
+                    new PCB(){name = 'D', arrivalTime = 6, serviceTime = 5},
+                    new PCB(){name = 'E', arrivalTime = 8, serviceTime = 2}
+                }
+        );
         public Algorithm() { }
 
         //TODO: beingAlgorithms(); 
@@ -73,30 +84,32 @@ namespace CPU_Scheduler_Simulation
             var counter = 0;    //'timer' since we are modeling as discrete events
             var process = new PCB();    //temporary holder
             var startIndex = 0;     //start index of the ready queues
-            var moveToNextQueue = true;
+            var numProcesses = 0;
+            List<PCB> finishedProcesses = new List<PCB>();
 
-            //create some sample data
-            Queue<PCB> sample = new Queue<PCB>
-            (
-                new[]{ 
-                    new PCB(){name = 'A', arrivalTime = 0, serviceTime = 3},
-                    new PCB(){name = 'B', arrivalTime = 2, serviceTime = 6},
-                    new PCB(){name = 'C', arrivalTime = 4, serviceTime = 4},
-                    new PCB(){name = 'D', arrivalTime = 6, serviceTime = 5},
-                    new PCB(){name = 'E', arrivalTime = 8, serviceTime = 2}
-                }
-            );
+            numProcesses = sample.Count;
 
-            //create a queue of queues
+            //create a list of queues
             List<Queue<PCB>> rq = new List<Queue<PCB>>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 6; i++)
             {
                 rq.Add(new Queue<PCB>());
             }
 
+
+            //first process
+            process = sample.Dequeue();
+            while (counter != sample.Peek().arrivalTime)
+            {
+                counter++;
+                Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum));
+            }
+            //assuming first process will not finish before next process comes in - not realistic of a CPU
+            rq[++startIndex].Enqueue(process);
+
             while (!finished)
             {
-                //if a process has arrive, get the process and start our index of queues back at 0
+                //if a process has arrived, get the process and start our index of queues back at 0
                 if (sample.Count != 0)
                 {
                     if (counter == sample.Peek().arrivalTime)
@@ -107,41 +120,32 @@ namespace CPU_Scheduler_Simulation
                     }
                 }
                 //if inbetween queues are empty, move along until we get to next queue that has elements
-                while(rq[startIndex].Count == 0)
+                while (rq[startIndex].Count == 0)
                     startIndex++;
                 //take the process of the current queue
                 process = rq[startIndex].Dequeue();
                 //the process serves a certain amount of time
-                Console.WriteLine("Process " +  process.name + " service time is " + process.serveTime(quantum));
+                Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum));
                 //this happens in one unit of time
                 counter++;
                 if (process.serviceTime == 0)
                 {
-                    process.finished = true;
+                    process.finished = true;                //process is finished
+                    process.executionTime = counter;        //set the finished time of the process
+                    finishedProcesses.Add(process);         //add to list of finished processes
+                    //check to see if we are finished
+                    if (finishedProcesses.Count == numProcesses)
+                        finished = true;
                     continue;
                 }
-                    
-                
-                //if there are no more processes left in the current queue, move to the next queue
-                if (rq[startIndex].Count == 0 && moveToNextQueue)
-                {
-                    startIndex++;
-                    rq[startIndex].Enqueue(process);
-                }
-                else
-                    rq[startIndex].Enqueue(process);
+                //move to the next queue
+                rq[++startIndex].Enqueue(process);
 
-                //check if finished
-                foreach (var queue in rq)
-                {
-                    //check if each queue is empty
-                    if (queue.Count != 0)
-                        break;
-                    else if (queue.Count == 0)
-                        continue;
-                    finished = true;
-                }
+                //if there are no processes in this queue, then we move to the next queue
+                if (rq[--startIndex].Count == 0)
+                    startIndex++;
             }
+            Console.WriteLine("Finished feedback algorithm");
             return null;
         }    
 
