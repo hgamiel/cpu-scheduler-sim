@@ -96,11 +96,11 @@ namespace CPU_Scheduler_Simulation
                     switch (switchAlg)
                     {
                         case 0: finishedProcesses = cpu2.algorithms.fcfs(cpu2.waitingCPU, CPUburst); break;
-                        //case 1: finishedProcesses = cpu1.algorithms.spn(cpu2.waitingCPU); break; // uncomment when done
-                        //case 2: finishedProcesses = cpu1.algorithms.srt(cpu2.waitingCPU); break; // uncomment when done
-                        //case 3: finishedProcesses = cpu1.algorithms.hrrn(cpu2.waitingCPU); break; // uncomment when done
-                        //case 4: finishedProcesses = cpu1.algorithms.rr(cpu2.waitingCPU, quantum); break; // uncomment when done
-                        //case 6: finishedProcesses = cpu1.algorithms.priority(cpu2.waitingCPU); break; // uncomment when done
+                        //case 1: finishedProcesses = cpu2.algorithms.spn(cpu2.waitingCPU); break; // uncomment when done
+                        //case 2: finishedProcesses = cpu2.algorithms.srt(cpu2.waitingCPU); break; // uncomment when done
+                        //case 3: finishedProcesses = cpu2.algorithms.hrrn(cpu2.waitingCPU); break; // uncomment when done
+                        //case 4: finishedProcesses = cpu2.algorithms.rr(cpu2.waitingCPU, quantum); break; // uncomment when done
+                        //case 6: finishedProcesses = cpu2.algorithms.priority(cpu2.waitingCPU); break; // uncomment when done
                         case 7: finishedProcesses = cpu2.algorithms.v1Feedback(cpu2.waitingCPU); break;
                         case 8: finishedProcesses = cpu2.algorithms.v2Feedback(cpu2.waitingCPU); break;
                     };
