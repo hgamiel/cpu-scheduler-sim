@@ -28,7 +28,8 @@ namespace CPU_Scheduler_Simulation
                     cpu2.waitingCPU.Enqueue(processes[i]);
             }
 
-            runCPUs();
+            runCPUs(); // runs the algorthms on processes on each CPU
+
             /* TODO: for now, we can just test our independent algorithms like this. 
              * once we complete them, we will create a function to put them into combinations
              */
