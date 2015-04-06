@@ -40,6 +40,13 @@ namespace CPU_Scheduler_Simulation
             //cpu2.beginAlgorithms();
         }
 
+        public int calcTotalTime()
+        {
+            int sum;
+            sum = cpu1.algorithms.timeCounter + cpu2.algorithms.timeCounter;
+            return sum;
+        }
+
         public void runCPUs()
         {
             Console.WriteLine("~~~~ ON CPU 1 ~~~~");
