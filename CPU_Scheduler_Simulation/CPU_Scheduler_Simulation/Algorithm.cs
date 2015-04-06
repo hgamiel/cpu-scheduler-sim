@@ -34,8 +34,8 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
             Console.WriteLine("--BEGIN FIRST COME FIRST SERVE");
-            Console.WriteLine("--Number of processes to be serviced this round: " + processes.Count);
-            Console.WriteLine("--Current burst processing: " + ((CPUburst) ? "CPU" : "I/O"));
+            Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
+            Console.WriteLine("\tCurrent burst processing: " + ((CPUburst) ? "CPU" : "I/O"));
 
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
@@ -64,9 +64,9 @@ namespace CPU_Scheduler_Simulation
 
             timeCounter += counter; // update our total time spent in algorithms
 
-            Console.WriteLine("--Time spent in this round of FCFS: " + counter);
-            Console.WriteLine("--Amount of processes left in FCFS: " + nonEmptyProcesses.Count);
-            Console.WriteLine("--Total time accumulated so far: " + timeCounter);
+            Console.WriteLine("\tTime spent in this round of FCFS: " + counter);
+            Console.WriteLine("\tAmount of processes left in FCFS: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
             Console.WriteLine("--END FIRST COME FIRST SERVE\n");
 
             return nonEmptyProcesses; 
