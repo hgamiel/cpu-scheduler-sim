@@ -48,21 +48,33 @@ namespace CPU_Scheduler_Simulation
         }
         public void runCPU1()
         {
+            int switchAlg = 0;
             bool CPUburst = true;
             List<PCB> finishedProcesses = new List<PCB>(); // TEST
             do
             {
-                if (CPUburst)
+                if (CPUburst) // if it's time to process the CPU bursts of processes
                 {
-                    finishedProcesses = cpu1.algorithms.fcfs(cpu1.waitingCPU, CPUburst);
+                    switch (switchAlg)
+                    {
+                        case 0: finishedProcesses = cpu1.algorithms.fcfs(cpu1.waitingCPU, CPUburst); break;
+                        //case 1: finishedProcesses = cpu1.algorithms.spn(cpu1.waitingCPU); break; // uncomment when done
+                        //case 2: finishedProcesses = cpu1.algorithms.srt(cpu1.waitingCPU); break; // uncomment when done
+                        //case 3: finishedProcesses = cpu1.algorithms.hrrn(cpu1.waitingCPU); break; // uncomment when done
+                        //case 4: finishedProcesses = cpu1.algorithms.rr(cpu1.waitingCPU, quantum); break; // uncomment when done
+                        //case 6: finishedProcesses = cpu1.algorithms.priority(cpu1.waitingCPU); break; // uncomment when done
+                        case 7: finishedProcesses = cpu1.algorithms.v1Feedback(cpu1.waitingCPU); break;
+                        case 8: finishedProcesses = cpu1.algorithms.v2Feedback(cpu1.waitingCPU); break;
+                    }
                     for (int i = 0; i < finishedProcesses.Count; i++)
                     {
                         cpu1.waitingIO.Enqueue(finishedProcesses[i]);
                     }
+                    //switchAlg++; // uncomment when other algs are done! This is a counter for the switch case
                 }
-                else
+                else // if it's time to process the IO bursts of processes
                 {
-                    finishedProcesses = cpu1.algorithms.fcfs(cpu1.waitingIO, CPUburst);
+                    finishedProcesses = cpu1.algorithms.fcfs(cpu1.waitingIO, CPUburst); // will always run FCFS in IO burst
                     for (int i = 0; i < finishedProcesses.Count; i++)
                     {
                         cpu1.waitingCPU.Enqueue(finishedProcesses[i]);

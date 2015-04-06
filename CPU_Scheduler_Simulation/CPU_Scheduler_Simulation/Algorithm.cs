@@ -33,8 +33,9 @@ namespace CPU_Scheduler_Simulation
         //first-come-first-serve algorithm - Hannh
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
-            Console.WriteLine("--BEGIN FIRST COME FIRST SERVE--");
-            Console.WriteLine("--Number of processes to be serviced this round: " + processes.Count + "--");
+            Console.WriteLine("--BEGIN FIRST COME FIRST SERVE");
+            Console.WriteLine("--Number of processes to be serviced this round: " + processes.Count);
+
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
             List<PCB> finishedProcesses = new List<PCB>();
@@ -57,11 +58,11 @@ namespace CPU_Scheduler_Simulation
             } while (processes.Count != 0);
 
             timeCounter += counter; // update our total time
+            Console.WriteLine("--Time spent in this round of FCFS: " + counter);
+            Console.WriteLine("--Amount of processes left in FCFS: " + finishedProcesses.Count);
+            Console.WriteLine("--Total time accumulated so far: " + timeCounter);
+            Console.WriteLine("--END FIRST COME FIRST SERVE\n");
 
-            Console.WriteLine("--END FIRST COME FIRST SERVE--");
-            Console.WriteLine("--Time spent in this round of FCFS: " + counter + "--");
-            Console.WriteLine("--Amount of processes left in FCFS: " + finishedProcesses.Count + "--");
-            Console.WriteLine("--TOTAL TIME SO FAR: " + timeCounter + "--");
 
             return finishedProcesses; 
         }
