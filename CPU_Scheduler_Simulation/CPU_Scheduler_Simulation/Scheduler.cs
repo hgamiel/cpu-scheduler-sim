@@ -50,7 +50,7 @@ namespace CPU_Scheduler_Simulation
 
         public void runCPU(CPU currCPU)
         {
-            int switchAlg = 0;
+            int switchAlg = 3;
             bool CPUburst = true;
             List<PCB> nonEmptyProcesses = new List<PCB>(); // TEST
             do
@@ -65,14 +65,17 @@ namespace CPU_Scheduler_Simulation
                         //case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
                         //case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, quantum); break; // uncomment when done
                         //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
-                        case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break;
-                        case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break;
+                        //case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break; // uncomment when done
+                        //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break; // uncomment when done
+                        default: Console.WriteLine("Algorithm " + switchAlg + " does not exist (yet); Skipping algorithm...\n");
+                                    switchAlg = (switchAlg + 1) % 8;
+                                    continue; // will ignore rest of do/while and go through again with updated value for switch statement
                     }
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                     {
                         currCPU.waitingIO.Enqueue(nonEmptyProcesses[i]);
                     }
-                    //switchAlg += 1 % 8; uncomment when other algs are done! This is a counter for the switch case
+                    switchAlg = (switchAlg + 1) % 8;
                 }
                 else // if it's time to process the IO bursts of processes
                 {
