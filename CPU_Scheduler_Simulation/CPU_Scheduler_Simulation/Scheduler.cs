@@ -33,7 +33,28 @@ namespace CPU_Scheduler_Simulation
              */
             //cpu1.algorithms.v1Feedback(cpu1.waitingCPU);
             //cpu1.algorithms.v2Feedback(cpu1.waitingCPU); 
-            cpu1.algorithms.fcfs(cpu1.waitingCPU, true); 
+            bool CPUburst = true;
+            List<PCB> finishedProcesses = new List<PCB>(); // TEST
+            do
+            {
+                if (CPUburst)
+                {
+                    finishedProcesses = cpu1.algorithms.fcfs(cpu1.waitingCPU, CPUburst);
+                    for (int i = 0; i < finishedProcesses.Count; i++)
+                    {
+                        cpu1.waitingIO.Enqueue(finishedProcesses[i]);
+                    }
+                }
+                else
+                {
+                    finishedProcesses = cpu1.algorithms.fcfs(cpu1.waitingIO, CPUburst);
+                    for (int i = 0; i < finishedProcesses.Count; i++)
+                    {
+                        cpu1.waitingCPU.Enqueue(finishedProcesses[i]);
+                    }
+                }
+                CPUburst = !CPUburst;
+            } while (cpu1.waitingIO.Count != 0 || cpu1.waitingCPU.Count != 0);
             //TODO: reset clock
             //cpu2.beginAlgorithms();
         }

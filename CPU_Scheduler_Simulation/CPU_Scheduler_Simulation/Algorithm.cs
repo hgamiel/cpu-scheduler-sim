@@ -9,8 +9,8 @@ namespace CPU_Scheduler_Simulation
     public class Algorithm
     {
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
-
-        public int contextSwitchCost = 0;   //cost of switching between processes. assumption: cost is one per switch
+        public int timeCounter = 0;
+        public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
@@ -34,37 +34,33 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
             Console.WriteLine("--BEGIN FIRST COME FIRST SERVE--");
-            //foreach (var process in processes)
-            //    processes.Dequeue();
-            int quantum = 1;
-            int contextswitch = 1;
-            bool finished = false;   //when algorithm is complete
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
             List<PCB> finishedProcesses = new List<PCB>();
 
             do // assuming the processes in the queue are ordered by arrival time...
             {
-                counter += contextswitch; // context switch time
+                counter += contextSwitchCost; // context switch time
                 while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                 {
                     counter++;
                 }
                 process = processes.Dequeue();
                 int service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
-                Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
+                //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
                 counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
-                if (process.CPU.Count > 0)
+                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
                 {
                     finishedProcesses.Add(process);
                 }
             } while (processes.Count != 0);
 
-            finished = true;
+            timeCounter += counter; // update our total time
 
             Console.WriteLine("--END FIRST COME FIRST SERVE--");
-
-            Console.WriteLine(counter);
+            Console.WriteLine("--Time spent in this round of FCFS: " + counter + "--");
+            Console.WriteLine("--Amount of processes left in FCFS: " + finishedProcesses.Count + "--");
+            Console.WriteLine("--TOTAL TIME SO FAR: " + timeCounter + "--");
 
             return finishedProcesses; 
         }
