@@ -32,7 +32,8 @@ namespace CPU_Scheduler_Simulation
              * once we complete them, we will create a function to put them into combinations
              */
             //cpu1.algorithms.v1Feedback(cpu1.waitingCPU);
-            cpu1.algorithms.v2Feedback(cpu1.waitingCPU); 
+            //cpu1.algorithms.v2Feedback(cpu1.waitingCPU); 
+            cpu1.algorithms.fcfs(cpu1.waitingCPU, true); 
             //TODO: reset clock
             //cpu2.beginAlgorithms();
         }

@@ -31,7 +31,7 @@ namespace CPU_Scheduler_Simulation
         //TODO: beingAlgorithms(); 
 
         //first-come-first-serve algorithm - Hannh
-        public List<PCB> fcfs(Queue<PCB> processes) 
+        public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
             Console.WriteLine("--BEGIN FIRST COME FIRST SERVE--");
             //foreach (var process in processes)
@@ -46,15 +46,19 @@ namespace CPU_Scheduler_Simulation
             do // assuming the processes in the queue are ordered by arrival time...
             {
                 counter += contextswitch; // context switch time
-                while (counter < sample.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
+                while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                 {
                     counter++;
                 }
-                process = sample.Dequeue();
-                Console.WriteLine("Process " + process.name + " has been serviced " + process.serviceTime + ".");
-                counter += process.serviceTime; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
-                finishedProcesses.Add(process);
-            } while (sample.Count != 0);
+                process = processes.Dequeue();
+                int service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
+                Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
+                counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
+                if (process.CPU.Count > 0)
+                {
+                    finishedProcesses.Add(process);
+                }
+            } while (processes.Count != 0);
 
             finished = true;
 
