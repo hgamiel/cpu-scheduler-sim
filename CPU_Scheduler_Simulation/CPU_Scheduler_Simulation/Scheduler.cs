@@ -30,17 +30,9 @@ namespace CPU_Scheduler_Simulation
 
             runCPUs(); // runs the algorthms on processes on each CPU
 
-            /* TODO: for now, we can just test our independent algorithms like this. 
-             * once we complete them, we will create a function to put them into combinations
-             */
-            //cpu1.algorithms.v1Feedback(cpu1.waitingCPU);
-            //cpu1.algorithms.v2Feedback(cpu1.waitingCPU); 
-            
-            //TODO: reset clock
-            //cpu2.beginAlgorithms();
         }
 
-        public int calcTotalTime()
+        public int calcTotalTime() // returns the total time spent across both CPUs
         {
             int sum;
             sum = cpu1.algorithms.timeCounter + cpu2.algorithms.timeCounter;
@@ -57,7 +49,7 @@ namespace CPU_Scheduler_Simulation
 
         public void runCPU(CPU currCPU)
         {
-            int switchAlg = 3;
+            int switchAlg = 0; // starting algorithm
             bool CPUburst = true;
             List<PCB> nonEmptyProcesses = new List<PCB>(); // TEST
             do
