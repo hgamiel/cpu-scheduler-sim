@@ -31,7 +31,8 @@ namespace CPU_Scheduler_Simulation
             /* TODO: for now, we can just test our independent algorithms like this. 
              * once we complete them, we will create a function to put them into combinations
              */
-            cpu1.algorithms.v1Feedback(cpu1.waitingCPU); 
+            //cpu1.algorithms.v1Feedback(cpu1.waitingCPU);
+            cpu1.algorithms.v2Feedback(cpu1.waitingCPU); 
             //TODO: reset clock
             //cpu2.beginAlgorithms();
         }
