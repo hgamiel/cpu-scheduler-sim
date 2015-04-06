@@ -43,11 +43,12 @@ namespace CPU_Scheduler_Simulation
         public void runCPUs()
         {
             Console.WriteLine("~~~~ ON CPU 1 ~~~~");
-            runCPU1();
+            runCPU(cpu1);
             Console.WriteLine("~~~~ ON CPU 2 ~~~~");
-            runCPU2();
+            runCPU(cpu2);
         }
-        public void runCPU1()
+
+        public void runCPU(CPU currCPU)
         {
             int switchAlg = 0;
             bool CPUburst = true;
@@ -58,68 +59,31 @@ namespace CPU_Scheduler_Simulation
                 {
                     switch (switchAlg)
                     {
-                        case 0: finishedProcesses = cpu1.algorithms.fcfs(cpu1.waitingCPU, CPUburst); break;
-                        //case 1: finishedProcesses = cpu1.algorithms.spn(cpu1.waitingCPU); break; // uncomment when done
-                        //case 2: finishedProcesses = cpu1.algorithms.srt(cpu1.waitingCPU); break; // uncomment when done
-                        //case 3: finishedProcesses = cpu1.algorithms.hrrn(cpu1.waitingCPU); break; // uncomment when done
-                        //case 4: finishedProcesses = cpu1.algorithms.rr(cpu1.waitingCPU, quantum); break; // uncomment when done
-                        //case 6: finishedProcesses = cpu1.algorithms.priority(cpu1.waitingCPU); break; // uncomment when done
-                        case 7: finishedProcesses = cpu1.algorithms.v1Feedback(cpu1.waitingCPU); break;
-                        case 8: finishedProcesses = cpu1.algorithms.v2Feedback(cpu1.waitingCPU); break;
+                        case 0: finishedProcesses = currCPU.algorithms.fcfs(currCPU.waitingCPU, CPUburst); break;
+                        //case 1: finishedProcesses = currCPU.algorithms.spn(currCPU.waitingCPU); break; // uncomment when done
+                        //case 2: finishedProcesses = currCPU.algorithms.srt(currCPU.waitingCPU); break; // uncomment when done
+                        //case 3: finishedProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
+                        //case 4: finishedProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, quantum); break; // uncomment when done
+                        //case 6: finishedProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
+                        case 7: finishedProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break;
+                        case 8: finishedProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break;
                     }
                     for (int i = 0; i < finishedProcesses.Count; i++)
                     {
-                        cpu1.waitingIO.Enqueue(finishedProcesses[i]);
+                        currCPU.waitingIO.Enqueue(finishedProcesses[i]);
                     }
-                    //switchAlg++; // uncomment when other algs are done! This is a counter for the switch case
+                    //switchAlg += 1 % 8; uncomment when other algs are done! This is a counter for the switch case
                 }
                 else // if it's time to process the IO bursts of processes
                 {
-                    finishedProcesses = cpu1.algorithms.fcfs(cpu1.waitingIO, CPUburst); // will always run FCFS in IO burst
+                    finishedProcesses = currCPU.algorithms.fcfs(currCPU.waitingIO, CPUburst); // will always run FCFS in IO burst
                     for (int i = 0; i < finishedProcesses.Count; i++)
                     {
-                        cpu1.waitingCPU.Enqueue(finishedProcesses[i]);
+                        currCPU.waitingCPU.Enqueue(finishedProcesses[i]);
                     }
                 }
                 CPUburst = !CPUburst;
-            } while (cpu1.waitingIO.Count != 0 || cpu1.waitingCPU.Count != 0);
-        }
-        public void runCPU2()
-        {
-            bool CPUburst = true;
-            List<PCB> finishedProcesses = new List<PCB>(); // TEST
-            int switchAlg = 0;
-            do
-            {
-                if (CPUburst)
-                {
-                    switch (switchAlg)
-                    {
-                        case 0: finishedProcesses = cpu2.algorithms.fcfs(cpu2.waitingCPU, CPUburst); break;
-                        //case 1: finishedProcesses = cpu2.algorithms.spn(cpu2.waitingCPU); break; // uncomment when done
-                        //case 2: finishedProcesses = cpu2.algorithms.srt(cpu2.waitingCPU); break; // uncomment when done
-                        //case 3: finishedProcesses = cpu2.algorithms.hrrn(cpu2.waitingCPU); break; // uncomment when done
-                        //case 4: finishedProcesses = cpu2.algorithms.rr(cpu2.waitingCPU, quantum); break; // uncomment when done
-                        //case 6: finishedProcesses = cpu2.algorithms.priority(cpu2.waitingCPU); break; // uncomment when done
-                        case 7: finishedProcesses = cpu2.algorithms.v1Feedback(cpu2.waitingCPU); break;
-                        case 8: finishedProcesses = cpu2.algorithms.v2Feedback(cpu2.waitingCPU); break;
-                    };
-                    for (int i = 0; i < finishedProcesses.Count; i++)
-                    {
-                        cpu2.waitingIO.Enqueue(finishedProcesses[i]);
-                    }
-                    //switchAlg++; // uncomment when other algs are done! This is a counter for the switch case
-                }
-                else
-                {
-                    finishedProcesses = cpu2.algorithms.fcfs(cpu2.waitingIO, CPUburst);
-                    for (int i = 0; i < finishedProcesses.Count; i++)
-                    {
-                        cpu2.waitingCPU.Enqueue(finishedProcesses[i]);
-                    }
-                }
-                CPUburst = !CPUburst;
-            } while (cpu2.waitingIO.Count != 0 || cpu2.waitingCPU.Count != 0);
+            } while (currCPU.waitingIO.Count != 0 || currCPU.waitingCPU.Count != 0);
         }
     }
 }
