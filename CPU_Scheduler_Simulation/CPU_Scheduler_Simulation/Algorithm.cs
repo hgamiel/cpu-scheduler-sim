@@ -101,6 +101,34 @@ namespace CPU_Scheduler_Simulation
             //as quantums deplete the service time, match with arrival time
             //processes get added to queue when the arrive
             //alternate processes
+
+            int counter = 0;    //'timer' since we are modeling as discrete events
+            PCB process = new PCB();    //temporary holder
+            List<PCB> nonEmptyProcesses = new List<PCB>();
+            Queue<PCB> currProcesses = new Queue<PCB>();
+            int index = 0;
+
+            do // assuming the processes in the queue are ordered by arrival time...
+            {
+                counter += contextSwitchCost; // context switch time
+                while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
+                {
+                    counter++;
+                }
+                currProcesses.Enqueue(process);
+                
+                //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
+                counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
+                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
+                {
+                    nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
+                }
+                else
+                {
+                    finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
+                }
+            } while (processes.Count != 0);
+
             return null; 
         }
 
