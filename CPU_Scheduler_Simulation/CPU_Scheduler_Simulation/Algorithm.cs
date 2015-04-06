@@ -41,6 +41,8 @@ namespace CPU_Scheduler_Simulation
             PCB process = new PCB();    //temporary holder
             List<PCB> nonEmptyProcesses = new List<PCB>();
 
+            int beginAmount = processes.Count;
+
             do // assuming the processes in the queue are ordered by arrival time...
             {
                 counter += contextSwitchCost; // context switch time
@@ -65,6 +67,7 @@ namespace CPU_Scheduler_Simulation
             timeCounter += counter; // update our total time spent in algorithms
 
             Console.WriteLine("\tTime spent in this round of FCFS: " + counter);
+            Console.WriteLine("\tNumber of processes serviced: " + (beginAmount - nonEmptyProcesses.Count));
             Console.WriteLine("\tAmount of processes left in FCFS: " + nonEmptyProcesses.Count);
             Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
             Console.WriteLine("--END FIRST COME FIRST SERVE\n");
