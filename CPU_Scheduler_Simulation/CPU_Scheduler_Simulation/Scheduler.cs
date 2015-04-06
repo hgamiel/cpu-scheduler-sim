@@ -28,11 +28,26 @@ namespace CPU_Scheduler_Simulation
                     cpu2.waitingCPU.Enqueue(processes[i]);
             }
 
+            runCPUs();
             /* TODO: for now, we can just test our independent algorithms like this. 
              * once we complete them, we will create a function to put them into combinations
              */
             //cpu1.algorithms.v1Feedback(cpu1.waitingCPU);
             //cpu1.algorithms.v2Feedback(cpu1.waitingCPU); 
+            
+            //TODO: reset clock
+            //cpu2.beginAlgorithms();
+        }
+
+        public void runCPUs()
+        {
+            Console.WriteLine("~~~~ ON CPU 1 ~~~~");
+            runCPU1();
+            Console.WriteLine("~~~~ ON CPU 2 ~~~~");
+            runCPU2();
+        }
+        public void runCPU1()
+        {
             bool CPUburst = true;
             List<PCB> finishedProcesses = new List<PCB>(); // TEST
             do
@@ -55,8 +70,31 @@ namespace CPU_Scheduler_Simulation
                 }
                 CPUburst = !CPUburst;
             } while (cpu1.waitingIO.Count != 0 || cpu1.waitingCPU.Count != 0);
-            //TODO: reset clock
-            //cpu2.beginAlgorithms();
+        }
+        public void runCPU2()
+        {
+            bool CPUburst = true;
+            List<PCB> finishedProcesses = new List<PCB>(); // TEST
+            do
+            {
+                if (CPUburst)
+                {
+                    finishedProcesses = cpu2.algorithms.fcfs(cpu2.waitingCPU, CPUburst);
+                    for (int i = 0; i < finishedProcesses.Count; i++)
+                    {
+                        cpu2.waitingIO.Enqueue(finishedProcesses[i]);
+                    }
+                }
+                else
+                {
+                    finishedProcesses = cpu2.algorithms.fcfs(cpu2.waitingIO, CPUburst);
+                    for (int i = 0; i < finishedProcesses.Count; i++)
+                    {
+                        cpu2.waitingCPU.Enqueue(finishedProcesses[i]);
+                    }
+                }
+                CPUburst = !CPUburst;
+            } while (cpu2.waitingIO.Count != 0 || cpu2.waitingCPU.Count != 0);
         }
     }
 }

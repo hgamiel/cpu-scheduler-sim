@@ -34,6 +34,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
             Console.WriteLine("--BEGIN FIRST COME FIRST SERVE--");
+            Console.WriteLine("--Number of processes to be serviced this round: " + processes.Count + "--");
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
             List<PCB> finishedProcesses = new List<PCB>();
