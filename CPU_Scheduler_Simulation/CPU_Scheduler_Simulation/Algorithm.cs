@@ -8,7 +8,10 @@ namespace CPU_Scheduler_Simulation
 {
     public class Algorithm
     {
-        public int contextSwitchCost;
+        public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
+
+        public int contextSwitchCost = 0;   //cost of switching between processes. assumption: cost is one per switch
+
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
 
@@ -85,7 +88,6 @@ namespace CPU_Scheduler_Simulation
             var process = new PCB();    //temporary holder
             var startIndex = 0;     //start index of the ready queues
             var numProcesses = 0;
-            List<PCB> finishedProcesses = new List<PCB>();
 
             numProcesses = sample.Count;
 
@@ -144,6 +146,9 @@ namespace CPU_Scheduler_Simulation
                 //if there are no processes in this queue, then we move to the next queue
                 if (rq[--startIndex].Count == 0)
                     startIndex++;
+
+                //incorporate the context switch cost when switching between processes
+                contextSwitchCost++;
             }
             Console.WriteLine("Finished feedback algorithm");
             return null;
@@ -152,36 +157,33 @@ namespace CPU_Scheduler_Simulation
         //version 2 feedback with quantum = 2^i - Tommy
         public List<PCB> v2Feedback(Queue<PCB> processes)
         {
-            var finished = false;   //when algorithm is complete
-            var counter = 0;    //'timer' since we are modeling as discrete events
-            var process = new PCB();    //temporary holder
-            var startIndex = 0;     //start index of the ready queues
+            var finished = false;   
+            var counter = 0;    
+            var process = new PCB();    
+            var startIndex = 0;     
             var numProcesses = 0;
-            List<PCB> finishedProcesses = new List<PCB>();
 
             numProcesses = sample.Count;
 
-            //create a list of queues
             List<Queue<PCB>> rq = new List<Queue<PCB>>();
             for (int i = 0; i < 4; i++)
             {
                 rq.Add(new Queue<PCB>());
             }
 
-
-            //first process
             process = sample.Dequeue();
             while (counter != sample.Peek().arrivalTime)
             {
                 counter++;
+                //quantum is only (2^0)=1 for this case
                 Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(1.00));
             }
-            //assuming first process will not finish before next process comes in - not realistic of a CPU
+
             rq[++startIndex].Enqueue(process);
 
             while (!finished)
             {
-                //if a process has arrived, get the process and start our index of queues back at 0
+                //if a process has arrived either on time or has been waiting, get the process and start our index of queues back at 0
                 if (sample.Count != 0)
                 {
                     if (counter >= sample.Peek().arrivalTime)
@@ -191,16 +193,16 @@ namespace CPU_Scheduler_Simulation
                         rq[startIndex].Enqueue(process);
                     }
                 }
-                //if inbetween queues are empty, move along until we get to next queue that has elements
+
                 while (rq[startIndex].Count == 0)
                     startIndex++;
-                //take the process of the current queue
+
                 process = rq[startIndex].Dequeue();
-                //the process serves a certain amount of time
+                //the process serves 2^1 amount of time
                 var quantum = Math.Pow(2.00, (Double)startIndex);
                 var processServeTime = Convert.ToInt32(process.serveTime(quantum));
                 Console.WriteLine("Process " + process.name + " service time is " + processServeTime);
-                //this happens in 2^i units time
+
                 //must check if the process finished before the quantum amount
                 if (processServeTime < 0)
                     counter += (processServeTime * (-1));
@@ -208,20 +210,21 @@ namespace CPU_Scheduler_Simulation
                     counter += (int)quantum;    //otherwise we just set it to the total time
                 if (process.serviceTime <= 0)
                 {
-                    process.finished = true;                //process is finished
-                    process.executionTime = counter;      //set the finished time of the process
-                    finishedProcesses.Add(process);         //add to list of finished processes
+                    process.finished = true;                
+                    process.executionTime = counter;      
+                    finishedProcesses.Add(process);         
                     //check to see if we are finished
                     if (finishedProcesses.Count == numProcesses)
                         finished = true;
                     continue;
                 }
-                //move to the next queue
+
                 rq[++startIndex].Enqueue(process);
 
-                //if there are no processes in this queue, then we move to the next queue
                 if (rq[--startIndex].Count == 0)
                     startIndex++;
+
+                contextSwitchCost++;
             }
             Console.WriteLine("Finished feedback algorithm");
             return null;

@@ -17,7 +17,7 @@ namespace CPU_Scheduler_Simulation
         public double waitTime;         //time process must wait during it execution - accumulated
         public double responseTime;     //time from submission utnil response begins to be received - accumulated
         public double executionTime;    //time of completion
-        public Boolean waiting = false;
+        //public Boolean waiting = false;
         public Boolean finished = false;
 
         public List<int> CPU = new List<int>();     //array of CPU 
