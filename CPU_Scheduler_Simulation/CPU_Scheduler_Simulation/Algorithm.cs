@@ -118,7 +118,6 @@ namespace CPU_Scheduler_Simulation
                 rq.Add(new Queue<PCB>());
             }
 
-
             //first process
             process = sample.Dequeue();
             while (counter != sample.Peek().arrivalTime)
@@ -154,10 +153,13 @@ namespace CPU_Scheduler_Simulation
                 {
                     process.finished = true;                //process is finished
                     process.executionTime = counter;        //set the finished time of the process
+                    process.turnaroundTime = process.executionTime - process.arrivalTime;
+                    process.tr_ts = process.turnaroundTime / process.serviceTime;
                     finishedProcesses.Add(process);         //add to list of finished processes
                     //check to see if we are finished
                     if (finishedProcesses.Count == numProcesses)
                         finished = true;
+                    Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
                     continue;
                 }
                 //move to the next queue
@@ -231,11 +233,14 @@ namespace CPU_Scheduler_Simulation
                 if (process.serviceTime <= 0)
                 {
                     process.finished = true;                
-                    process.executionTime = counter;      
+                    process.executionTime = counter;
+                    process.turnaroundTime = process.executionTime - process.arrivalTime;
+                    process.tr_ts = process.turnaroundTime / process.serviceTime;
                     finishedProcesses.Add(process);         
                     //check to see if we are finished
-                    if (finishedProcesses.Count == numProcesses)
+                    if (finishedProcesses.Count == numProcesses) 
                         finished = true;
+                    Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
                     continue;
                 }
 
