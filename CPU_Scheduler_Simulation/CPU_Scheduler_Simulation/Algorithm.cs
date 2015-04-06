@@ -35,7 +35,27 @@ namespace CPU_Scheduler_Simulation
         {
             //foreach (var process in processes)
             //    processes.Dequeue();
-            return null; 
+            int quantum = 1;
+            bool finished = false;   //when algorithm is complete
+            int counter = 0;    //'timer' since we are modeling as discrete events
+            PCB process = new PCB();    //temporary holder
+            List<PCB> finishedProcesses = new List<PCB>();
+
+            do
+            {
+                while (counter != sample.Peek().arrivalTime)
+                {
+
+                }
+            } while (sample.Count != 0);
+
+            while (counter != sample.Peek().arrivalTime)
+            {
+                counter++;
+                Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum));
+            }
+
+            return finishedProcesses; 
         }
 
         //shortest-process-next algorithm - Wilo
