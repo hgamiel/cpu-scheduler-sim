@@ -152,16 +152,24 @@ namespace CPU_Scheduler_Simulation
 
             do // assuming the processes in the queue are ordered by arrival time...
             {
-                if (currProcesses.Count == 0 || processes.Peek().arrivalTime > counter) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
+                if (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
                 {
-                    counter += contextSwitchCost; // context switch time
+                    //counter += contextSwitchCost; // context switch time
+                    
                     while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                     {
                         counter++;
                     }
-                    process = processes.Dequeue(); // take the process off and then...
-                    process.serviceTime = process.CPU.Dequeue();
-                    currProcesses.Add(process); // finally add that process to be processed by rr
+                    do
+                    {
+                        process = processes.Dequeue(); // take the process off and then...
+                        process.serviceTime = process.CPU.Dequeue();
+                        currProcesses.Add(process); // finally add that process to be processed by rr
+                        if (processes.Count == 0)
+                        {
+                            break;
+                        }
+                    } while (counter >= processes.Peek().arrivalTime);
                 }
 
                 Console.WriteLine("\t\tBeginning queue #" + queueCounter + " with " + currProcesses.Count + " processes...");
@@ -182,11 +190,11 @@ namespace CPU_Scheduler_Simulation
                         currProcesses.RemoveAt(i);
                         i--;
                     }
-                    calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : quantum;
+                    calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
                     counter += calcTimeSpentOnProcess;
                 }
-               // Console.WriteLine("\t\tEnding queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
-                //queueCounter++;
+               Console.WriteLine("\t\tEnding queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
+               queueCounter++;
            
             } while (processes.Count != 0);
 
