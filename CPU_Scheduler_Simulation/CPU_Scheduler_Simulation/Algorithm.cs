@@ -137,18 +137,23 @@ namespace CPU_Scheduler_Simulation
 
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
-            List<PCB> nonEmptyProcesses = new List<PCB>();
-            Queue<PCB> currProcesses = new Queue<PCB>();
-            int index = 0;
+            List<PCB> nonEmptyProcesses = new List<PCB>(); // this will be the list that we return in the end.
+            Queue<PCB> currProcesses = new Queue<PCB>(); // the processes we will be processing in RR
+                                                        // (processes from "processes" will be pushed on once they reach their arrival time)
 
-            //do // assuming the processes in the queue are ordered by arrival time...
-            //{
-            //    counter += contextSwitchCost; // context switch time
-            //    while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
-            //    {
-            //        counter++;
-            //    }
-            //    currProcesses.Enqueue(process);
+            do // assuming the processes in the queue are ordered by arrival time...
+            {
+                counter += contextSwitchCost; // context switch time
+                if (currProcesses.Count == 0) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
+                {
+                    while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
+                    {
+                        counter++;
+                    }
+                    currProcesses.Enqueue(process); // finally add that process
+                }
+                
+
                 
             //    //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
             //    counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
@@ -160,7 +165,7 @@ namespace CPU_Scheduler_Simulation
             //    {
             //        finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
             //    }
-            //} while (processes.Count != 0);
+            } while (processes.Count != 0);
 
             return null; 
         }
