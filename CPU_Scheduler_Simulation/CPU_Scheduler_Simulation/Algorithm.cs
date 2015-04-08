@@ -52,8 +52,7 @@ namespace CPU_Scheduler_Simulation
                 }
                 process = processes.Dequeue();
                 int service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
-                //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
-                counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
+                counter += service;
                 if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
                 {
                     nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
