@@ -137,7 +137,6 @@ namespace CPU_Scheduler_Simulation
 
             Console.WriteLine("--BEGIN FIRST COME FIRST SERVE");
             Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
-            Console.WriteLine("\tCurrent burst processing: " + ((CPUburst) ? "CPU" : "I/O"));
 
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
