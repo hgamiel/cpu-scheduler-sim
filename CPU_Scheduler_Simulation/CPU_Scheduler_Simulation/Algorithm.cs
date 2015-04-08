@@ -146,13 +146,14 @@ namespace CPU_Scheduler_Simulation
 
             int serveTimeLeftOnProcess;
             int calcTimeSpentOnProcess;
+            int calcRunningTimeOnProcesses;
             int beginAmount = processes.Count;
 
             do // assuming the processes in the queue are ordered by arrival time...
             {
-                counter += contextSwitchCost; // context switch time
                 if (currProcesses.Count == 0 || processes.Peek().arrivalTime > counter) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
                 {
+                    counter += contextSwitchCost; // context switch time
                     while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                     {
                         counter++;
@@ -165,7 +166,7 @@ namespace CPU_Scheduler_Simulation
                 for(int i = 0; i < currProcesses.Count; i++) {
                     counter += contextSwitchCost;
                     serveTimeLeftOnProcess = currProcesses[i].serviceTime;
-                    currProcesses[i].serviceTime = ((quantum - serveTimeLeftOnProcess) > 0) ? quantum - serveTimeLeftOnProcess : 0;
+                    currProcesses[i].serviceTime = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : 0;
                     if (currProcesses[i].serviceTime == 0)
                     {
                         if ((currProcesses[i].IO.Count > 0) || (currProcesses[i].CPU.Count > 0)) // if we still have IO or CPU bursts to process...
@@ -179,11 +180,13 @@ namespace CPU_Scheduler_Simulation
                         currProcesses.RemoveAt(i);
                         i--;
                     }
-                    calcTimeSpentOnProcess = ((quantum - serveTimeLeftOnProcess) > 0) ? quantum : serveTimeLeftOnProcess;
+                    calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : quantum;
                     counter += calcTimeSpentOnProcess;
                 } 
            
             } while (processes.Count != 0);
+
+            timeCounter += counter;
 
             Console.WriteLine("\tTime spent in this round of RR: " + counter);
             Console.WriteLine("\tNumber of processes serviced: " + (beginAmount - nonEmptyProcesses.Count));

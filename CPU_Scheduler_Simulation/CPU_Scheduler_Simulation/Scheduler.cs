@@ -62,7 +62,7 @@ namespace CPU_Scheduler_Simulation
                         //case 1: nonEmptyProcesses = currCPU.algorithms.spn(currCPU.waitingCPU); break; // uncomment when done
                         //case 2: nonEmptyProcesses = currCPU.algorithms.srt(currCPU.waitingCPU); break; // uncomment when done
                         //case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
-                        //case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, quantum); break; // uncomment when done
+                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 20); break; // uncomment when done
                         //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
                         //case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break; // uncomment when done
                         //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break; // uncomment when done
