@@ -154,8 +154,6 @@ namespace CPU_Scheduler_Simulation
             {
                 if (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
                 {
-                    //counter += contextSwitchCost; // context switch time
-                    
                     while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                     {
                         counter++;
