@@ -135,7 +135,7 @@ namespace CPU_Scheduler_Simulation
             //processes get added to queue when the arrive
             //alternate processes
 
-            Console.WriteLine("--BEGIN FIRST COME FIRST SERVE");
+            Console.WriteLine("--BEGIN ROUND ROBIN");
             Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
 
             int counter = 0;    //'timer' since we are modeling as discrete events
@@ -147,14 +147,16 @@ namespace CPU_Scheduler_Simulation
             do // assuming the processes in the queue are ordered by arrival time...
             {
                 counter += contextSwitchCost; // context switch time
-                if (currProcesses.Count == 0) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
+                if (currProcesses.Count == 0 || processes.Peek().arrivalTime > counter) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
                 {
                     while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                     {
                         counter++;
                     }
-                    //currProcesses.Enqueue(process); // finally add that process
+                    process = processes.Dequeue(); // take the process off and then...
+                    currProcesses.Enqueue(process); // finally add that process to be processed by rr
                 }
+
 
             //    //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
             //    counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
