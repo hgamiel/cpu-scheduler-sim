@@ -141,7 +141,7 @@ namespace CPU_Scheduler_Simulation
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
             List<PCB> nonEmptyProcesses = new List<PCB>(); // this will be the list that we return in the end.
-            Queue<PCB> currProcesses = new Queue<PCB>(); // the processes we will be processing in RR
+            List<PCB> currProcesses = new List<PCB>(); // the processes we will be processing in RR
                                                         // (processes from "processes" will be pushed on once they reach their arrival time)
 
             do // assuming the processes in the queue are ordered by arrival time...
@@ -154,10 +154,21 @@ namespace CPU_Scheduler_Simulation
                         counter++;
                     }
                     process = processes.Dequeue(); // take the process off and then...
-                    currProcesses.Enqueue(process); // finally add that process to be processed by rr
+                    process.serviceTime = process.CPU.Dequeue();
+                    currProcesses.Add(process); // finally add that process to be processed by rr
                 }
-
-
+                
+                for(int i = 0; i < currProcesses.Count; i++) {
+                    int serveTimeLeft = currProcesses[i].serviceTime;
+                    currProcesses[i].serviceTime = ((quantum - serveTimeLeft) > 0) ? quantum - serveTimeLeft : 0;
+                    if (currProcesses[i].serviceTime == 0)
+                    {
+                        nonEmptyProcesses.Add(currProcesses[i]);
+                        currProcesses.RemoveAt(i);
+                        i--;
+                    }
+                }
+                
             //    //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
             //    counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
             //    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
