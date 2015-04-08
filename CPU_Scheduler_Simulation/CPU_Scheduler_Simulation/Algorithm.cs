@@ -144,6 +144,9 @@ namespace CPU_Scheduler_Simulation
             List<PCB> currProcesses = new List<PCB>(); // the processes we will be processing in RR
                                                         // (processes from "processes" will be pushed on once they reach their arrival time)
 
+            int serveTimeLeftOnProcess;
+            int calcTimeSpentOnProcess;
+
             do // assuming the processes in the queue are ordered by arrival time...
             {
                 counter += contextSwitchCost; // context switch time
@@ -157,31 +160,31 @@ namespace CPU_Scheduler_Simulation
                     process.serviceTime = process.CPU.Dequeue();
                     currProcesses.Add(process); // finally add that process to be processed by rr
                 }
-                
+
                 for(int i = 0; i < currProcesses.Count; i++) {
-                    int serveTimeLeft = currProcesses[i].serviceTime;
-                    currProcesses[i].serviceTime = ((quantum - serveTimeLeft) > 0) ? quantum - serveTimeLeft : 0;
+                    counter += contextSwitchCost;
+                    serveTimeLeftOnProcess = currProcesses[i].serviceTime;
+                    currProcesses[i].serviceTime = ((quantum - serveTimeLeftOnProcess) > 0) ? quantum - serveTimeLeftOnProcess : 0;
                     if (currProcesses[i].serviceTime == 0)
                     {
-                        nonEmptyProcesses.Add(currProcesses[i]);
+                        if ((currProcesses[i].IO.Count > 0) || (currProcesses[i].CPU.Count > 0)) // if we still have IO or CPU bursts to process...
+                        {
+                            nonEmptyProcesses.Add(currProcesses[i]); // add it to the process list that still needs to further processed
+                        }
+                        else
+                        {
+                            finishedProcesses.Add(currProcesses[i]); // add it to the list of "finished" processes (processes that don't have any more bursts)
+                        }
                         currProcesses.RemoveAt(i);
                         i--;
                     }
-                }
-                
-            //    //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
-            //    counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
-            //    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
-            //    {
-            //        nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
-            //    }
-            //    else
-            //    {
-            //        finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
-            //    }
+                    calcTimeSpentOnProcess = ((quantum - serveTimeLeftOnProcess) > 0) ? quantum : serveTimeLeftOnProcess;
+                    counter += calcTimeSpentOnProcess;
+                } 
+           
             } while (processes.Count != 0);
 
-            return null; 
+            return nonEmptyProcesses; 
         }
 
         //priority algorithm - Brady
