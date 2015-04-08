@@ -79,6 +79,37 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> spn(Queue<PCB> processes)
         { 
             //after a process has completed, observe all processes that have arrived and use shortest service time
+            // first  check  list and see the arrival time of process 
+            // if there a time that arrived at 0 compute that time
+            // this is non preeptive so once process is picked it has to be finished
+            //when the first process finishes check process with shortest service time then compute that until  the queue is compute
+            Console.WriteLine("--Begin Shortest Process Next");
+            int counterVar = 0;
+            List<PCB> filledProcessList = new List<PCB>();
+            PCB process = new PCB();
+            int intialNum = sample.Count;
+            do 
+            { 
+                contextSwitchCost+=counterVar;
+                while (counterVar < sample.Peek().arrivalTime)
+                {
+                    counterVar++;
+                }
+                process = sample.Dequeue();
+                if(process.serviceTime ==0)
+                {
+                    finishedProcesses.Add(process);
+                    break;
+                }
+                else if (process.serviceTime != 0) 
+                {
+                    /// will look and find shortest burst time
+                    var lowest = (from c in sample
+                                  where c.serviceTime == sample.Min(i => i.serviceTime)
+                                  select c).FirstOrDefault();
+                    finishedProcesses.Add(process);
+                }
+            } while (processes.Count != 0);
             return null; 
         }
 
