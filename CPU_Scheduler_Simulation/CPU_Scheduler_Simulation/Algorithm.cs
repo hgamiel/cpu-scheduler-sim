@@ -135,6 +135,10 @@ namespace CPU_Scheduler_Simulation
             //processes get added to queue when the arrive
             //alternate processes
 
+            Console.WriteLine("--BEGIN FIRST COME FIRST SERVE");
+            Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
+            Console.WriteLine("\tCurrent burst processing: " + ((CPUburst) ? "CPU" : "I/O"));
+
             int counter = 0;    //'timer' since we are modeling as discrete events
             PCB process = new PCB();    //temporary holder
             List<PCB> nonEmptyProcesses = new List<PCB>(); // this will be the list that we return in the end.
@@ -150,11 +154,9 @@ namespace CPU_Scheduler_Simulation
                     {
                         counter++;
                     }
-                    currProcesses.Enqueue(process); // finally add that process
+                    //currProcesses.Enqueue(process); // finally add that process
                 }
-                
 
-                
             //    //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
             //    counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
             //    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
