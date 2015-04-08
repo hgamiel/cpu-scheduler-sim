@@ -148,6 +148,7 @@ namespace CPU_Scheduler_Simulation
             int calcTimeSpentOnProcess;
             int calcRunningTimeOnProcesses;
             int beginAmount = processes.Count;
+            int queueCounter = 1;
 
             do // assuming the processes in the queue are ordered by arrival time...
             {
@@ -163,6 +164,7 @@ namespace CPU_Scheduler_Simulation
                     currProcesses.Add(process); // finally add that process to be processed by rr
                 }
 
+                Console.WriteLine("\t\tBeginning queue #" + queueCounter + " with " + currProcesses.Count + " processes...");
                 for(int i = 0; i < currProcesses.Count; i++) {
                     counter += contextSwitchCost;
                     serveTimeLeftOnProcess = currProcesses[i].serviceTime;
@@ -182,7 +184,9 @@ namespace CPU_Scheduler_Simulation
                     }
                     calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : quantum;
                     counter += calcTimeSpentOnProcess;
-                } 
+                }
+               // Console.WriteLine("\t\tEnding queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
+                //queueCounter++;
            
             } while (processes.Count != 0);
 
