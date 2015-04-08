@@ -146,6 +146,7 @@ namespace CPU_Scheduler_Simulation
 
             int serveTimeLeftOnProcess;
             int calcTimeSpentOnProcess;
+            int beginAmount = processes.Count;
 
             do // assuming the processes in the queue are ordered by arrival time...
             {
@@ -183,6 +184,12 @@ namespace CPU_Scheduler_Simulation
                 } 
            
             } while (processes.Count != 0);
+
+            Console.WriteLine("\tTime spent in this round of RR: " + counter);
+            Console.WriteLine("\tNumber of processes serviced: " + (beginAmount - nonEmptyProcesses.Count));
+            Console.WriteLine("\tAmount of processes left in RR: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
+            Console.WriteLine("--END FIRST COME FIRST SERVE\n");
 
             return nonEmptyProcesses; 
         }
