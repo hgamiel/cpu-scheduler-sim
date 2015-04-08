@@ -45,6 +45,7 @@ namespace CPU_Scheduler_Simulation
             runCPU(cpu1);
             Console.WriteLine("~~~~ ON CPU 2 ~~~~");
             runCPU(cpu2);
+            
         }
 
         public void runCPU(CPU currCPU)
@@ -54,7 +55,7 @@ namespace CPU_Scheduler_Simulation
             List<PCB> nonEmptyProcesses = new List<PCB>(); // TEST
             do
             {
-                if (CPUburst) // if it's time to process the CPU bursts of processes
+                if (CPUburst && currCPU.waitingCPU.Count != 0) // if it's time to process the CPU bursts of processes
                 {
                     switch (switchAlg)
                     {
@@ -76,12 +77,14 @@ namespace CPU_Scheduler_Simulation
                     }
                     switchAlg = (switchAlg + 1) % 8;
                 }
-                else // if it's time to process the IO bursts of processes
+                else// if it's time to process the IO bursts of processes
                 {
-                    nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingIO, CPUburst); // will always run FCFS in IO burst
-                    for (int i = 0; i < nonEmptyProcesses.Count; i++)
-                    {
-                        currCPU.waitingCPU.Enqueue(nonEmptyProcesses[i]);
+                    if(currCPU.waitingIO.Count != 0) {
+                         nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingIO, CPUburst); // will always run FCFS in IO burst
+                        for (int i = 0; i < nonEmptyProcesses.Count; i++)
+                        {
+                            currCPU.waitingCPU.Enqueue(nonEmptyProcesses[i]);
+                        }
                     }
                 }
                 CPUburst = !CPUburst;

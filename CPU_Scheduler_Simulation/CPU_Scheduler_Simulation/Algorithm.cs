@@ -67,7 +67,8 @@ namespace CPU_Scheduler_Simulation
 
             Console.WriteLine("\tTime spent in this round of FCFS: " + counter);
             Console.WriteLine("\tNumber of processes serviced: " + (beginAmount - nonEmptyProcesses.Count));
-            Console.WriteLine("\tAmount of processes left in FCFS: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tAmount of processes left to process: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
             Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
             Console.WriteLine("--END FIRST COME FIRST SERVE\n");
 
@@ -152,7 +153,7 @@ namespace CPU_Scheduler_Simulation
 
             do // assuming the processes in the queue are ordered by arrival time...
             {
-                if (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
+                if (processes.Count != 0 && (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter)) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
                 {
                     while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                     {
@@ -194,13 +195,14 @@ namespace CPU_Scheduler_Simulation
                Console.WriteLine("\t\tEnding queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
                queueCounter++;
            
-            } while (processes.Count != 0);
+            } while (currProcesses.Count != 0);
 
             timeCounter += counter;
 
             Console.WriteLine("\tTime spent in this round of RR: " + counter);
             Console.WriteLine("\tNumber of processes serviced: " + (beginAmount - nonEmptyProcesses.Count));
-            Console.WriteLine("\tAmount of processes left in RR: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tAmount of processes left to process: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
             Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
             Console.WriteLine("--END FIRST COME FIRST SERVE\n");
 
