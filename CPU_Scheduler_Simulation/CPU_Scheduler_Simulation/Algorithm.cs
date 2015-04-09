@@ -11,7 +11,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
         public int timeCounter = 0;
         public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
-        bool debugStatements = false;
+        bool debugStatements = true;
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
@@ -149,7 +149,7 @@ namespace CPU_Scheduler_Simulation
 
             do // assuming the processes in the queue are ordered by arrival time...
             {
-                if (processes.Count != 0 && (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter)) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
+                if (processes.Count != 0 && (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter))  // if no processes have arrived yet... (or we're done processing the ones with short bursts)
                 {
                     while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
                     {
@@ -174,7 +174,7 @@ namespace CPU_Scheduler_Simulation
                     currProcesses[i].serviceTime = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : 0;
                     if (currProcesses[i].serviceTime == 0)
                     {
-                        if ((currProcesses[i].IO.Count > 0) || (currProcesses[i].CPU.Count > 0)) // if we still have IO or CPU bursts to process...
+                        if (currProcesses[i].IO.Count > 0) // if we still have IO or CPU bursts to process...
                         {
                             nonEmptyProcesses.Add(currProcesses[i]); // add it to the process list that still needs to further processed
                         }
@@ -191,7 +191,7 @@ namespace CPU_Scheduler_Simulation
                if(debugStatements) Console.WriteLine("\t\tEnding queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
                queueCounter++;
            
-            } while (currProcesses.Count != 0);
+            } while ((processes.Count != 0 && currProcesses.Count == 0) || (processes.Count == 0 && currProcesses.Count != 0) || (processes.Count != 0 && currProcesses.Count != 0));
 
             timeCounter += counter;
 

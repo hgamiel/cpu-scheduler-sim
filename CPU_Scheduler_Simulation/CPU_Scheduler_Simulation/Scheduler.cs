@@ -41,10 +41,12 @@ namespace CPU_Scheduler_Simulation
 
         public void runCPUs()
         {
-            Console.WriteLine("~~~~ ON CPU 1 ~~~~");
+            Console.WriteLine("~~~~ BEGIN CPU 1 ~~~~");
             runCPU(cpu1);
-            Console.WriteLine("~~~~ ON CPU 2 ~~~~");
+            Console.WriteLine("~~~~ END CPU 1 ~~~~\n");
+            Console.WriteLine("~~~~ BEGIN CPU 2 ~~~~");
             runCPU(cpu2);
+            Console.WriteLine("~~~~ END CPU 1 ~~~~\n");
         }
 
         public void runCPU(CPU currCPU)
