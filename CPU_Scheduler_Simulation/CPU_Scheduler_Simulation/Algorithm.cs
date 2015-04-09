@@ -38,33 +38,33 @@ namespace CPU_Scheduler_Simulation
             Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
             Console.WriteLine("\tCurrent burst processing: " + ((CPUburst) ? "CPU" : "I/O"));
 
-            int counter = 0;    //'timer' since we are modeling as discrete events
-            PCB process = new PCB();    //temporary holder
+            int counter = 0;
+            int beginAmount = processes.Count;
+            int service;
+            PCB process = new PCB();
             List<PCB> nonEmptyProcesses = new List<PCB>();
 
-            int beginAmount = processes.Count;
-
-            do // assuming the processes in the queue are ordered by arrival time...
+            do
             {
-                counter += contextSwitchCost; // context switch time
-                while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
+                counter += contextSwitchCost;
+                while (counter < processes.Peek().arrivalTime)
                 {
                     counter++;
                 }
                 process = processes.Dequeue();
-                int service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
+                service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
                 counter += service;
-                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
+                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
                 {
-                    nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
+                    nonEmptyProcesses.Add(process);
                 }
                 else
                 {
-                    finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
+                    finishedProcesses.Add(process);
                 }
             } while (processes.Count != 0);
 
-            timeCounter += counter; // update our total time spent in algorithms
+            timeCounter += counter;
 
             Console.WriteLine("\tTime spent in this round of FCFS: " + counter);
             Console.WriteLine("\tNumber of processes finished this round: " + (beginAmount - nonEmptyProcesses.Count));
@@ -91,7 +91,7 @@ namespace CPU_Scheduler_Simulation
             int intialNum = sample.Count;
             do 
             { 
-                contextSwitchCost+=counterVar;
+                contextSwitchCost+=counterVar; // this should probably be counterVar += contextSwitchCost. - Hannah
                 while (counterVar < sample.Peek().arrivalTime)
                 {
                     counterVar++;
@@ -137,29 +137,28 @@ namespace CPU_Scheduler_Simulation
             Console.WriteLine("--Quantum: " + quantum);
             Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
 
-            int counter = 0;    //'timer' since we are modeling as discrete events
-            PCB process = new PCB();    //temporary holder
-            List<PCB> nonEmptyProcesses = new List<PCB>(); // this will be the list that we return in the end.
-            List<PCB> currProcesses = new List<PCB>(); // the processes we will be processing in RR
-                                                        // (processes from "processes" will be pushed on once they reach their arrival time)
+            int counter = 0;
             int serveTimeLeftOnProcess;
             int calcTimeSpentOnProcess;
             int beginAmount = processes.Count;
             int queueCounter = 1;
+            PCB process = new PCB();
+            List<PCB> nonEmptyProcesses = new List<PCB>();
+            List<PCB> currProcesses = new List<PCB>();
 
-            do // assuming the processes in the queue are ordered by arrival time...
+            do
             {
-                if (processes.Count != 0 && (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter))  // if no processes have arrived yet... (or we're done processing the ones with short bursts)
+                if (processes.Count != 0 && (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter))
                 {
-                    while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
+                    while (counter < processes.Peek().arrivalTime)
                     {
                         counter++;
                     }
                     do
                     {
-                        process = processes.Dequeue(); // take the process off and then...
+                        process = processes.Dequeue();
                         process.serviceTime = process.CPU.Dequeue();
-                        currProcesses.Add(process); // finally add that process to be processed by rr
+                        currProcesses.Add(process);
                         if (processes.Count == 0)
                         {
                             break;
@@ -174,13 +173,13 @@ namespace CPU_Scheduler_Simulation
                     currProcesses[i].serviceTime = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : 0;
                     if (currProcesses[i].serviceTime == 0)
                     {
-                        if (currProcesses[i].IO.Count > 0) // if we still have IO or CPU bursts to process...
+                        if (currProcesses[i].IO.Count > 0)
                         {
-                            nonEmptyProcesses.Add(currProcesses[i]); // add it to the process list that still needs to further processed
+                            nonEmptyProcesses.Add(currProcesses[i]);
                         }
                         else
                         {
-                            finishedProcesses.Add(currProcesses[i]); // add it to the list of "finished" processes (processes that don't have any more bursts)
+                            finishedProcesses.Add(currProcesses[i]);
                         }
                         currProcesses.RemoveAt(i);
                         i--;
@@ -188,7 +187,7 @@ namespace CPU_Scheduler_Simulation
                     calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
                     counter += calcTimeSpentOnProcess;
                 }
-               if(debugStatements) Console.WriteLine("\t\tEnding queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
+               if(debugStatements) Console.WriteLine("\t\t   Ending queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
                queueCounter++;
            
             } while ((processes.Count != 0 && currProcesses.Count == 0) || (processes.Count == 0 && currProcesses.Count != 0) || (processes.Count != 0 && currProcesses.Count != 0));
