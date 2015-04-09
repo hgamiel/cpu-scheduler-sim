@@ -55,6 +55,7 @@ namespace CPU_Scheduler_Simulation
             List<PCB> nonEmptyProcesses = new List<PCB>(); // TEST
             do
             {
+                nonEmptyProcesses = nonEmptyProcesses.OrderBy(p => p.arrivalTime).ToList();
                 if (CPUburst && currCPU.waitingCPU.Count != 0) // if it's time to process the CPU bursts of processes
                 {
                     switch (switchAlg)
@@ -63,7 +64,8 @@ namespace CPU_Scheduler_Simulation
                         //case 1: nonEmptyProcesses = currCPU.algorithms.spn(currCPU.waitingCPU); break; // uncomment when done
                         //case 2: nonEmptyProcesses = currCPU.algorithms.srt(currCPU.waitingCPU); break; // uncomment when done
                         //case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
-                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 20); break; // uncomment when done
+                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 20); break;
+                        case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 40); break;
                         //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
                         //case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break; // uncomment when done
                         //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break; // uncomment when done

@@ -66,8 +66,8 @@ namespace CPU_Scheduler_Simulation
             timeCounter += counter; // update our total time spent in algorithms
 
             Console.WriteLine("\tTime spent in this round of FCFS: " + counter);
-            Console.WriteLine("\tNumber of processes serviced: " + (beginAmount - nonEmptyProcesses.Count));
-            Console.WriteLine("\tAmount of processes left to process: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tNumber of processes finished this round: " + (beginAmount - nonEmptyProcesses.Count));
+            Console.WriteLine("\tAmount of processes left to finish/process: " + nonEmptyProcesses.Count);
             Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
             Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
             Console.WriteLine("--END FIRST COME FIRST SERVE\n");
@@ -131,12 +131,9 @@ namespace CPU_Scheduler_Simulation
         //round robin algorithm - Hannah
         public List<PCB> rr(Queue<PCB> processes, int quantum)
         { 
-            //create an empty queue
-            //as quantums deplete the service time, match with arrival time
-            //processes get added to queue when the arrive
-            //alternate processes
 
             Console.WriteLine("--BEGIN ROUND ROBIN");
+            Console.WriteLine("--Quantum: " + quantum);
             Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
 
             int counter = 0;    //'timer' since we are modeling as discrete events
@@ -144,10 +141,8 @@ namespace CPU_Scheduler_Simulation
             List<PCB> nonEmptyProcesses = new List<PCB>(); // this will be the list that we return in the end.
             List<PCB> currProcesses = new List<PCB>(); // the processes we will be processing in RR
                                                         // (processes from "processes" will be pushed on once they reach their arrival time)
-
             int serveTimeLeftOnProcess;
             int calcTimeSpentOnProcess;
-            int calcRunningTimeOnProcesses;
             int beginAmount = processes.Count;
             int queueCounter = 1;
 
@@ -200,8 +195,8 @@ namespace CPU_Scheduler_Simulation
             timeCounter += counter;
 
             Console.WriteLine("\tTime spent in this round of RR: " + counter);
-            Console.WriteLine("\tNumber of processes serviced: " + (beginAmount - nonEmptyProcesses.Count));
-            Console.WriteLine("\tAmount of processes left to process: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tNumber of processes finished this round: " + (beginAmount - nonEmptyProcesses.Count));
+            Console.WriteLine("\tAmount of processes left to process/finish: " + nonEmptyProcesses.Count);
             Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
             Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
             Console.WriteLine("--END FIRST COME FIRST SERVE\n");
