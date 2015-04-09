@@ -81,7 +81,10 @@ namespace CPU_Scheduler_Simulation
 
         //ends the simulation
         public void endSim() {
-            Console.WriteLine("Simulation complete.");
+            Console.WriteLine("Simulation complete.\n");
+            Console.WriteLine("Total time spent in CPU #1: " + SimScheduler.cpu1.algorithms.timeCounter);
+            Console.WriteLine("Total time spent in CPU #2: " + SimScheduler.cpu2.algorithms.timeCounter);
+            Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Total time spent across both CPUs: " + SimScheduler.calcTotalTime());
             Console.ReadKey();
         }               
