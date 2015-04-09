@@ -45,7 +45,6 @@ namespace CPU_Scheduler_Simulation
             runCPU(cpu1);
             Console.WriteLine("~~~~ ON CPU 2 ~~~~");
             runCPU(cpu2);
-            
         }
 
         public void runCPU(CPU currCPU)
@@ -58,6 +57,7 @@ namespace CPU_Scheduler_Simulation
                 nonEmptyProcesses = nonEmptyProcesses.OrderBy(p => p.arrivalTime).ToList();
                 if (CPUburst && currCPU.waitingCPU.Count != 0) // if it's time to process the CPU bursts of processes
                 {
+                    Console.WriteLine("~IN CPU BURST");
                     switch (switchAlg)
                     {
                         case 0: nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingCPU, CPUburst); break;
@@ -69,28 +69,27 @@ namespace CPU_Scheduler_Simulation
                         //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
                         //case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break; // uncomment when done
                         //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break; // uncomment when done
-                        default: Console.WriteLine("Algorithm " + switchAlg + " does not exist (yet); Skipping algorithm...\n");
-                                    switchAlg = (switchAlg + 1) % 8;
+                        default: Console.WriteLine("Algorithm at index " + switchAlg + " does not exist (yet); Skipping algorithm...\n");
+                                    switchAlg = (switchAlg + 1) % 9;
                                     continue; // will ignore rest of do/while and go through again with updated value for switch statement
                     }
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                     {
                         currCPU.waitingIO.Enqueue(nonEmptyProcesses[i]);
                     }
-                    switchAlg = (switchAlg + 1) % 8;
+                    switchAlg = (switchAlg + 1) % 9;
                 }
-                else// if it's time to process the IO bursts of processes
+                else if (currCPU.waitingIO.Count != 0)// if it's time to process the IO bursts of processes
                 {
-                    if(currCPU.waitingIO.Count != 0) {
-                         nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingIO, CPUburst); // will always run FCFS in IO burst
-                        for (int i = 0; i < nonEmptyProcesses.Count; i++)
-                        {
+                    Console.WriteLine("~IN I/O BURST");
+                    nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingIO, CPUburst); // will always run FCFS in IO burst
+                    for (int i = 0; i < nonEmptyProcesses.Count; i++)
+                    {
                             currCPU.waitingCPU.Enqueue(nonEmptyProcesses[i]);
-                        }
                     }
                 }
                 CPUburst = !CPUburst;
-            } while (currCPU.waitingIO.Count != 0 || currCPU.waitingCPU.Count != 0);
+            } while ((currCPU.waitingIO.Count != 0 && !CPUburst) || (currCPU.waitingCPU.Count != 0 && CPUburst));
         }
     }
 }

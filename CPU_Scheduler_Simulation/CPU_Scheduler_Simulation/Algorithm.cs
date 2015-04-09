@@ -11,6 +11,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
         public int timeCounter = 0;
         public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
+        bool debugStatements = false;
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
@@ -30,7 +31,7 @@ namespace CPU_Scheduler_Simulation
 
         //TODO: beingAlgorithms(); 
 
-        //first-come-first-serve algorithm - Hannh
+        //first-come-first-serve algorithm - Hannah
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
             Console.WriteLine("--BEGIN FIRST COME FIRST SERVE");
@@ -166,7 +167,7 @@ namespace CPU_Scheduler_Simulation
                     } while (counter >= processes.Peek().arrivalTime);
                 }
 
-                Console.WriteLine("\t\tBeginning queue #" + queueCounter + " with " + currProcesses.Count + " processes...");
+                if(debugStatements) Console.WriteLine("\t\tBeginning queue #" + queueCounter + " with " + currProcesses.Count + " processes...");
                 for(int i = 0; i < currProcesses.Count; i++) {
                     counter += contextSwitchCost;
                     serveTimeLeftOnProcess = currProcesses[i].serviceTime;
@@ -187,7 +188,7 @@ namespace CPU_Scheduler_Simulation
                     calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
                     counter += calcTimeSpentOnProcess;
                 }
-               Console.WriteLine("\t\tEnding queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
+               if(debugStatements) Console.WriteLine("\t\tEnding queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
                queueCounter++;
            
             } while (currProcesses.Count != 0);
