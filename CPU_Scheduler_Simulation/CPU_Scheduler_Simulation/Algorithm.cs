@@ -157,7 +157,19 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> srt(Queue<PCB> processes)
         {
             //as processes arrive, compute service time
-            //after computing, observe all processes that have arrived and use the one with the shortest service time
+            Console.WriteLine("====START OF SRTF====");
+            Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
+            int counter = 0;
+            List<PCB> myList = new List<PCB>(processes);
+            PCB process = new PCB();
+            do
+            {
+                //computing service time
+                //after computing, observe all processes that have arrived and use the one with the shortest service time
+            } while (myList.Count != 0);
+
+
+            Console.WriteLine("====END OF SRTF====");
             return null;
         }
 
