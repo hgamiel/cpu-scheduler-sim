@@ -79,39 +79,37 @@ namespace CPU_Scheduler_Simulation
         //shortest-process-next algorithm - Wilo
         public List<PCB> spn(Queue<PCB> processes)
         { 
-            //after a process has completed, observe all processes that have arrived and use shortest service time
-            // first  check  list and see the arrival time of process 
-            // if there a time that arrived at 0 compute that time
-            // this is non preeptive so once process is picked it has to be finished
-            //when the first process finishes check process with shortest service time then compute that until  the queue is compute
+            
             Console.WriteLine("--Begin Shortest Process Next");
             int counterVar = 0;
-            List<PCB> filledProcessList = new List<PCB>();
+            List<PCB> tempList = new List<PCB>();
             PCB process = new PCB();
-            int intialNum = sample.Count;
-            do 
-            { 
-                contextSwitchCost+=counterVar; // this should probably be counterVar += contextSwitchCost. - Hannah
-                while (counterVar < sample.Peek().arrivalTime)
-                {
-                    counterVar++;
+            while(processes.Count != 0) {
+                for (int i = 0; i < processes.Count; i++) {
+                    if (processes.ElementAt(i).arrivalTime <= counterVar)
+                        tempList.Add(processes.Dequeue());
                 }
-                process = sample.Dequeue();
-                if(process.serviceTime ==0)
+
+                process = tempList[0];
+                var k = 0;
+                for (int i = 1; i< tempList.Count; i++ )
                 {
-                    finishedProcesses.Add(process);
-                    break;
+                    if (tempList[i].serviceTime < process.serviceTime)
+                    {
+                        process = tempList[i];
+                        k = i;
+                    }
                 }
-                else if (process.serviceTime != 0) 
-                {
-                    /// will look and find shortest burst time
-                    var lowest = (from c in sample
-                                  where c.serviceTime == sample.Min(i => i.serviceTime)
-                                  select c).FirstOrDefault();
-                    finishedProcesses.Add(process);
-                }
-            } while (processes.Count != 0);
-            return null; 
+                tempList.RemoveAt(k);
+                counterVar += process.serviceTime;
+                process.serviceTime -= process.serviceTime;
+                for (int i = 0; i < tempList.Count; i++)
+                    processes.Enqueue(tempList[i]);
+                tempList.Clear();
+                Console.WriteLine("Process " + process.name + " has finished");
+                
+            }
+            return tempList;
         }
 
         //shortest-remaining-time algorithm - Brady
@@ -124,7 +122,11 @@ namespace CPU_Scheduler_Simulation
 
         //highest-response-ratio-next algorithm - Wilo
         public List<PCB> hrrn(Queue<PCB> processes)
-        { 
+        {
+
+            int counter = 0;
+            bool finish = false;
+
             //ration = (wait time + service time) / service time
             return null; 
         }
