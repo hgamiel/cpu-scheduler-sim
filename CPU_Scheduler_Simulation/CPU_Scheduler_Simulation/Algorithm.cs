@@ -360,7 +360,8 @@ namespace CPU_Scheduler_Simulation
             while (counter != processes.Peek().arrivalTime)
             {
                 counter++;
-                if(debugStatements)Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter);
+                //if(debugStatements)
+                    Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter);
             }
             //assuming first process will not finish before next process comes in - not realistic of a CPU
             rq[++startIndex].Enqueue(process);
@@ -397,7 +398,8 @@ namespace CPU_Scheduler_Simulation
                 //this happens in one unit of time
                 counter++;
                 //the process serves a certain amount of time
-                if(debugStatements)Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
+                //if(debugStatements)
+                    Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
                 if (process.serviceTime == 0)
                 {
                     localFinishedProcesses++;
@@ -419,7 +421,8 @@ namespace CPU_Scheduler_Simulation
                         finished = true;
                         timeCounter += counter;
                     }
-                    if(debugStatements)Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
+                    //if(debugStatements)
+                        Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
 
                     continue;
                 }
