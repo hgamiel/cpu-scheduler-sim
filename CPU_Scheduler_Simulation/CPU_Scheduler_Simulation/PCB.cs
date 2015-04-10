@@ -14,8 +14,10 @@ namespace CPU_Scheduler_Simulation
         public int beginServiceTime;    //temp to hold initial service time needed for current CPU burst
         public int priorityNumber;      //lowest interger -> higher priority
         public int arrivalTime;         //when processes arrive
+        public int start;
+        public int stop;
         public double turnaroundTime;   //executionTime - arrivalTime
-        public double waitTime;         //time process must wait during it execution - accumulated
+        public double waitTime;         //time process must wait during its execution - accumulated
         public double responseTime;     //time from submission until first CPU allocation
         public double executionTime;    //time of completion
         public List<double> tr_ts = new List<double>();            //turnaround time / service time
@@ -26,23 +28,23 @@ namespace CPU_Scheduler_Simulation
         public Queue<int> IO = new Queue<int>(); // queue of IO bursts
 
         public PCB() {
-            lastTimeProcessed = 0;
-            waitTime = 0;
-            responseTime = -1; // this is to avoid checks where startTime could actually start at 0
+            this.lastTimeProcessed = 0;
+            this.waitTime = 0;
+            this.responseTime = -1; // this is to avoid checks where startTime could actually start at 0
         }
 
         public void determineTurnaroundTime() {
-            turnaroundTime = executionTime - arrivalTime;
+            this.turnaroundTime = executionTime - arrivalTime;
         }
 
         public void determineTRTS(int st)
         {
-            tr_ts.Add(turnaroundTime / st);
+            this.tr_ts.Add(turnaroundTime / st);
         }
 
         public void resetTempCounters () {
-            lastTimeProcessed = 0;
-            beginServiceTime = 0;
+            this.lastTimeProcessed = 0;
+            this.beginServiceTime = 0;
         }
 
         public String serveTime(double q) {
