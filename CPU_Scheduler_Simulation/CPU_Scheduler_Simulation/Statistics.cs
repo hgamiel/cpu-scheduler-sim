@@ -18,11 +18,47 @@ namespace CPU_Scheduler_Simulation
         public void runStatistics()
         {
             Console.WriteLine("Avg response time: " + determineAverageResponseTime());
+            Console.WriteLine("\tMin response time: " + determineMinResponseTime());
+            Console.WriteLine("\tMin response time: " + determineMaxResponseTime());
             Console.WriteLine("Avg wait time: " + determineAverageWaitTime());
-            Console.WriteLine("Avg turnaround: " + determineAverageTurnaround());
+            Console.WriteLine("\tMin wait time: " + determineMinWaitTime());
+            Console.WriteLine("\tMax wait time: " + determineMaxWaitTime());
+            Console.WriteLine("Avg turnaround time: " + determineAverageTurnaroundTime());
+            Console.WriteLine("\tMin turnaround time: " + determineMinTurnaroundTime());
+            Console.WriteLine("\tMax turnaround time: " + determineMaxTurnaroundTime());
+            Console.WriteLine("Avg execution time: " + determineAverageExecutionTime());
+            Console.WriteLine("\tMin execution time: " + determineMinExecutionTime());
+            Console.WriteLine("\tMax execution time: " + determineMaxExecutionTime());
             Console.WriteLine("Avg trts: " + determineAverageTRTS());
-            Console.WriteLine("Min wait time: " + determineMinWaitTime());
-            Console.WriteLine("Max wait time: " + determineMaxWaitTime());
+            
+        }
+
+        public double determineMinResponseTime()
+        {
+            double min = finishedProcesses[0].responseTime;
+            foreach (var p in finishedProcesses)
+            {
+                if (p.responseTime < min)
+                {
+                    min = p.responseTime;
+                }
+            }
+
+            return min;
+        }
+
+        public double determineMaxResponseTime()
+        {
+            double max = 0;
+            foreach (var p in finishedProcesses)
+            {
+                if (p.responseTime > max)
+                {
+                    max = p.responseTime;
+                }
+            }
+
+            return max;
         }
 
         public double determineMinWaitTime()
@@ -85,7 +121,7 @@ namespace CPU_Scheduler_Simulation
 
         }
 
-        public double determineAverageTurnaround()
+        public double determineAverageTurnaroundTime()
         {
             double sum = 0;
             double average;
@@ -98,6 +134,77 @@ namespace CPU_Scheduler_Simulation
             average = (sum > 0) ? (sum / finishedProcesses.Count) : 0;
 
             return average;
+        }
+
+        public double determineMinTurnaroundTime()
+        {
+            double min = finishedProcesses[0].turnaroundTime;
+            foreach (var p in finishedProcesses)
+            {
+                if (p.turnaroundTime < min)
+                {
+                    min = p.turnaroundTime;
+                }
+            }
+
+            return min;
+        }
+
+        public double determineMaxTurnaroundTime()
+        {
+            double max = 0;
+            foreach (var p in finishedProcesses)
+            {
+                if (p.turnaroundTime > max)
+                {
+                    max = p.turnaroundTime;
+                }
+            }
+
+            return max;
+        }
+
+        public double determineAverageExecutionTime()
+        {
+            double sum = 0;
+            double average;
+
+            foreach (var p in finishedProcesses)
+            {
+                sum += p.executionTime;
+            }
+
+            average = (sum > 0) ? (sum / finishedProcesses.Count) : 0;
+
+            return average;
+        }
+
+        public double determineMinExecutionTime()
+        {
+            double min = finishedProcesses[0].executionTime;
+            foreach (var p in finishedProcesses)
+            {
+                if (p.executionTime < min)
+                {
+                    min = p.executionTime;
+                }
+            }
+
+            return min;
+        }
+
+        public double determineMaxExecutionTime()
+        {
+            double max = 0;
+            foreach (var p in finishedProcesses)
+            {
+                if (p.executionTime > max)
+                {
+                    max = p.executionTime;
+                }
+            }
+
+            return max;
         }
 
         public double determineAverageTRTS() {
