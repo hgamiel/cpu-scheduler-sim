@@ -18,15 +18,15 @@ namespace CPU_Scheduler_Simulation
 
         //create some sample data
         public Queue<PCB> sample = new Queue<PCB>
-        (
-            new[]{ 
-                    new PCB(){name = 'A', arrivalTime = 0, serviceTime = 3},
-                    new PCB(){name = 'B', arrivalTime = 2, serviceTime = 6},
-                    new PCB(){name = 'C', arrivalTime = 4, serviceTime = 4},
-                    new PCB(){name = 'D', arrivalTime = 6, serviceTime = 5},
-                    new PCB(){name = 'E', arrivalTime = 8, serviceTime = 2}
+               (
+                   new[]{ 
+                    new PCB(){name = 'A', arrivalTime = 0, serviceTime = 3, priorityNumber = 1},
+                    new PCB(){name = 'B', arrivalTime = 2, serviceTime = 6, priorityNumber = 4},
+                    new PCB(){name = 'C', arrivalTime = 4, serviceTime = 4, priorityNumber = 5},
+                    new PCB(){name = 'D', arrivalTime = 6, serviceTime = 5, priorityNumber = 2},
+                    new PCB(){name = 'E', arrivalTime = 8, serviceTime = 2, priorityNumber = 3}
                 }
-        );
+               );
         public Algorithm() { }
 
         //TODO: beingAlgorithms(); 
@@ -205,14 +205,32 @@ namespace CPU_Scheduler_Simulation
         }
 
         //priority algorithm - Brady
-        public List<PCB> priority(Queue<PCB> processes)
+        public List<PCB> priority(Queue<PCB> processes, bool CPUburst)
         {
+            Console.WriteLine("Number of processes to be serviced: " + processes.Count());
             List<PCB> temp = new List<PCB>(processes);
+            List<PCB> nonEmptyProcesses = new List<PCB>();
+            int counter = 0;
             temp = temp.OrderBy(x => x.priorityNumber).ToList();
-            var test = temp[0];
-            test.serviceTime = test.CPU.Dequeue();
+            for (int i = 0; i < processes.Count(); ++i)
+            {
+                var process = temp[i];
+                process.serviceTime = process.CPU.Dequeue();
+                counter += process.serviceTime;
+                process.serviceTime -= process.serviceTime;
+                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
+                {
+                    nonEmptyProcesses.Add(process);
+                }
+                else
+                {
+                    finishedProcesses.Add(process);
+                }
+            }
+            timeCounter += counter;
+
             //lowest interger priority number has highest priority
-            return null; 
+            return nonEmptyProcesses;
         }
 
         //feedback algorithms if we wish to implement a feedback age solution

@@ -80,13 +80,14 @@ namespace CPU_Scheduler_Simulation
                         //case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
                         case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 20); break;
                         case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 40); break;
-                        //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
+                        case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU, CPUburst); break; // uncomment when done
                         //case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
                         //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break; // uncomment when done
                         default: Console.WriteLine("Algorithm at index " + switchAlg + " does not exist (yet); Skipping algorithm...\n");
                                     switchAlg = (switchAlg + 1) % 9;
                                     continue; // will ignore rest of do/while and go through again with updated value for switch statement
                     }
+                    currCPU.waitingIO.Clear();
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                     {
                         currCPU.waitingIO.Enqueue(nonEmptyProcesses[i]);
@@ -97,6 +98,7 @@ namespace CPU_Scheduler_Simulation
                 {
                     Console.WriteLine("~IN I/O BURST");
                     nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingIO, CPUburst); // will always run FCFS in IO burst
+                    currCPU.waitingCPU.Clear();
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                     {
                             currCPU.waitingCPU.Enqueue(nonEmptyProcesses[i]);
