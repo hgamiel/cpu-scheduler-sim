@@ -61,6 +61,16 @@ namespace CPU_Scheduler_Simulation
             } 
         }
 
+        public List<PCB> resetTempCounters(List<PCB> processes)
+        {
+            foreach (var p in processes)
+            {
+                p.resetTempCounters();
+            }
+
+            return processes;
+        }
+
         public void runCPU(CPU currCPU)
         {
             int switchAlg = 0; // starting algorithm
@@ -68,6 +78,7 @@ namespace CPU_Scheduler_Simulation
             List<PCB> nonEmptyProcesses = new List<PCB>(); // TEST
             do
             {
+                nonEmptyProcesses = resetTempCounters(nonEmptyProcesses);
                 nonEmptyProcesses = nonEmptyProcesses.OrderBy(p => p.arrivalTime).ToList();
                 if (CPUburst && currCPU.waitingCPU.Count != 0) // if it's time to process the CPU bursts of processes
                 {
@@ -80,7 +91,7 @@ namespace CPU_Scheduler_Simulation
                         //case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
                         case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 20); break;
                         case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 40); break;
-                        case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU, CPUburst); break; // uncomment when done
+                        //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU, CPUburst); break; // uncomment when done
                         //case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
                         //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break; // uncomment when done
                         default: Console.WriteLine("Algorithm at index " + switchAlg + " does not exist (yet); Skipping algorithm...\n");

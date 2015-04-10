@@ -30,6 +30,10 @@ namespace CPU_Scheduler_Simulation
             waitTime = 0;
         }
 
+        public void resetTempCounters () {
+            lastTimeProcessed = 0;
+        }
+
         public String serveTime(double q) {
             this.serviceTime -= (int)q;
             return Convert.ToString(this.serviceTime);

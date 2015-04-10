@@ -53,6 +53,7 @@ namespace CPU_Scheduler_Simulation
                 }
                 process = processes.Dequeue();
                 service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
+                process.waitTime += counter - process.arrivalTime;
                 counter += service;
                 if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
                 {
