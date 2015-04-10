@@ -43,6 +43,7 @@ namespace CPU_Scheduler_Simulation
 
         public void resetTempCounters () {
             lastTimeProcessed = 0;
+            beginServiceTime = 0;
         }
 
         public String serveTime(double q) {
