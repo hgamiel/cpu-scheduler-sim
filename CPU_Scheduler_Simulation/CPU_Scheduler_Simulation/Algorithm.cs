@@ -29,7 +29,7 @@ namespace CPU_Scheduler_Simulation
                     }
                );
 
-        public Queue<PCB> processes = new Queue<PCB>
+        public Queue<PCB> sample2 = new Queue<PCB>
             (
                 new[] {
                     new PCB(){PID = 1, arrivalTime = 0, serviceTime = 50},
@@ -292,7 +292,7 @@ namespace CPU_Scheduler_Simulation
         //feedback algorithms if we wish to implement a feedback age solution
 
         //version 1 feedback with quantum = 1 
-        public List<PCB> v1Feedback(Queue<PCB> processes1, bool CPUburst)
+        public List<PCB> v1Feedback(Queue<PCB> processes, bool CPUburst)
         {
             int quantum = 1;
             var finished = false;   //when algorithm is complete
@@ -403,7 +403,7 @@ namespace CPU_Scheduler_Simulation
         }
 
         //version 2 feedback with quantum = 2^i - Tommy
-        public List<PCB> v2Feedback(Queue<PCB> processes1, bool CPUburst)
+        public List<PCB> v2Feedback(Queue<PCB> processes, bool CPUburst)
         {
             var finished = false;
             var counter = 0;
