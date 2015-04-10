@@ -9,6 +9,7 @@ namespace CPU_Scheduler_Simulation
     public class CPU
     {
         //local queues
+        //public int throughput;
         public Queue<PCB> readyIO = new Queue<PCB>();       // ready queue for IO
         public Queue<PCB> waitingIO = new Queue<PCB>();     // waiting queue for IO
         public Queue<PCB> readyCPU = new Queue<PCB>();      // ready queue for CPU

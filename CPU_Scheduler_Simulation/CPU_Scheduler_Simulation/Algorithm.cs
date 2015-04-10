@@ -11,6 +11,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
         public int timeCounter = 0;
         public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
+        bool debugStatements = false;
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
@@ -30,44 +31,45 @@ namespace CPU_Scheduler_Simulation
 
         //TODO: beingAlgorithms(); 
 
-        //first-come-first-serve algorithm - Hannh
+        //first-come-first-serve algorithm - Hannah
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
             Console.WriteLine("--BEGIN FIRST COME FIRST SERVE");
             Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
             Console.WriteLine("\tCurrent burst processing: " + ((CPUburst) ? "CPU" : "I/O"));
 
-            int counter = 0;    //'timer' since we are modeling as discrete events
-            PCB process = new PCB();    //temporary holder
+            int counter = 0;
+            int beginAmount = processes.Count;
+            int service;
+            PCB process = new PCB();
             List<PCB> nonEmptyProcesses = new List<PCB>();
 
-            int beginAmount = processes.Count;
-
-            do // assuming the processes in the queue are ordered by arrival time...
+            do
             {
-                counter += contextSwitchCost; // context switch time
-                while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
+                counter += contextSwitchCost;
+                while (counter < processes.Peek().arrivalTime)
                 {
                     counter++;
                 }
                 process = processes.Dequeue();
-                int service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
+                service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
                 counter += service;
-                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
+                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
                 {
-                    nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
+                    nonEmptyProcesses.Add(process);
                 }
                 else
                 {
-                    finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
+                    finishedProcesses.Add(process);
                 }
             } while (processes.Count != 0);
 
-            timeCounter += counter; // update our total time spent in algorithms
+            timeCounter += counter;
 
             Console.WriteLine("\tTime spent in this round of FCFS: " + counter);
-            Console.WriteLine("\tNumber of processes serviced: " + (beginAmount - nonEmptyProcesses.Count));
-            Console.WriteLine("\tAmount of processes left in FCFS: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tNumber of processes finished this round: " + (beginAmount - nonEmptyProcesses.Count));
+            Console.WriteLine("\tAmount of processes left to finish/process: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
             Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
             Console.WriteLine("--END FIRST COME FIRST SERVE\n");
 
@@ -89,7 +91,7 @@ namespace CPU_Scheduler_Simulation
             int intialNum = sample.Count;
             do 
             { 
-                contextSwitchCost+=counterVar;
+                contextSwitchCost+=counterVar; // this should probably be counterVar += contextSwitchCost. - Hannah
                 while (counterVar < sample.Peek().arrivalTime)
                 {
                     counterVar++;
@@ -130,49 +132,85 @@ namespace CPU_Scheduler_Simulation
         //round robin algorithm - Hannah
         public List<PCB> rr(Queue<PCB> processes, int quantum)
         { 
-            //create an empty queue
-            //as quantums deplete the service time, match with arrival time
-            //processes get added to queue when the arrive
-            //alternate processes
 
-            int counter = 0;    //'timer' since we are modeling as discrete events
-            PCB process = new PCB();    //temporary holder
-            List<PCB> nonEmptyProcesses = new List<PCB>(); // this will be the list that we return in the end.
-            Queue<PCB> currProcesses = new Queue<PCB>(); // the processes we will be processing in RR
-                                                        // (processes from "processes" will be pushed on once they reach their arrival time)
+            Console.WriteLine("--BEGIN ROUND ROBIN");
+            Console.WriteLine("--Quantum: " + quantum);
+            Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
 
-            do // assuming the processes in the queue are ordered by arrival time...
+            int counter = 0;
+            int serveTimeLeftOnProcess;
+            int calcTimeSpentOnProcess;
+            int beginAmount = processes.Count;
+            int queueCounter = 1;
+            PCB process = new PCB();
+            List<PCB> nonEmptyProcesses = new List<PCB>();
+            List<PCB> currProcesses = new List<PCB>();
+
+            do
             {
-                counter += contextSwitchCost; // context switch time
-                if (currProcesses.Count == 0) // if no processes have arrived yet... (or we're done processing the ones with short bursts)
+                if (processes.Count != 0 && (currProcesses.Count == 0 || processes.Peek().arrivalTime < counter))
                 {
-                    while (counter < processes.Peek().arrivalTime) // just incase there are processes that arrive much later than when the first process is finished
+                    while (counter < processes.Peek().arrivalTime)
                     {
                         counter++;
                     }
-                    currProcesses.Enqueue(process); // finally add that process
+                    do
+                    {
+                        process = processes.Dequeue();
+                        process.serviceTime = process.CPU.Dequeue();
+                        currProcesses.Add(process);
+                        if (processes.Count == 0)
+                        {
+                            break;
+                        }
+                    } while (counter >= processes.Peek().arrivalTime);
                 }
-                
 
-                
-            //    //Console.WriteLine("Process " + process.PID + " has been serviced " + service + ".");
-            //    counter += service; // if we're in this function to serve CPU burst, then let's add the CPU burst to the counter. Else, I/O burst.
-            //    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
-            //    {
-            //        nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
-            //    }
-            //    else
-            //    {
-            //        finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
-            //    }
-            } while (processes.Count != 0);
+                if(debugStatements) Console.WriteLine("\t\tBeginning queue #" + queueCounter + " with " + currProcesses.Count + " processes...");
+                for(int i = 0; i < currProcesses.Count; i++) {
+                    counter += contextSwitchCost;
+                    serveTimeLeftOnProcess = currProcesses[i].serviceTime;
+                    currProcesses[i].serviceTime = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : 0;
+                    if (currProcesses[i].serviceTime == 0)
+                    {
+                        if (currProcesses[i].IO.Count > 0)
+                        {
+                            nonEmptyProcesses.Add(currProcesses[i]);
+                        }
+                        else
+                        {
+                            finishedProcesses.Add(currProcesses[i]);
+                        }
+                        currProcesses.RemoveAt(i);
+                        i--;
+                    }
+                    calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
+                    counter += calcTimeSpentOnProcess;
+                }
+               if(debugStatements) Console.WriteLine("\t\t   Ending queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
+               queueCounter++;
+           
+            } while ((processes.Count != 0 && currProcesses.Count == 0) || (processes.Count == 0 && currProcesses.Count != 0) || (processes.Count != 0 && currProcesses.Count != 0));
 
-            return null; 
+            timeCounter += counter;
+
+            Console.WriteLine("\tTime spent in this round of RR: " + counter);
+            Console.WriteLine("\tNumber of processes finished this round: " + (beginAmount - nonEmptyProcesses.Count));
+            Console.WriteLine("\tAmount of processes left to process/finish: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
+            Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
+            Console.WriteLine("--END ROUND ROBIN\n");
+
+            return nonEmptyProcesses; 
         }
 
         //priority algorithm - Brady
         public List<PCB> priority(Queue<PCB> processes)
-        { 
+        {
+            List<PCB> temp = new List<PCB>(processes);
+            temp = temp.OrderBy(x => x.priorityNumber).ToList();
+            var test = temp[0];
+            test.serviceTime = test.CPU.Dequeue();
             //lowest interger priority number has highest priority
             return null; 
         }
@@ -239,6 +277,7 @@ namespace CPU_Scheduler_Simulation
                     process.executionTime = counter;        //set the finished time of the process
                     process.turnaroundTime = process.executionTime - process.arrivalTime;
                     process.tr_ts = process.turnaroundTime / process.serviceTime;
+<<<<<<< HEAD
                     if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
                     {
                         nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
@@ -254,6 +293,16 @@ namespace CPU_Scheduler_Simulation
                         Console.ReadKey();
                     }
                     Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
+=======
+                    finishedProcesses.Add(process);         //add to list of finished processes
+                    //check to see if we are finished
+                    if (finishedProcesses.Count == numProcesses)
+                    {
+                        finished = true;
+                        timeCounter += counter;
+                    }
+                    Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
+>>>>>>> 66e01c8730268eddb6fe8aecaf9fde86891d3fd9
                     continue;
                 }
                 //move to the next queue
