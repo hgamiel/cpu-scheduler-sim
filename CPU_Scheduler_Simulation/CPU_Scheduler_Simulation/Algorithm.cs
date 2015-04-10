@@ -206,7 +206,11 @@ namespace CPU_Scheduler_Simulation
 
         //priority algorithm - Brady
         public List<PCB> priority(Queue<PCB> processes)
-        { 
+        {
+            List<PCB> temp = new List<PCB>(processes);
+            temp = temp.OrderBy(x => x.priorityNumber).ToList();
+            var test = temp[0];
+            test.serviceTime = test.CPU.Dequeue();
             //lowest interger priority number has highest priority
             return null; 
         }
@@ -272,7 +276,10 @@ namespace CPU_Scheduler_Simulation
                     finishedProcesses.Add(process);         //add to list of finished processes
                     //check to see if we are finished
                     if (finishedProcesses.Count == numProcesses)
+                    {
                         finished = true;
+                        timeCounter += counter;
+                    }
                     Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
                     continue;
                 }

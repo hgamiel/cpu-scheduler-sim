@@ -16,7 +16,7 @@ namespace CPU_Scheduler_Simulation
         public int startTime;           //actual start time of a process
         public double turnaroundTime;   //executionTime - arrivalTime
         public double waitTime;         //time process must wait during it execution - accumulated
-        public double responseTime;     //time from submission utnil response begins to be received - accumulated
+        public double responseTime;     //time from submission until response begins to be received - accumulated
         public double executionTime;    //time of completion
         public double tr_ts;            //turnaround time / service time
         //public Boolean waiting = false;
