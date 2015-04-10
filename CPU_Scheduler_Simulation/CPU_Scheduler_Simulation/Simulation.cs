@@ -85,7 +85,7 @@ namespace CPU_Scheduler_Simulation
             Console.WriteLine("Simulation complete.\n");
             for (int i = 0; i < SimScheduler.numCPUs; i++)
             {
-                Console.WriteLine("Total time spent in CPU #" + i + ": " + SimScheduler.cpus[i].algorithms.timeCounter);
+                Console.WriteLine("Total time spent in CPU #" + (i+1) + ": " + SimScheduler.cpus[i].algorithms.timeCounter);
             }
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Total time spent across all CPUs: " + SimScheduler.calcTotalTime());

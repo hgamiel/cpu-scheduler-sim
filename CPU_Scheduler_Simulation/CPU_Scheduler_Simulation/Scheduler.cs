@@ -12,14 +12,13 @@ namespace CPU_Scheduler_Simulation
         public List<CPU> cpus = new List<CPU>();
         public int numCPUs;
 
-        public Scheduler() { }  // default contructor 
+        public Scheduler() { }  // default contructor
 
         //for each idle processor, select thread from ready queue
         //version: first come first served to whichever processor is idle
         public void loadBalancing(List<PCB> processes)
         {
             addCPUs();
-
             var numProcesses = processes.Count;     // number of processors
             // assigning each half of the number of processors to each processor
             int counter = 0;
