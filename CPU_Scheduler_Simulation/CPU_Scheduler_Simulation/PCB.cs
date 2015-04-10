@@ -11,6 +11,7 @@ namespace CPU_Scheduler_Simulation
         public char name;               //testing purposes
         public int PID;                 //unique id to a PCB
         public int serviceTime;         //time required by a process -- same as CPU burst time (see list below)
+        public int beginServiceTime;    //temp to hold initial service time needed for current CPU burst
         public int priorityNumber;      //lowest interger -> higher priority
         public int arrivalTime;         //when processes arrive
         public int startTime;           //actual start time of a process
@@ -29,6 +30,15 @@ namespace CPU_Scheduler_Simulation
             lastTimeProcessed = 0;
             waitTime = 0;
             startTime = -1; // this is to avoid checks where startTime could actually start at 0
+        }
+
+        public void determineTurnaroundTime() {
+            turnaroundTime = executionTime - arrivalTime;
+        }
+
+        public void determineTRTS(int st)
+        {
+            tr_ts = turnaroundTime / st;
         }
 
         public void resetTempCounters () {

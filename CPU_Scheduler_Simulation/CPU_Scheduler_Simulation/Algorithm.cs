@@ -67,6 +67,8 @@ namespace CPU_Scheduler_Simulation
                 {
                     process.finished = true;
                     process.executionTime = timeCounter+counter;
+                    process.determineTurnaroundTime();
+                    process.determineTRTS(service);
                     finishedProcesses.Add(process);
                 }
             } while (processes.Count != 0);
@@ -165,6 +167,7 @@ namespace CPU_Scheduler_Simulation
                     {
                         process = processes.Dequeue();
                         process.serviceTime = process.CPU.Dequeue();
+                        process.beginServiceTime = process.serviceTime;
                         currProcesses.Add(process);
                         if (processes.Count == 0)
                         {
@@ -185,6 +188,7 @@ namespace CPU_Scheduler_Simulation
                     calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
                     counter += calcTimeSpentOnProcess;
                     currProcesses[i].lastTimeProcessed = counter;
+
                     if (currProcesses[i].serviceTime == 0)
                     {
                         if (currProcesses[i].IO.Count > 0)
@@ -193,8 +197,10 @@ namespace CPU_Scheduler_Simulation
                         }
                         else
                         {
-                            process.finished = true;
-                            process.executionTime = timeCounter + counter;
+                            currProcesses[i].finished = true;
+                            currProcesses[i].executionTime = timeCounter + counter;
+                            currProcesses[i].determineTurnaroundTime();
+                            currProcesses[i].determineTRTS(currProcesses[i].beginServiceTime);
                             finishedProcesses.Add(currProcesses[i]);
                         }
                         currProcesses.RemoveAt(i);
