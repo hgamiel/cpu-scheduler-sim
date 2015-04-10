@@ -53,9 +53,9 @@ namespace CPU_Scheduler_Simulation
                 }
                 process = processes.Dequeue();
                 service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
-                if (process.startTime == -1)
+                if (process.responseTime == -1)
                 {
-                    process.startTime = counter;
+                    process.responseTime = counter;
                 }
                 process.waitTime += counter - process.arrivalTime;
                 counter += service;
@@ -179,8 +179,8 @@ namespace CPU_Scheduler_Simulation
                 if(debugStatements) Console.WriteLine("\t\tBeginning queue #" + queueCounter + " with " + currProcesses.Count + " processes...");
                 for(int i = 0; i < currProcesses.Count; i++) {
                     counter += contextSwitchCost;
-                    if(currProcesses[i].startTime == -1) {
-                        currProcesses[i].startTime = counter;
+                    if(currProcesses[i].responseTime == -1) {
+                        currProcesses[i].responseTime = counter;
                     }
                     currProcesses[i].waitTime += ((currProcesses[i].lastTimeProcessed == 0) ? (counter - currProcesses[i].arrivalTime) : (counter - currProcesses[i].lastTimeProcessed));
                     serveTimeLeftOnProcess = currProcesses[i].serviceTime;

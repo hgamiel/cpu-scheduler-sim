@@ -14,7 +14,6 @@ namespace CPU_Scheduler_Simulation
         public int beginServiceTime;    //temp to hold initial service time needed for current CPU burst
         public int priorityNumber;      //lowest interger -> higher priority
         public int arrivalTime;         //when processes arrive
-        public int startTime;           //actual start time of a process
         public double turnaroundTime;   //executionTime - arrivalTime
         public double waitTime;         //time process must wait during it execution - accumulated
         public double responseTime;     //time from submission until first CPU allocation
@@ -29,7 +28,7 @@ namespace CPU_Scheduler_Simulation
         public PCB() {
             lastTimeProcessed = 0;
             waitTime = 0;
-            startTime = -1; // this is to avoid checks where startTime could actually start at 0
+            responseTime = -1; // this is to avoid checks where startTime could actually start at 0
         }
 
         public void determineTurnaroundTime() {

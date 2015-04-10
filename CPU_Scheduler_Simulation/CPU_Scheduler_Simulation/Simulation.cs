@@ -15,6 +15,7 @@ namespace CPU_Scheduler_Simulation
         public string filename;     // name of file containing information of PCBs
         public string filepath;     // in the same folder as the solution file
         public bool debugStatements = false;
+        
         public Simulation() { }     // default constructor
 
         //pushes info from lines on .dat files into processTable as a PCB
@@ -93,6 +94,8 @@ namespace CPU_Scheduler_Simulation
             }
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Total time spent across all CPUs: " + SimScheduler.calcTotalTime());
+            Statistics stats = new Statistics(SimScheduler.finishedProcesses);
+            stats.runStatistics();
             Console.ReadKey();
         }               
     }

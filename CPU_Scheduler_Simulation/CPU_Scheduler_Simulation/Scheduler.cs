@@ -10,6 +10,7 @@ namespace CPU_Scheduler_Simulation
     {
         // this simulation will be using two processors
         public List<CPU> cpus = new List<CPU>();
+        public List<PCB> finishedProcesses = new List<PCB>();
         public int numCPUs;
 
         public Scheduler() { }  // default contructor
@@ -58,7 +59,15 @@ namespace CPU_Scheduler_Simulation
                 Console.WriteLine("~~~~ BEGIN CPU "+(i+1)+" ~~~~");
                 runCPU(cpus[i]);
                 Console.WriteLine("~~~~ END CPU "+(i+1)+" ~~~~\n");
-            } 
+            }
+
+            foreach (var c in cpus)
+            {
+                foreach (var p in c.algorithms.finishedProcesses)
+                {
+                    finishedProcesses.Add(p);
+                }
+            }
         }
 
         public List<PCB> resetTempCounters(List<PCB> processes)
