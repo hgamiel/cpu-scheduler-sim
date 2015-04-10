@@ -19,7 +19,7 @@ namespace CPU_Scheduler_Simulation
         public double waitTime;         //time process must wait during it execution - accumulated
         public double responseTime;     //time from submission until first CPU allocation
         public double executionTime;    //time of completion
-        public double tr_ts;            //turnaround time / service time
+        public List<double> tr_ts = new List<double>();            //turnaround time / service time
         public double lastTimeProcessed; //for purposes of RR
         public Boolean finished = false;
 
@@ -38,7 +38,7 @@ namespace CPU_Scheduler_Simulation
 
         public void determineTRTS(int st)
         {
-            tr_ts = turnaroundTime / st;
+            tr_ts.Add(turnaroundTime / st);
         }
 
         public void resetTempCounters () {

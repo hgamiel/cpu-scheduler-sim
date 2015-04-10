@@ -314,7 +314,7 @@ namespace CPU_Scheduler_Simulation
                     localFinishedProcesses++;
                     process.executionTime = counter;        //set the finished time of the process
                     process.turnaroundTime = process.executionTime - process.arrivalTime;
-                    process.tr_ts = process.turnaroundTime / process.serviceTime;
+                    //process.tr_ts = process.turnaroundTime / process.serviceTime;
                     if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
                     {
                         nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
@@ -412,7 +412,7 @@ namespace CPU_Scheduler_Simulation
                     localFinishedProcesses++;
                     process.executionTime = counter;
                     process.turnaroundTime = process.executionTime - process.arrivalTime;
-                    process.tr_ts = process.turnaroundTime / process.serviceTime;
+                    //process.tr_ts = process.turnaroundTime / process.serviceTime;
                     if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
                     {
                         nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
