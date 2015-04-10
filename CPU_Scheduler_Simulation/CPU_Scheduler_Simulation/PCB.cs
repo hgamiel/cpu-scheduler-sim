@@ -19,12 +19,16 @@ namespace CPU_Scheduler_Simulation
         public double responseTime;     //time from submission until first CPU allocation
         public double executionTime;    //time of completion
         public double tr_ts;            //turnaround time / service time
+        public double lastTimeProcessed; //for purposes of RR
         public Boolean finished = false;
 
         public Queue<int> CPU = new Queue<int>(); // queue of CPU bursts
         public Queue<int> IO = new Queue<int>(); // queue of IO bursts
 
-        public PCB() { }
+        public PCB() {
+            lastTimeProcessed = 0;
+            waitTime = 0;
+        }
 
         public String serveTime(double q) {
             this.serviceTime -= (int)q;

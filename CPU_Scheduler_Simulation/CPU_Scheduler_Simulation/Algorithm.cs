@@ -11,7 +11,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
         public int timeCounter = 0;
         public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
-        bool debugStatements = false;
+        bool debugStatements = true;
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
@@ -169,8 +169,12 @@ namespace CPU_Scheduler_Simulation
                 if(debugStatements) Console.WriteLine("\t\tBeginning queue #" + queueCounter + " with " + currProcesses.Count + " processes...");
                 for(int i = 0; i < currProcesses.Count; i++) {
                     counter += contextSwitchCost;
+                    currProcesses[i].waitTime += ((currProcesses[i].lastTimeProcessed == 0) ? (counter - currProcesses[i].arrivalTime) : (counter - currProcesses[i].lastTimeProcessed));
                     serveTimeLeftOnProcess = currProcesses[i].serviceTime;
                     currProcesses[i].serviceTime = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : 0;
+                    calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
+                    counter += calcTimeSpentOnProcess;
+                    currProcesses[i].lastTimeProcessed = counter;
                     if (currProcesses[i].serviceTime == 0)
                     {
                         if (currProcesses[i].IO.Count > 0)
@@ -184,8 +188,6 @@ namespace CPU_Scheduler_Simulation
                         currProcesses.RemoveAt(i);
                         i--;
                     }
-                    calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
-                    counter += calcTimeSpentOnProcess;
                 }
                if(debugStatements) Console.WriteLine("\t\t   Ending queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
                queueCounter++;
