@@ -98,6 +98,12 @@ namespace CPU_Scheduler_Simulation
             Statistics stats = new Statistics(SimScheduler.finishedProcesses);
             stats.runStatistics();
             Console.ReadKey();
-        }               
+            writeStatsToFile();
+        }
+
+        public void writeStatsToFile()
+        {
+            
+        }
     }
 }

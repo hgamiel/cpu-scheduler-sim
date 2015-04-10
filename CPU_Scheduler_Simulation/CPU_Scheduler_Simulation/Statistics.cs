@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace CPU_Scheduler_Simulation
 {
     public class Statistics
     {
         public List<PCB> finishedProcesses = new List<PCB>();
+        int avgResponseTime;
+        int avgWaitTime;
+        int avgTurnaroundTime;
+        int avgExecutionTime;
+        int avgTRTS;
 
         public Statistics(List<PCB> processes)
         {
@@ -30,6 +36,12 @@ namespace CPU_Scheduler_Simulation
             Console.WriteLine("\tMin execution time: " + determineMinExecutionTime());
             Console.WriteLine("\tMax execution time: " + determineMaxExecutionTime());
             Console.WriteLine("Avg trts: " + determineAverageTRTS());
+
+            avgResponseTime = determineAverageResponseTime();
+            avgTurnaroundTime = determineAverageTurnaroundTime();
+            avgExecutionTime = determineAverageExecutionTime();
+            avgTRTS = determineAverageTRTS();
+            avgWaitTime = determineAverageWaitTime();
             
         }
 
@@ -89,14 +101,14 @@ namespace CPU_Scheduler_Simulation
             return max;
         }
 
-        public double determineAverageResponseTime()
+        public int determineAverageResponseTime()
         {
-            double sum = 0;
-            double average;
+            int sum = 0;
+            int average;
 
             foreach (var p in finishedProcesses)
             {
-                sum += p.responseTime;
+                sum += Convert.ToInt32(p.responseTime);
             }
 
             average = (sum > 0) ? (sum / finishedProcesses.Count) : 0;
@@ -105,14 +117,14 @@ namespace CPU_Scheduler_Simulation
 
         }
 
-        public double determineAverageWaitTime()
+        public int determineAverageWaitTime()
         {
-            double sum = 0;
-            double average;
+            int sum = 0;
+            int average;
 
             foreach (var p in finishedProcesses)
             {
-                sum += p.waitTime;
+                sum += Convert.ToInt32(p.waitTime);
             }
 
             average = (sum > 0) ? (sum / finishedProcesses.Count) : 0;
@@ -121,14 +133,14 @@ namespace CPU_Scheduler_Simulation
 
         }
 
-        public double determineAverageTurnaroundTime()
+        public int determineAverageTurnaroundTime()
         {
-            double sum = 0;
-            double average;
+            int sum = 0;
+            int average;
 
             foreach (var p in finishedProcesses)
             {
-                sum += p.turnaroundTime;
+                sum += Convert.ToInt32(p.turnaroundTime);
             }
 
             average = (sum > 0) ? (sum / finishedProcesses.Count) : 0;
@@ -164,14 +176,14 @@ namespace CPU_Scheduler_Simulation
             return max;
         }
 
-        public double determineAverageExecutionTime()
+        public int determineAverageExecutionTime()
         {
-            double sum = 0;
-            double average;
+            int sum = 0;
+            int average;
 
             foreach (var p in finishedProcesses)
             {
-                sum += p.executionTime;
+                sum += Convert.ToInt32(p.executionTime);
             }
 
             average = (sum > 0) ? (sum / finishedProcesses.Count) : 0;
@@ -207,17 +219,17 @@ namespace CPU_Scheduler_Simulation
             return max;
         }
 
-        public double determineAverageTRTS() {
+        public int determineAverageTRTS() {
 
-            double sum = 0;
-            double average;
-            double countTRTS = 0;
+            int sum = 0;
+            int average;
+            int countTRTS = 0;
 
             foreach (var p in finishedProcesses)
             {
                 foreach (var t in p.tr_ts)
                 {
-                    sum += t;
+                    sum += Convert.ToInt32(t);
                     countTRTS++;
                 }
             }
