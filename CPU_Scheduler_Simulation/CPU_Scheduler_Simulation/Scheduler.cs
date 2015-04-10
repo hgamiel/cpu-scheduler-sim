@@ -9,8 +9,6 @@ namespace CPU_Scheduler_Simulation
     public class Scheduler
     {
         // this simulation will be using two processors
-        public CPU cpu1 = new CPU();
-        public CPU cpu2 = new CPU();
         public List<CPU> cpus = new List<CPU>();
         public int numCPUs;
 
