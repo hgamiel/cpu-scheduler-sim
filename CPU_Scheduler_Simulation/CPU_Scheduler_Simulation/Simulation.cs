@@ -15,20 +15,22 @@ namespace CPU_Scheduler_Simulation
         public string filename;     // name of file containing information of PCBs
         public string filepath;     // in the same folder as the solution file
         public bool debugStatements = false;
+        
         public Simulation() { }     // default constructor
 
         //pushes info from lines on .dat files into processTable as a PCB
         public void readDataFiles()
         {
+            Console.WriteLine("--BEGIN FILE I/O");
             filename = "processes.dat";
             Directory.SetCurrentDirectory(@"..\..\..\"); // default is \bin\Debug -> this sets the current directory up a few folders
             filepath = Path.Combine(Environment.CurrentDirectory, filename);
 
-            Console.WriteLine("File + Path: {0}", filepath);
+            Console.WriteLine("\tFile + Path: {0}", filepath);
 
             if (File.Exists(filepath))
             {
-                Console.WriteLine("{0} exists. File will be processed.", filepath); // debugging purposes
+                Console.WriteLine("\t{0} exists. File will be processed.", filepath); // debugging purposes
 
                 var reader = new StreamReader(File.OpenRead(filepath)); // opens the read stream
 
@@ -39,8 +41,9 @@ namespace CPU_Scheduler_Simulation
                     addProcess(values); // calls function that adds process to process table
                 }
             
-                Console.WriteLine("File read completed.\n");
-                Console.WriteLine("There were " + processTable.Count + " processes added.");
+                Console.WriteLine("\tFile read completed.");
+                Console.WriteLine("\tThere were " + processTable.Count + " processes added.");
+                Console.WriteLine("--END FILE I/O\n");
             }
             else
             {
@@ -91,6 +94,8 @@ namespace CPU_Scheduler_Simulation
             }
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Total time spent across all CPUs: " + SimScheduler.calcTotalTime());
+            Statistics stats = new Statistics(SimScheduler.finishedProcesses);
+            stats.runStatistics();
             Console.ReadKey();
         }               
     }

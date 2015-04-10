@@ -13,22 +13,22 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
         public int timeCounter = 0;
         public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
-        bool debugStatements = false;
+        bool debugStatements = true;
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
 
         //create some sample data
         public Queue<PCB> sample = new Queue<PCB>
-        (
-            new[]{ 
-                    new PCB(){name = 'A', arrivalTime = 0, serviceTime = 3},
-                    new PCB(){name = 'B', arrivalTime = 2, serviceTime = 6},
-                    new PCB(){name = 'C', arrivalTime = 4, serviceTime = 4},
-                    new PCB(){name = 'D', arrivalTime = 6, serviceTime = 5},
-                    new PCB(){name = 'E', arrivalTime = 8, serviceTime = 2}
+               (
+                   new[]{ 
+                    new PCB(){name = 'A', arrivalTime = 0, serviceTime = 3, priorityNumber = 1},
+                    new PCB(){name = 'B', arrivalTime = 2, serviceTime = 6, priorityNumber = 4},
+                    new PCB(){name = 'C', arrivalTime = 4, serviceTime = 4, priorityNumber = 5},
+                    new PCB(){name = 'D', arrivalTime = 6, serviceTime = 5, priorityNumber = 2},
+                    new PCB(){name = 'E', arrivalTime = 8, serviceTime = 2, priorityNumber = 3}
                 }
-        );
+               );
         public Algorithm() { }
 
         //TODO: beingAlgorithms(); 
@@ -55,6 +55,11 @@ namespace CPU_Scheduler_Simulation
                 }
                 process = processes.Dequeue();
                 service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();
+                if (process.responseTime == -1)
+                {
+                    process.responseTime = counter;
+                }
+                process.waitTime += counter - process.arrivalTime;
                 counter += service;
                 if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
                 {
@@ -62,6 +67,10 @@ namespace CPU_Scheduler_Simulation
                 }
                 else
                 {
+                    process.finished = true;
+                    process.executionTime = timeCounter+counter;
+                    process.determineTurnaroundTime();
+                    process.determineTRTS(service);
                     finishedProcesses.Add(process);
                 }
             } while (processes.Count != 0);
@@ -154,6 +163,7 @@ namespace CPU_Scheduler_Simulation
                     {
                         process = processes.Dequeue();
                         process.serviceTime = process.CPU.Dequeue();
+                        process.beginServiceTime = process.serviceTime;
                         currProcesses.Add(process);
                         if (processes.Count == 0)
                         {
@@ -165,8 +175,16 @@ namespace CPU_Scheduler_Simulation
                 if(debugStatements) Console.WriteLine("\t\tBeginning queue #" + queueCounter + " with " + currProcesses.Count + " processes...");
                 for(int i = 0; i < currProcesses.Count; i++) {
                     counter += contextSwitchCost;
+                    if(currProcesses[i].responseTime == -1) {
+                        currProcesses[i].responseTime = counter;
+                    }
+                    currProcesses[i].waitTime += ((currProcesses[i].lastTimeProcessed == 0) ? (counter - currProcesses[i].arrivalTime) : (counter - currProcesses[i].lastTimeProcessed));
                     serveTimeLeftOnProcess = currProcesses[i].serviceTime;
                     currProcesses[i].serviceTime = ((serveTimeLeftOnProcess - quantum) > 0) ? serveTimeLeftOnProcess - quantum : 0;
+                    calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
+                    counter += calcTimeSpentOnProcess;
+                    currProcesses[i].lastTimeProcessed = counter;
+
                     if (currProcesses[i].serviceTime == 0)
                     {
                         if (currProcesses[i].IO.Count > 0)
@@ -175,13 +193,15 @@ namespace CPU_Scheduler_Simulation
                         }
                         else
                         {
+                            currProcesses[i].finished = true;
+                            currProcesses[i].executionTime = timeCounter + counter;
+                            currProcesses[i].determineTurnaroundTime();
+                            currProcesses[i].determineTRTS(currProcesses[i].beginServiceTime);
                             finishedProcesses.Add(currProcesses[i]);
                         }
                         currProcesses.RemoveAt(i);
                         i--;
                     }
-                    calcTimeSpentOnProcess = ((serveTimeLeftOnProcess - quantum) > 0) ? quantum : serveTimeLeftOnProcess;
-                    counter += calcTimeSpentOnProcess;
                 }
                if(debugStatements) Console.WriteLine("\t\t   Ending queue #" + queueCounter + " with " + currProcesses.Count + " processes left...");
                queueCounter++;
@@ -201,14 +221,32 @@ namespace CPU_Scheduler_Simulation
         }
 
         //priority algorithm - Brady
-        public List<PCB> priority(Queue<PCB> processes)
+        public List<PCB> priority(Queue<PCB> processes, bool CPUburst)
         {
+            Console.WriteLine("Number of processes to be serviced: " + processes.Count());
             List<PCB> temp = new List<PCB>(processes);
+            List<PCB> nonEmptyProcesses = new List<PCB>();
+            int counter = 0;
             temp = temp.OrderBy(x => x.priorityNumber).ToList();
-            var test = temp[0];
-            test.serviceTime = test.CPU.Dequeue();
+            for (int i = 0; i < processes.Count(); ++i)
+            {
+                var process = temp[i];
+                process.serviceTime = process.CPU.Dequeue();
+                counter += process.serviceTime;
+                process.serviceTime -= process.serviceTime;
+                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
+                {
+                    nonEmptyProcesses.Add(process);
+                }
+                else
+                {
+                    finishedProcesses.Add(process);
+                }
+            }
+            timeCounter += counter;
+
             //lowest interger priority number has highest priority
-            return null; 
+            return nonEmptyProcesses;
         }
 
         //feedback algorithms if we wish to implement a feedback age solution
@@ -276,7 +314,7 @@ namespace CPU_Scheduler_Simulation
                     localFinishedProcesses++;
                     process.executionTime = counter;        //set the finished time of the process
                     process.turnaroundTime = process.executionTime - process.arrivalTime;
-                    process.tr_ts = process.turnaroundTime / process.serviceTime;
+                    //process.tr_ts = process.turnaroundTime / process.serviceTime;
                     if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
                     {
                         nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
@@ -375,7 +413,7 @@ namespace CPU_Scheduler_Simulation
                     localFinishedProcesses++;
                     process.executionTime = counter;
                     process.turnaroundTime = process.executionTime - process.arrivalTime;
-                    process.tr_ts = process.turnaroundTime / process.serviceTime;
+                    //process.tr_ts = process.turnaroundTime / process.serviceTime;
                     if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
                     {
                         nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
