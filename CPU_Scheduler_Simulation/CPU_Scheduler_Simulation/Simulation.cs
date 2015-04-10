@@ -11,15 +11,12 @@ namespace CPU_Scheduler_Simulation
     public class Simulation
     {
         public int quantum;     // quantum for the simulation
-        private List<PCB> processTable = new List<PCB>();    // contains list of PCBs
-        public IReadOnlyCollection<PCB> list
-        {
-            get { return processTable.AsReadOnly(); }
-        }
+        List<PCB> processTable = new List<PCB>();    // contains list of PCBs
         public Scheduler SimScheduler = new Scheduler();    // create a scheduler object
         public string filename;     // name of file containing information of PCBs
         public string filepath;     // in the same folder as the solution file
         public bool debugStatements = false;
+        List<PCB> copy = new List<PCB>();
         
         public Simulation() { }     // default constructor
 
@@ -49,6 +46,7 @@ namespace CPU_Scheduler_Simulation
                 Console.WriteLine("\tFile read completed.");
                 Console.WriteLine("\tThere were " + processTable.Count + " processes added.");
                 Console.WriteLine("--END FILE I/O\n");
+                reader.Close();
             }
             else
             {
@@ -76,6 +74,7 @@ namespace CPU_Scheduler_Simulation
                 }
             }
             processTable.Add(process); // adds process to process table
+            //copy.Add(process);
             if(debugStatements)Console.WriteLine("Process with PID {0} added.", process.PID);
         }
 
@@ -89,28 +88,26 @@ namespace CPU_Scheduler_Simulation
             simScheduler.numCPUs = 2;
             var integers = new List<int> { 0, 4, 5, 7, 8};
             var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);
-            
+            var copy = new List<PCB>(processTable);
             foreach (var v in x)
             {
-                var copy = processTable;
-                simScheduler.loadBalancing(copy, v); // load balances the processes
-                endSim(simScheduler);
-                simScheduler = new Scheduler();
- 
+                copy = simScheduler.loadBalancing(copy, v); // load balances the processes
+                endSim(processTable);
+                simScheduler.finishedProcesses.Clear();
+                copy = processTable;
             }
-            
         }
 
         //ends the simulation
-        public void endSim(Scheduler scheduler) {
+        public void endSim(List<PCB> list) {
             Console.WriteLine("Simulation complete.\n");
             for (int i = 0; i < SimScheduler.numCPUs; i++)
             {
-                Console.WriteLine("Total time spent in CPU #" + (i+1) + ": " + scheduler.cpus[i].algorithms.timeCounter);
+                Console.WriteLine("Total time spent in CPU #" + (i+1) + ": " + SimScheduler.cpus[i].algorithms.timeCounter);
             }
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Total time spent across all CPUs: " + SimScheduler.calcTotalTime());
-            Statistics stats = new Statistics(scheduler.finishedProcesses);
+            Statistics stats = new Statistics(list);
             stats.runStatistics();
             Console.ReadKey();
             writeStatsToFile();

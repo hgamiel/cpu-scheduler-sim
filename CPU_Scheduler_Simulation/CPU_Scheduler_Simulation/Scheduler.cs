@@ -31,7 +31,7 @@ namespace CPU_Scheduler_Simulation
 
         //for each idle processor, select thread from ready queue
         //version: first come first served to whichever processor is idle
-        public void loadBalancing(List<PCB> processes, IList<int> v)
+        public List<PCB> loadBalancing(List<PCB> processes, IList<int> v)
         {
             switchAlgs = v;
             addCPUs();
@@ -45,7 +45,7 @@ namespace CPU_Scheduler_Simulation
             }
 
             runCPUs(); // runs the algorthms on processes on each CPU
-
+            return finishedProcesses;
         }
 
         public void addCPUs()
