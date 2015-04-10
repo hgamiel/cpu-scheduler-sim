@@ -19,7 +19,7 @@ namespace CPU_Scheduler_Simulation
         {
             Console.WriteLine("Avg response time: " + determineAverageResponseTime());
             Console.WriteLine("\tMin response time: " + determineMinResponseTime());
-            Console.WriteLine("\tMin response time: " + determineMaxResponseTime());
+            Console.WriteLine("\tMax response time: " + determineMaxResponseTime());
             Console.WriteLine("Avg wait time: " + determineAverageWaitTime());
             Console.WriteLine("\tMin wait time: " + determineMinWaitTime());
             Console.WriteLine("\tMax wait time: " + determineMaxWaitTime());

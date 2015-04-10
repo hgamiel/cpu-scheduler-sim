@@ -314,7 +314,7 @@ namespace CPU_Scheduler_Simulation
             while (counter != processes.Peek().arrivalTime)
                 counter++;
             process = processes.Dequeue();
-            //process.serviceTime = process.CPU.Dequeue();
+            process.serviceTime = process.CPU.Dequeue();
             process.beginServiceTime = process.serviceTime;
             process.responseTime = counter;
             process.waitTime += counter;
@@ -336,7 +336,7 @@ namespace CPU_Scheduler_Simulation
                     if (counter == processes.Peek().arrivalTime)
                     {
                         process = processes.Dequeue();
-                        //process.serviceTime = process.CPU.Dequeue();
+                        process.serviceTime = process.CPU.Dequeue();
                         process.beginServiceTime = process.serviceTime;
                         process.responseTime = counter;
                         process.waitTime += counter;
@@ -425,7 +425,7 @@ namespace CPU_Scheduler_Simulation
                 counter++;
 
             process = processes.Dequeue();
-            //process.serviceTime = process.CPU.Dequeue();
+            process.serviceTime = process.CPU.Dequeue();
             process.beginServiceTime = process.serviceTime;
             process.responseTime = counter;
             process.waitTime += counter;
@@ -448,7 +448,7 @@ namespace CPU_Scheduler_Simulation
                     if (counter >= processes.Peek().arrivalTime)
                     {
                         process = processes.Dequeue();
-                        //process.serviceTime = process.CPU.Dequeue();
+                        process.serviceTime = process.CPU.Dequeue();
                         process.beginServiceTime = process.serviceTime;
                         process.responseTime = counter;
                         process.waitTime += counter;
