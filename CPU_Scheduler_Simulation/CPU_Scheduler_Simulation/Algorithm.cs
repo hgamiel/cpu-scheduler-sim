@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace CPU_Scheduler_Simulation
@@ -92,7 +91,6 @@ namespace CPU_Scheduler_Simulation
         { 
             
             Console.WriteLine("--Begin Shortest Process Next");
-<<<<<<< HEAD
             int counterVar = 0;
             List<PCB> tempList = new List<PCB>();
             PCB process = new PCB();
@@ -122,7 +120,6 @@ namespace CPU_Scheduler_Simulation
                 
             }
             return tempList;
-=======
             //var list = sample.ToList();
             //int counter = 0;
             //Collection<PCB> test = new Collection<PCB>(list);
@@ -143,8 +140,7 @@ namespace CPU_Scheduler_Simulation
             //    test.Remove(process);
             //    temp.Clear();
             //}
-            return null; 
->>>>>>> origin/master
+            //return null; 
         }
 
         //shortest-remaining-time algorithm - Brady
@@ -305,29 +301,28 @@ namespace CPU_Scheduler_Simulation
             }
             //first process
 
-            while (counter != sample.Peek().arrivalTime)
+            while (counter != processes.Peek().arrivalTime)
                 counter++;
-            process = sample.Dequeue();
-            //process.serviceTime = process.CPU.Dequeue();
-            //process.serviced = true;
-            
-            while (counter != sample.Peek().arrivalTime)
+            process = processes.Dequeue();
+            process.serviceTime = process.CPU.Dequeue();
+
+            while (counter != processes.Peek().arrivalTime)
             {
                 counter++;
-                Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum));
+                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum));
             }
             //assuming first process will not finish before next process comes in - not realistic of a CPU
-            //rq[++startIndex].Enqueue(process);
+            rq[++startIndex].Enqueue(process);
 
             while (!finished)
             {
                 //if a process has arrived, get the process and start our index of queues back at 0
-                if (sample.Count != 0)
+                if (processes.Count != 0)
                 {
-                    if (counter == sample.Peek().arrivalTime)
+                    if (counter == processes.Peek().arrivalTime)
                     {
-                        process = sample.Dequeue();
-                        //process.serviceTime = process.CPU.Dequeue();
+                        process = processes.Dequeue();
+                        process.serviceTime = process.CPU.Dequeue();
                         startIndex = 0;
                         rq[startIndex].Enqueue(process);
                     }
@@ -338,7 +333,7 @@ namespace CPU_Scheduler_Simulation
                 //take the process of the current queue
                 process = rq[startIndex].Dequeue();
                 //the process serves a certain amount of time
-                Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum));
+                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum));
                 //this happens in one unit of time
                 counter++;
                 if (process.serviceTime == 0)
@@ -361,7 +356,7 @@ namespace CPU_Scheduler_Simulation
                         finished = true;
                         timeCounter += counter;
                     }
-                    Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
+                    Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
 
                     continue;
                 }
@@ -400,15 +395,20 @@ namespace CPU_Scheduler_Simulation
                 rq.Add(new Queue<PCB>());
             }
 
-            //process = processes.Dequeue();
+            while (counter != processes.Peek().arrivalTime)
+                counter++;
+
+            process = processes.Dequeue();
+            process.serviceTime = process.CPU.Dequeue();
+
             while (counter != processes.Peek().arrivalTime)
             {
                 counter++;
                 //quantum is only (2^0)=1 for this case
-                //Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(1.00));
+                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(1.00));
             }
 
-            //rq[++startIndex].Enqueue(process);
+            rq[++startIndex].Enqueue(process);
 
             while (!finished)
             {
@@ -432,7 +432,7 @@ namespace CPU_Scheduler_Simulation
                 //the process serves 2^1 amount of time
                 var quantum = Math.Pow(2.00, (Double)startIndex);
                 var processServeTime = Convert.ToInt32(process.serveTime(quantum));
-                Console.WriteLine("Process " + process.name + " service time is " + processServeTime);
+                Console.WriteLine("Process " + process.PID + " service time is " + processServeTime);
 
                 //must check if the process finished before the quantum amount
                 if (processServeTime < 0)
@@ -459,10 +459,11 @@ namespace CPU_Scheduler_Simulation
                         finished = true;
                         timeCounter += counter;
                     }
-                    Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
+                    Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
                     continue;
                 }
-
+                if ((startIndex + 1) == rq.Count)
+                    rq.Add(new Queue<PCB>());
                 rq[++startIndex].Enqueue(process);
 
                 if (rq[--startIndex].Count == 0)
