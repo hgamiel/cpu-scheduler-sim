@@ -28,6 +28,7 @@ namespace CPU_Scheduler_Simulation
         public PCB() {
             lastTimeProcessed = 0;
             waitTime = 0;
+            startTime = -1; // this is to avoid checks where startTime could actually start at 0
         }
 
         public void resetTempCounters () {
