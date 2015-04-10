@@ -332,6 +332,10 @@ namespace CPU_Scheduler_Simulation
         //version 1 feedback with quantum = 1 
         public List<PCB> v1Feedback(Queue<PCB> processes, bool CPUburst)
         {
+            Console.WriteLine("--BEGIN Feedback with q = 1");
+            Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
+            Console.WriteLine("\tCurrent burst processing: " + ((CPUburst) ? "CPU" : "I/O"));
+
             int quantum = 1;
             var finished = false;   //when algorithm is complete
             var counter = 0;    //'timer' since we are modeling as discrete events
@@ -360,8 +364,10 @@ namespace CPU_Scheduler_Simulation
             while (counter != processes.Peek().arrivalTime)
             {
                 counter++;
-                //if(debugStatements)
+                if (debugStatements)
                     Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter);
+                else
+                    process.serveTime(quantum);
             }
             //assuming first process will not finish before next process comes in - not realistic of a CPU
             rq[++startIndex].Enqueue(process);
@@ -398,8 +404,10 @@ namespace CPU_Scheduler_Simulation
                 //this happens in one unit of time
                 counter++;
                 //the process serves a certain amount of time
-                //if(debugStatements)
+                if (debugStatements)
                     Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
+                else
+                    process.serveTime(quantum);
                 if (process.serviceTime == 0)
                 {
                     localFinishedProcesses++;
@@ -421,8 +429,7 @@ namespace CPU_Scheduler_Simulation
                         finished = true;
                         timeCounter += counter;
                     }
-                    //if(debugStatements)
-                        Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
+                    if(debugStatements) Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
 
                     continue;
                 }
@@ -439,13 +446,22 @@ namespace CPU_Scheduler_Simulation
                 //incorporate the context switch cost when switching between processes
                 contextSwitchCost++;
             }
-            Console.WriteLine("Finished feedback algorithm");
+            Console.WriteLine("\tTime spent in this round of v1Feedback: " + counter);
+            Console.WriteLine("\tNumber of processes finished this round: " + (numProcesses - nonEmptyProcesses.Count));
+            Console.WriteLine("\tAmount of processes left to finish/process: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
+            Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
+            Console.WriteLine("--END FEEDBACK WITH QUANTUM = 1\n");
             return nonEmptyProcesses;
         }
 
         //version 2 feedback with quantum = 2^i - Tommy
         public List<PCB> v2Feedback(Queue<PCB> processes, bool CPUburst)
         {
+            Console.WriteLine("--BEGIN Feedback with quantum = 2^i");
+            Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
+            Console.WriteLine("\tCurrent burst processing: " + ((CPUburst) ? "CPU" : "I/O"));
+
             var finished = false;
             var counter = 0;
             var process = new PCB();
@@ -475,7 +491,10 @@ namespace CPU_Scheduler_Simulation
             {
                 counter++;
                 //quantum is only (2^0)=1 for this case
-                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(1.00));
+                if (debugStatements)
+                    Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(1.00));
+                else
+                    process.serveTime(1.00);
             }
 
             rq[++startIndex].Enqueue(process);
@@ -518,7 +537,10 @@ namespace CPU_Scheduler_Simulation
                     counter += (processServeTime * (-1));
                 else
                     counter += (int)quantum;    //otherwise we just set it to the total time
-                if(debugStatements)Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
+                if (debugStatements)
+                    Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
+                else
+                    process.serveTime(quantum);
                 if (process.serviceTime <= 0)
                 {
                     process.finished = true;
@@ -551,7 +573,12 @@ namespace CPU_Scheduler_Simulation
 
                 contextSwitchCost++;
             }
-            Console.WriteLine("Finished feedback algorithm");
+            Console.WriteLine("\tTime spent in this round of v2Feedback: " + counter);
+            Console.WriteLine("\tNumber of processes finished this round: " + (numProcesses - nonEmptyProcesses.Count));
+            Console.WriteLine("\tAmount of processes left to finish/process: " + nonEmptyProcesses.Count);
+            Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
+            Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
+            Console.WriteLine("--END FEEDBACK WITH QUANTUM = 2^I \n");
             return nonEmptyProcesses;
         }
     }

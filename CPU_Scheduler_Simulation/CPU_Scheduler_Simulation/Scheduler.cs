@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Combinatorics.Collections;
 
 namespace CPU_Scheduler_Simulation
 {
@@ -11,6 +12,7 @@ namespace CPU_Scheduler_Simulation
         // this simulation will be using two processors
         public List<CPU> cpus = new List<CPU>();
         public List<PCB> finishedProcesses = new List<PCB>();
+        public IList<int> switchAlgs;
         public int numCPUs;
         public int q1; // quantum 1 (rr)
         public int q2; // quantum 2 (rr)
@@ -29,8 +31,9 @@ namespace CPU_Scheduler_Simulation
 
         //for each idle processor, select thread from ready queue
         //version: first come first served to whichever processor is idle
-        public void loadBalancing(List<PCB> processes)
+        public void loadBalancing(List<PCB> processes, IList<int> v)
         {
+            switchAlgs = v;
             addCPUs();
             var numProcesses = processes.Count;     // number of processors
             // assigning each half of the number of processors to each processor
@@ -94,7 +97,8 @@ namespace CPU_Scheduler_Simulation
 
         public void runCPU(CPU currCPU)
         {
-            int switchAlg = 0; // starting algorithm
+            int index = 0;
+            int switchAlg = switchAlgs[index]; // starting algorithm
             bool CPUburst = true;
             List<PCB> nonEmptyProcesses = new List<PCB>(); // TEST
             do
@@ -107,15 +111,15 @@ namespace CPU_Scheduler_Simulation
                     switch (switchAlg)
                     {
 
-                        //case 0: nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingCPU, CPUburst); break;
+                        case 0: nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingCPU, CPUburst); break;
                         //case 1: nonEmptyProcesses = currCPU.algorithms.spn(currCPU.waitingCPU, CPUburst); break; // uncomment when done
                         //case 2: nonEmptyProcesses = currCPU.algorithms.srt(currCPU.waitingCPU); break; // uncomment when done
                         //case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
-                        //case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, q1); break;
-                        //case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, q2); break;
+                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, q1); break;
+                        case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, q2); break;
                         //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU, CPUburst); break; // uncomment when done
                         case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
-                        //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
+                        case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
 
                         default: Console.WriteLine("Algorithm at index " + switchAlg + " does not exist (yet); Skipping algorithm...\n");
                                     switchAlg = (switchAlg + 1) % 9;
@@ -127,7 +131,8 @@ namespace CPU_Scheduler_Simulation
                     {
                         currCPU.waitingIO.Enqueue(nonEmptyProcesses[i]);
                     }
-                    switchAlg = (switchAlg + 1) % 9;
+                    switchAlg = switchAlgs[++index];
+                    //Console.ReadKey();
                 }
                 else if (currCPU.waitingIO.Count != 0)// if it's time to process the IO bursts of processes
                 {
@@ -140,7 +145,7 @@ namespace CPU_Scheduler_Simulation
                     }
                 }
                 CPUburst = !CPUburst;
-            } while ((currCPU.waitingIO.Count != 0 && !CPUburst) || (currCPU.waitingCPU.Count != 0 && CPUburst));
+            } while ((currCPU.waitingIO.Count != 0 && !CPUburst) || (currCPU.waitingCPU.Count != 0 && CPUburst)); 
         }
     }
 }
