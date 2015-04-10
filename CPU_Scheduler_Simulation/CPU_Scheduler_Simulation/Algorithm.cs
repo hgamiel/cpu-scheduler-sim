@@ -11,7 +11,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
         public int timeCounter = 0;
         public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
-        bool debugStatements = true;
+        bool debugStatements = false;
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
@@ -199,7 +199,7 @@ namespace CPU_Scheduler_Simulation
             Console.WriteLine("\tAmount of processes left to process/finish: " + nonEmptyProcesses.Count);
             Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
             Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
-            Console.WriteLine("--END FIRST COME FIRST SERVE\n");
+            Console.WriteLine("--END ROUND ROBIN\n");
 
             return nonEmptyProcesses; 
         }
