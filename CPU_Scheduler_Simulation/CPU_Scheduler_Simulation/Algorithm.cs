@@ -11,7 +11,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
         public int timeCounter = 0;
         public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
-        bool debugStatements = true;
+        bool debugStatements = false;
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first

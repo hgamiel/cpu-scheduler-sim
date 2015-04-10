@@ -14,7 +14,7 @@ namespace CPU_Scheduler_Simulation
         public Scheduler SimScheduler = new Scheduler();    // create a scheduler object
         public string filename;     // name of file containing information of PCBs
         public string filepath;     // in the same folder as the solution file
-
+        public bool debugStatements = false;
         public Simulation() { }     // default constructor
 
         //pushes info from lines on .dat files into processTable as a PCB
@@ -38,8 +38,10 @@ namespace CPU_Scheduler_Simulation
                     var values = line.Split(new string[] {"\t"}, StringSplitOptions.RemoveEmptyEntries); // creates array of values in line
                     addProcess(values); // calls function that adds process to process table
                 }
-
                 Console.WriteLine("File read completed.\n");
+                Console.WriteLine("There were " + processTable.Count + " processes added.");
+
+                
             }
             else
             {
@@ -67,11 +69,12 @@ namespace CPU_Scheduler_Simulation
                 }
             }
             processTable.Add(process); // adds process to process table
-            Console.WriteLine("Process with PID {0} added.", process.PID);
+            if(debugStatements)Console.WriteLine("Process with PID {0} added.", process.PID);
         }
 
         //sets up the scheduler and runs the simulation
         public void startSim(int quantum) {
+            Console.WriteLine("Simulation beginning.\n");
             this.quantum = quantum; // sets quantum for the simulation (should be 1 or 2; some very small number)
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();
