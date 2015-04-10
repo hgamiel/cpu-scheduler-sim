@@ -38,10 +38,9 @@ namespace CPU_Scheduler_Simulation
                     var values = line.Split(new string[] {"\t"}, StringSplitOptions.RemoveEmptyEntries); // creates array of values in line
                     addProcess(values); // calls function that adds process to process table
                 }
+            
                 Console.WriteLine("File read completed.\n");
                 Console.WriteLine("There were " + processTable.Count + " processes added.");
-
-                
             }
             else
             {
