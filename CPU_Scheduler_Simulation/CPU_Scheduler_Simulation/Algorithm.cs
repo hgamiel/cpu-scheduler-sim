@@ -277,7 +277,6 @@ namespace CPU_Scheduler_Simulation
                     process.executionTime = counter;        //set the finished time of the process
                     process.turnaroundTime = process.executionTime - process.arrivalTime;
                     process.tr_ts = process.turnaroundTime / process.serviceTime;
-<<<<<<< HEAD
                     if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
                     {
                         nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
@@ -286,6 +285,7 @@ namespace CPU_Scheduler_Simulation
                     {
                         finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
                     }
+
                     if (localFinishedProcesses == numProcesses)
                     {
                         finished = true;
@@ -293,16 +293,7 @@ namespace CPU_Scheduler_Simulation
                         Console.ReadKey();
                     }
                     Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
-=======
-                    finishedProcesses.Add(process);         //add to list of finished processes
-                    //check to see if we are finished
-                    if (finishedProcesses.Count == numProcesses)
-                    {
-                        finished = true;
-                        timeCounter += counter;
-                    }
-                    Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
->>>>>>> 66e01c8730268eddb6fe8aecaf9fde86891d3fd9
+
                     continue;
                 }
                 //move to the next queue

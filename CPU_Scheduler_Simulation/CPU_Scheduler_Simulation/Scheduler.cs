@@ -81,21 +81,10 @@ namespace CPU_Scheduler_Simulation
                         //case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 20); break;
                         //case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 40); break;
                         //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU); break; // uncomment when done
-<<<<<<< HEAD
-                        case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break; // uncomment when done
-=======
-<<<<<<< HEAD
                         case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
-                        //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
-                        default: Console.WriteLine("Algorithm " + switchAlg + " does not exist (yet); Skipping algorithm...\n");
-                                    switchAlg = (switchAlg + 1) % 8;
-=======
-                        //case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU); break; // uncomment when done
->>>>>>> 6f2bb707e64ff887369dafa811b938d0b616d320
                         //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU); break; // uncomment when done
                         default: Console.WriteLine("Algorithm at index " + switchAlg + " does not exist (yet); Skipping algorithm...\n");
                                     switchAlg = (switchAlg + 1) % 9;
->>>>>>> 66e01c8730268eddb6fe8aecaf9fde86891d3fd9
                                     continue; // will ignore rest of do/while and go through again with updated value for switch statement
                     }
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
