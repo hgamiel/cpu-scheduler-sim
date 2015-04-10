@@ -199,7 +199,7 @@ namespace CPU_Scheduler_Simulation
             Console.WriteLine("\tAmount of processes left to process/finish: " + nonEmptyProcesses.Count);
             Console.WriteLine("\tAmount of processes \"done\" (no more bursts) so far: " + finishedProcesses.Count);
             Console.WriteLine("\tTotal time accumulated so far: " + timeCounter);
-            Console.WriteLine("--END FIRST COME FIRST SERVE\n");
+            Console.WriteLine("--END ROUND ROBIN\n");
 
             return nonEmptyProcesses; 
         }
