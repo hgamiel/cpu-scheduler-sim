@@ -218,7 +218,7 @@ namespace CPU_Scheduler_Simulation
         //feedback algorithms if we wish to implement a feedback age solution
 
         //version 1 feedback with quantum = 1 
-        public List<PCB> v1Feedback(Queue<PCB> processes)
+        public List<PCB> v1Feedback(Queue<PCB> processes, bool CPUburst)
         {
             int quantum = 1;
             var finished = false;   //when algorithm is complete
@@ -226,22 +226,25 @@ namespace CPU_Scheduler_Simulation
             var process = new PCB();    //temporary holder
             var startIndex = 0;     //start index of the ready queues
             var numProcesses = 0;
+            var localFinishedProcesses = 0;
+            List<PCB> nonEmptyProcesses = new List<PCB>();
 
-            numProcesses = sample.Count;
+            numProcesses = processes.Count;
 
             //create a list of queues
             List<Queue<PCB>> rq = new List<Queue<PCB>>();
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 20; i++)
             {
                 rq.Add(new Queue<PCB>());
             }
-
             //first process
-            process = sample.Dequeue();
-            while (counter != sample.Peek().arrivalTime)
+            process = processes.Dequeue();
+            process.serviceTime = process.CPU.Dequeue();
+            //process.serviced = true;
+            while (counter != processes.Peek().arrivalTime)
             {
                 counter++;
-                Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum));
+                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum));
             }
             //assuming first process will not finish before next process comes in - not realistic of a CPU
             rq[++startIndex].Enqueue(process);
@@ -249,11 +252,12 @@ namespace CPU_Scheduler_Simulation
             while (!finished)
             {
                 //if a process has arrived, get the process and start our index of queues back at 0
-                if (sample.Count != 0)
+                if (processes.Count != 0)
                 {
-                    if (counter == sample.Peek().arrivalTime)
+                    if (counter == processes.Peek().arrivalTime)
                     {
-                        process = sample.Dequeue();
+                        process = processes.Dequeue();
+                        process.serviceTime = process.CPU.Dequeue();
                         startIndex = 0;
                         rq[startIndex].Enqueue(process);
                     }
@@ -264,15 +268,32 @@ namespace CPU_Scheduler_Simulation
                 //take the process of the current queue
                 process = rq[startIndex].Dequeue();
                 //the process serves a certain amount of time
-                Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum));
+                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum));
                 //this happens in one unit of time
                 counter++;
                 if (process.serviceTime == 0)
                 {
-                    process.finished = true;                //process is finished
+                    localFinishedProcesses++;
                     process.executionTime = counter;        //set the finished time of the process
                     process.turnaroundTime = process.executionTime - process.arrivalTime;
                     process.tr_ts = process.turnaroundTime / process.serviceTime;
+<<<<<<< HEAD
+                    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
+                    {
+                        nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
+                    }
+                    else
+                    {
+                        finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
+                    }
+                    if (localFinishedProcesses == numProcesses)
+                    {
+                        finished = true;
+                        timeCounter += counter;
+                        Console.ReadKey();
+                    }
+                    Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
+=======
                     finishedProcesses.Add(process);         //add to list of finished processes
                     //check to see if we are finished
                     if (finishedProcesses.Count == numProcesses)
@@ -281,9 +302,12 @@ namespace CPU_Scheduler_Simulation
                         timeCounter += counter;
                     }
                     Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
+>>>>>>> 66e01c8730268eddb6fe8aecaf9fde86891d3fd9
                     continue;
                 }
                 //move to the next queue
+                if ((startIndex + 1) == rq.Count)
+                    rq.Add(new Queue<PCB>());
                 rq[++startIndex].Enqueue(process);
 
                 //if there are no processes in this queue, then we move to the next queue
@@ -294,19 +318,21 @@ namespace CPU_Scheduler_Simulation
                 contextSwitchCost++;
             }
             Console.WriteLine("Finished feedback algorithm");
-            return null;
+            return nonEmptyProcesses;
         }    
 
         //version 2 feedback with quantum = 2^i - Tommy
-        public List<PCB> v2Feedback(Queue<PCB> processes)
+        public List<PCB> v2Feedback(Queue<PCB> processes, bool CPUburst)
         {
             var finished = false;   
             var counter = 0;    
             var process = new PCB();    
             var startIndex = 0;     
             var numProcesses = 0;
+            var localFinishedProcesses = 0;
+            List<PCB> nonEmptyProcesses = new List<PCB>();
 
-            numProcesses = sample.Count;
+            numProcesses = processes.Count;
 
             List<Queue<PCB>> rq = new List<Queue<PCB>>();
             for (int i = 0; i < 4; i++)
@@ -314,8 +340,8 @@ namespace CPU_Scheduler_Simulation
                 rq.Add(new Queue<PCB>());
             }
 
-            process = sample.Dequeue();
-            while (counter != sample.Peek().arrivalTime)
+            process = processes.Dequeue();
+            while (counter != processes.Peek().arrivalTime)
             {
                 counter++;
                 //quantum is only (2^0)=1 for this case
@@ -327,11 +353,11 @@ namespace CPU_Scheduler_Simulation
             while (!finished)
             {
                 //if a process has arrived either on time or has been waiting, get the process and start our index of queues back at 0
-                if (sample.Count != 0)
+                if (processes.Count != 0)
                 {
-                    if (counter >= sample.Peek().arrivalTime)
+                    if (counter >= processes.Peek().arrivalTime)
                     {
-                        process = sample.Dequeue();
+                        process = processes.Dequeue();
                         startIndex = 0;
                         rq[startIndex].Enqueue(process);
                     }
@@ -353,14 +379,24 @@ namespace CPU_Scheduler_Simulation
                     counter += (int)quantum;    //otherwise we just set it to the total time
                 if (process.serviceTime <= 0)
                 {
-                    process.finished = true;                
+                    process.finished = true;
+                    localFinishedProcesses++;
                     process.executionTime = counter;
                     process.turnaroundTime = process.executionTime - process.arrivalTime;
                     process.tr_ts = process.turnaroundTime / process.serviceTime;
-                    finishedProcesses.Add(process);         
-                    //check to see if we are finished
-                    if (finishedProcesses.Count == numProcesses) 
+                    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0)) // if we still have IO or CPU bursts to process...
+                    {
+                        nonEmptyProcesses.Add(process); // add it to the process list that still needs to further processed
+                    }
+                    else
+                    {
+                        finishedProcesses.Add(process); // add it to the list of "finished" processes (processes that don't have any more bursts)
+                    }
+                    if (localFinishedProcesses == numProcesses)
+                    {
                         finished = true;
+                        timeCounter += counter;
+                    }
                     Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
                     continue;
                 }
