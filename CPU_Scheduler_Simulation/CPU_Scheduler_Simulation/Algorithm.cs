@@ -61,6 +61,8 @@ namespace CPU_Scheduler_Simulation
                 }
                 else
                 {
+                    process.finished = true;
+                    process.executionTime = timeCounter+counter;
                     finishedProcesses.Add(process);
                 }
             } while (processes.Count != 0);
@@ -184,6 +186,8 @@ namespace CPU_Scheduler_Simulation
                         }
                         else
                         {
+                            process.finished = true;
+                            process.executionTime = timeCounter + counter;
                             finishedProcesses.Add(currProcesses[i]);
                         }
                         currProcesses.RemoveAt(i);
