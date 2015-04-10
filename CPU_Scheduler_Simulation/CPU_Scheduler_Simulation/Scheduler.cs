@@ -12,8 +12,20 @@ namespace CPU_Scheduler_Simulation
         public List<CPU> cpus = new List<CPU>();
         public List<PCB> finishedProcesses = new List<PCB>();
         public int numCPUs;
+        public int q1; // quantum 1 (rr)
+        public int q2; // quantum 2 (rr)
 
         public Scheduler() { }  // default contructor
+
+        public Scheduler(int quantum1, int quantum2) {
+            q1 = quantum1;
+            q2 = quantum2;
+        }
+
+        public void setQuantums(int quantum1, int quantum2) {
+            q1 = quantum1;
+            q2 = quantum2;
+        }
 
         //for each idle processor, select thread from ready queue
         //version: first come first served to whichever processor is idle
@@ -95,15 +107,14 @@ namespace CPU_Scheduler_Simulation
                     switch (switchAlg)
                     {
 
-                        
-                        //case 0: nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingCPU, CPUburst); break;
+                        case 0: nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.waitingCPU, CPUburst); break;
                         //case 1: nonEmptyProcesses = currCPU.algorithms.spn(currCPU.waitingCPU); break; // uncomment when done
                         //case 2: nonEmptyProcesses = currCPU.algorithms.srt(currCPU.waitingCPU); break; // uncomment when done
                         //case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.waitingCPU); break; // uncomment when done
-                        //case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 20); break;
-                        //case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, 40); break;
+                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, q1); break;
+                        case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.waitingCPU, q2); break;
                         //case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.waitingCPU, CPUburst); break; // uncomment when done
-                        case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
+                        //case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
                         //case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.waitingCPU, CPUburst); break; // uncomment when done
 
                         default: Console.WriteLine("Algorithm at index " + switchAlg + " does not exist (yet); Skipping algorithm...\n");

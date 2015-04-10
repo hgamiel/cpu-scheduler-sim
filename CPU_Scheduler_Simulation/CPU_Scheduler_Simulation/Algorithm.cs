@@ -12,7 +12,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>(); //global list of finished processes for data processing
         public int timeCounter = 0;
         public int contextSwitchCost = 1;   //cost of switching between processes. assumption: cost is one per switch
-        bool debugStatements = true;
+        bool debugStatements = false;
 
         //public int counter;           //if we wish to implement a counter age solution
         //age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
@@ -322,7 +322,7 @@ namespace CPU_Scheduler_Simulation
             while (counter != processes.Peek().arrivalTime)
             {
                 counter++;
-                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter);
+                if(debugStatements)Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter);
             }
             //assuming first process will not finish before next process comes in - not realistic of a CPU
             rq[++startIndex].Enqueue(process);
@@ -359,7 +359,7 @@ namespace CPU_Scheduler_Simulation
                 //this happens in one unit of time
                 counter++;
                 //the process serves a certain amount of time
-                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
+                if(debugStatements)Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
                 if (process.serviceTime == 0)
                 {
                     localFinishedProcesses++;
@@ -381,7 +381,7 @@ namespace CPU_Scheduler_Simulation
                         finished = true;
                         timeCounter += counter;
                     }
-                    Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
+                    if(debugStatements)Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
 
                     continue;
                 }
@@ -477,7 +477,7 @@ namespace CPU_Scheduler_Simulation
                     counter += (processServeTime * (-1));
                 else
                     counter += (int)quantum;    //otherwise we just set it to the total time
-                Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
+                if(debugStatements)Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
                 if (process.serviceTime <= 0)
                 {
                     process.finished = true;
@@ -498,7 +498,7 @@ namespace CPU_Scheduler_Simulation
                         finished = true;
                         timeCounter += counter;
                     }
-                    Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
+                    if(debugStatements)Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
                     continue;
                 }
                 if ((startIndex + 1) == rq.Count)

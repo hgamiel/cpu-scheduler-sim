@@ -80,6 +80,7 @@ namespace CPU_Scheduler_Simulation
             this.quantum = quantum; // sets quantum for the simulation (should be 1 or 2; some very small number)
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();
+            SimScheduler.setQuantums(20, 40);
             SimScheduler.numCPUs = 2;
             SimScheduler.loadBalancing(processTable); // load balances the processes. Will uncomment when it's ready
             endSim();
