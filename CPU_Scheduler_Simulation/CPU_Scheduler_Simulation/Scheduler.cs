@@ -11,6 +11,8 @@ namespace CPU_Scheduler_Simulation
         // this simulation will be using two processors
         public CPU cpu1 = new CPU();
         public CPU cpu2 = new CPU();
+        public List<CPU> cpus = new List<CPU>();
+        public int numCPUs;
 
         public Scheduler() { }  // default contructor 
 
@@ -18,35 +20,48 @@ namespace CPU_Scheduler_Simulation
         //version: first come first served to whichever processor is idle
         public void loadBalancing(List<PCB> processes)
         {
+            addCPUs();
+
             var numProcesses = processes.Count;     // number of processors
             // assigning each half of the number of processors to each processor
+            int counter = 0;
             for (int i = 0; i < numProcesses; i++)
             {
-                if (i % 2 == 0)
-                    cpu1.waitingCPU.Enqueue(processes[i]);
-                else
-                    cpu2.waitingCPU.Enqueue(processes[i]);
+                cpus[counter].waitingCPU.Enqueue(processes[i]);
+                counter = (counter + 1) % numCPUs;
             }
 
             runCPUs(); // runs the algorthms on processes on each CPU
 
         }
 
+        public void addCPUs()
+        {
+            for (int i = 0; i < numCPUs; i++)
+            {
+                cpus.Add(new CPU());
+            }
+        }
+
         public int calcTotalTime() // returns the total time spent across both CPUs
         {
-            int sum;
-            sum = cpu1.algorithms.timeCounter + cpu2.algorithms.timeCounter;
+            int sum = 0;
+            for (int i = 0; i < numCPUs; i++)
+            {
+                sum += cpus[i].algorithms.timeCounter;
+            }
+            
             return sum;
         }
 
         public void runCPUs()
         {
-            Console.WriteLine("~~~~ BEGIN CPU 1 ~~~~");
-            runCPU(cpu1);
-            Console.WriteLine("~~~~ END CPU 1 ~~~~\n");
-            Console.WriteLine("~~~~ BEGIN CPU 2 ~~~~");
-            runCPU(cpu2);
-            Console.WriteLine("~~~~ END CPU 1 ~~~~\n");
+            for (int i = 0; i < cpus.Count; i++)
+            {
+                Console.WriteLine("~~~~ BEGIN CPU "+(i+1)+" ~~~~");
+                runCPU(cpus[i]);
+                Console.WriteLine("~~~~ END CPU "+(i+1)+" ~~~~\n");
+            } 
         }
 
         public void runCPU(CPU currCPU)

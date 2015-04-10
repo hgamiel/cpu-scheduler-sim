@@ -75,6 +75,7 @@ namespace CPU_Scheduler_Simulation
             this.quantum = quantum; // sets quantum for the simulation (should be 1 or 2; some very small number)
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();
+            SimScheduler.numCPUs = 2;
             SimScheduler.loadBalancing(processTable); // load balances the processes. Will uncomment when it's ready
             endSim();
         }
@@ -82,10 +83,12 @@ namespace CPU_Scheduler_Simulation
         //ends the simulation
         public void endSim() {
             Console.WriteLine("Simulation complete.\n");
-            Console.WriteLine("Total time spent in CPU #1: " + SimScheduler.cpu1.algorithms.timeCounter);
-            Console.WriteLine("Total time spent in CPU #2: " + SimScheduler.cpu2.algorithms.timeCounter);
+            for (int i = 0; i < SimScheduler.numCPUs; i++)
+            {
+                Console.WriteLine("Total time spent in CPU #" + i + ": " + SimScheduler.cpus[i].algorithms.timeCounter);
+            }
             Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("Total time spent across both CPUs: " + SimScheduler.calcTotalTime());
+            Console.WriteLine("Total time spent across all CPUs: " + SimScheduler.calcTotalTime());
             Console.ReadKey();
         }               
     }
