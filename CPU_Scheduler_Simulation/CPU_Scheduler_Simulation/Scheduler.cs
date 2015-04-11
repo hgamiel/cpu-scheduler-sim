@@ -136,6 +136,7 @@ namespace CPU_Scheduler_Simulation
                     index++;
                     if (index > 8)
                         index = 0;
+                    currCPU.algorithms.throughput.Add(cirrCPU.algorithms)
                     currCPU.waitingIO.Clear();
                     nonEmptyProcesses = nonEmptyProcesses.OrderBy(p => p.arrivalTime).ToList();
 

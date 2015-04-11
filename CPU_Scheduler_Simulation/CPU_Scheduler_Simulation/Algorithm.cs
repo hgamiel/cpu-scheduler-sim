@@ -13,6 +13,8 @@ namespace CPU_Scheduler_Simulation
         public int contextSwitchCost = 1;   // cost of switching between processes. assumption: cost is one per switch
         int counter = 0;                    // local time for an algorithm
         int numProcesses = 0;               // the number of processes in the beginning of an algorithm
+        public List<int> throughput = new List<int>();       // number of processes that the algorithm finishes on each run
+        public int currentThroughput = 0;
         bool debugStatements = false;       // if debugging is needed
         public Data data = new Data();      // data object to use for string output
         PCB process = new PCB();            // temporary holder for a process
@@ -65,9 +67,9 @@ namespace CPU_Scheduler_Simulation
             } while (processes.Count != 0);
 
             timeCounter += counter;         // add local time to total time
-
+            currentThroughput = numProcesses - nonEmptyProcesses.Count;
             // output ending of algorithm
-            Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 
             // return the processes that need to be computed
             return nonEmptyProcesses;
