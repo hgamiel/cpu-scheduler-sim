@@ -27,6 +27,7 @@ namespace CPU_Scheduler_Simulation
         public List<double> tr_ts = new List<double>();            //turnaround time / service time
         public double lastTimeProcessed; //for purposes of RR
         public Boolean finished = false;
+        public Boolean alreadyProcessed = false;
 
         public Queue<int> CPU = new Queue<int>(); // queue of CPU bursts
         public Queue<int> IO = new Queue<int>(); // queue of IO bursts

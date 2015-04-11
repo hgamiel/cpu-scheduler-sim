@@ -133,23 +133,76 @@ namespace CPU_Scheduler_Simulation
         }
 
         //shortest-remaining-time algorithm - Brady
-        public List<PCB> srt(Queue<PCB> processes)
+        public List<PCB> srt(Queue<PCB> processes, bool CPUburst)
         {
             //as processes arrive, compute service time
             Console.WriteLine("====START OF SRTF====");
             Console.WriteLine("\tNumber of processes to be serviced this round: " + processes.Count);
             int counter = 0;
-            List<PCB> myList = new List<PCB>(processes);
+            var List = processes.ToList();
+            Collection<PCB> collection = new Collection<PCB>(List);
+            List<PCB> nonEmptyProcesses = new List<PCB>();
+            List<PCB> tempList = new List<PCB>();
             PCB process = new PCB();
-            do
-            {
-                //computing service time
-                //after computing, observe all processes that have arrived and use the one with the shortest service time
-            } while (myList.Count != 0);
 
+            while (counter < processes.Peek().arrivalTime)
+            {
+                counter++;
+            }
+            process = collection[0];
+            counter++;
+            process.serviceTime = process.CPU.Dequeue();
+            process.serviceTime--;
+
+            while (collection.Count != 0)
+            {
+                for (int i = 0; i < collection.Count; ++i)
+                {
+                    if (collection.ElementAt(i).arrivalTime <= counter)
+                        tempList.Add(collection.ElementAt(i));
+                }
+                var min = tempList.Min(p => p.serviceTime);
+                var tempProcess = tempList.First(p => p.serviceTime == min);
+                if (process.serviceTime > tempProcess.serviceTime)
+                {
+                    process = tempProcess;
+                    if (!tempProcess.alreadyProcessed)
+                    {
+                        tempProcess.alreadyProcessed = true;
+                        process.serviceTime = process.CPU.Dequeue();
+                    }
+                }
+                counter++;
+                process.serviceTime -= 1;
+
+                if (process.serviceTime == 0)
+                {
+                    Console.WriteLine("Process " + process.PID + " has finished");
+                    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
+                    {
+                        nonEmptyProcesses.Add(process);
+                    }
+                    else
+                    {
+                        finishedProcesses.Add(process);
+                    }
+                    collection.Remove(process);
+                    if (collection.Count != 0)
+                    {
+                        process = collection[0];
+                        if (!tempProcess.alreadyProcessed)
+                        {
+                            tempProcess.alreadyProcessed = true;
+                            process.serviceTime = process.CPU.Dequeue();
+                        }
+                    }
+                }
+                tempList.Clear();
+            }
 
             Console.WriteLine("====END OF SRTF====");
-            return null;
+
+            return nonEmptyProcesses;
         }
 
         //highest-response-ratio-next algorithm - Wilo
