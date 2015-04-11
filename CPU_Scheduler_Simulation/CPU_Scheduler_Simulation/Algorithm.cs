@@ -210,8 +210,7 @@ namespace CPU_Scheduler_Simulation
         //highest-response-ratio-next algorithm - Wilo
         public List<PCB> hrrn(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine("-- Begin Highest Response Ratio Next");
-            Console.WriteLine("\tNummber of processes in this round " + sample.Count);
+           
              List<PCB> nonEmptyProcesses = new List<PCB>();
             var list = processes.ToList();
             int counter = 0;
