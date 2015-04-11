@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
     <Compile Include="CPU.cs" />
+    <Compile Include="Data.cs" />
     <Compile Include="PCB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Scheduler.cs" />

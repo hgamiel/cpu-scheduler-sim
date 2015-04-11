@@ -10,13 +10,13 @@ namespace CPU_Scheduler_Simulation
 {
     public class Simulation
     {
-        public int quantum;     // quantum for the simulation
-        List<PCB> processTable = new List<PCB>();    // contains list of PCBs
+        public int quantum;                                 // quantum for the simulation
+        List<PCB> processTable = new List<PCB>();           // contains list of PCBs
         public Scheduler SimScheduler = new Scheduler();    // create a scheduler object
-        public string filename;     // name of file containing information of PCBs
-        public string filepath;     // in the same folder as the solution file
+        public string filename;                             // name of file containing information of PCBs
+        public string filepath;                             // in the same folder as the solution file
         public bool debugStatements = false;
-        List<PCB> copy = new List<PCB>();
+        List<PCB> copy = new List<PCB>();                   // holds a copy of the original list, processTable
         
         public Simulation() { }     // default constructor
 
@@ -82,21 +82,26 @@ namespace CPU_Scheduler_Simulation
         public void startSim(int quantum1, int quantum2) {
             Console.WriteLine("Simulation beginning.\n");
             readDataFiles(); // reads in processes in the .dat file
-            processTable = processTable.OrderBy(p => p.arrivalTime).ToList();
+            processTable = processTable.OrderBy(p => p.arrivalTime).ToList();           // order the processes by arrival time
             
-            var integers = new List<int> { 3 };
-            var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);
+            var integers = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8 };                 // for all test cases
+            // var integers = new List<int> { 1 };                                      // for single algortihm processing
+            var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);  // create all permutations of the integers list - will run through 9! runs of the simulation
             List<PCB> copy = new List<PCB>();
-            
+
+            var k = 0;
             foreach (var v in x)
             {
+                Console.WriteLine("Current run: " + String.Join(",",v));
+                // create a new scheduler every time we start the scheduler
                 Scheduler simScheduler = new Scheduler();
-                simScheduler.setQuantums(quantum1, quantum2);
-                simScheduler.numCPUs = 2;
-                copy = processTable.ConvertAll(pcb => (PCB)pcb.Clone()).ToList();
-                simScheduler.loadBalancing(processTable, v); // load balances the processes
-                endSim(processTable);
-                processTable = copy;
+                simScheduler.setQuantums(quantum1, quantum2);                       // set the quantums
+                simScheduler.numCPUs = 2;                                           // set the number of CPUs
+                copy = processTable.ConvertAll(pcb => (PCB)pcb.Clone()).ToList();   // create a copy of the original list
+                simScheduler.loadBalancing(processTable, v);                        // load balances the processes
+                endSim(processTable);                                               // output the data
+                processTable = copy;                                                // reset the processTable with original list in copy
+                Console.ReadKey();
             }
         }
 
@@ -109,12 +114,14 @@ namespace CPU_Scheduler_Simulation
             }
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine("Total time spent across all CPUs: " + SimScheduler.calcTotalTime());
-            Statistics stats = new Statistics(list);
+
+            Statistics stats = new Statistics(list);        // object that holds all of the stats
             stats.runStatistics();
             Console.ReadKey();
             writeStatsToFile();
         }
 
+        // output stats to file for viewing
         public void writeStatsToFile()
         {
             

@@ -10,7 +10,7 @@ namespace CPU_Scheduler_Simulation
     {
         static void Main(string[] args)
         {
-            int quantum1 = 10;    //we can either have user input or hard-code
+            int quantum1 = 10;    // change the quantums for round robin
             int quantum2 = 20;
             Simulation simulation = new Simulation();   //create a simulation object
             //start the simulation

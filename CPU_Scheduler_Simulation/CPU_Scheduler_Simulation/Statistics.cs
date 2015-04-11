@@ -9,33 +9,32 @@ namespace CPU_Scheduler_Simulation
 {
     public class Statistics
     {
-        public List<PCB> finishedProcesses = new List<PCB>();
+        public List<PCB> finishedProcesses = new List<PCB>();   // finished processes from the algorithms
+        public Data data = new Data();
+
+        // data collection
         int avgResponseTime;
         int avgWaitTime;
         int avgTurnaroundTime;
         int avgExecutionTime;
         int avgTRTS;
 
+        // constructor
         public Statistics(List<PCB> processes)
         {
             finishedProcesses = processes;
         }
 
+        // computes and outputs all of the statistics
         public void runStatistics()
         {
-            Console.WriteLine("Avg response time: " + determineAverageResponseTime());
-            Console.WriteLine("\tMin response time: " + determineMinResponseTime());
-            Console.WriteLine("\tMax response time: " + determineMaxResponseTime());
-            Console.WriteLine("Avg wait time: " + determineAverageWaitTime());
-            Console.WriteLine("\tMin wait time: " + determineMinWaitTime());
-            Console.WriteLine("\tMax wait time: " + determineMaxWaitTime());
-            Console.WriteLine("Avg turnaround time: " + determineAverageTurnaroundTime());
-            Console.WriteLine("\tMin turnaround time: " + determineMinTurnaroundTime());
-            Console.WriteLine("\tMax turnaround time: " + determineMaxTurnaroundTime());
-            Console.WriteLine("Avg execution time: " + determineAverageExecutionTime());
-            Console.WriteLine("\tMin execution time: " + determineMinExecutionTime());
-            Console.WriteLine("\tMax execution time: " + determineMaxExecutionTime());
-            Console.WriteLine("Avg trts: " + determineAverageTRTS());
+            // output statistics
+            Console.WriteLine(data.getStatisticsOutput(
+                determineAverageResponseTime(), determineMinResponseTime(), determineMaxResponseTime(),
+                determineAverageWaitTime(), determineMinWaitTime(), determineMaxWaitTime(),
+                determineAverageTurnaroundTime(), determineMinTurnaroundTime(), determineMaxTurnaroundTime(),
+                determineAverageExecutionTime(), determineMinExecutionTime(), determineMaxExecutionTime(),
+                determineAverageTRTS()));
 
             avgResponseTime = determineAverageResponseTime();
             avgTurnaroundTime = determineAverageTurnaroundTime();
@@ -44,6 +43,10 @@ namespace CPU_Scheduler_Simulation
             avgWaitTime = determineAverageWaitTime();
             
         }
+
+        /* 
+         * The functions below calculate the following variables:
+         */
 
         public double determineMinResponseTime()
         {
@@ -219,6 +222,7 @@ namespace CPU_Scheduler_Simulation
             return max;
         }
 
+        // determine average turnaround time / service time
         public int determineAverageTRTS() {
 
             int sum = 0;
