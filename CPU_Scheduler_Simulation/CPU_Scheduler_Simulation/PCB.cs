@@ -12,6 +12,7 @@ namespace CPU_Scheduler_Simulation
     [Serializable]
     public class PCB : ICloneable
     {
+        public double ratio;            // for hrrn
         public char name;               //testing purposes
         public int PID;                 //unique id to a PCB
         public int serviceTime;         //time required by a process -- same as CPU burst time (see list below)
@@ -69,6 +70,10 @@ namespace CPU_Scheduler_Simulation
         public String serveTime(double q) {
             this.serviceTime -= (int)q;
             return Convert.ToString(this.serviceTime);
+        }
+        public void computeRatio()
+        {
+            ratio = (waitTime + serviceTime) / serviceTime;
         }
     }
 }

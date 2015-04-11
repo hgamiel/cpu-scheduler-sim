@@ -103,6 +103,8 @@ namespace CPU_Scheduler_Simulation
             Collection<PCB> collection = new Collection<PCB>(list);
             List<PCB> temp = new List<PCB>();
             var process = new PCB();
+            Console.WriteLine("-- Begin Shortest Process Next");
+            Console.WriteLine("\tNummber of processes in this round " + processes.Count);
             while (counter < processes.Peek().arrivalTime)
                 counter++;
             while (collection.Count != 0)
@@ -206,37 +208,52 @@ namespace CPU_Scheduler_Simulation
         }
 
         //highest-response-ratio-next algorithm - Wilo
-        public List<PCB> hrrn(Queue<PCB> processes)
+        public List<PCB> hrrn(Queue<PCB> processes, bool CPUburst)
         {
             Console.WriteLine("-- Begin Highest Response Ratio Next");
             Console.WriteLine("\tNummber of processes in this round " + sample.Count);
+             List<PCB> nonEmptyProcesses = new List<PCB>();
+            var list = processes.ToList();
             int counter = 0;
-            List<PCB> nonEmptyProcesses = new List<PCB>();
-            List<PCB> tempList = new List<PCB>();
-            PCB process = new PCB();
-          
-            while (sample.Count !=0)
+            Collection<PCB> collection = new Collection<PCB>(list);
+            List<PCB> temp = new List<PCB>();
+            var process = new PCB();
+            Console.WriteLine("-- Begin Shortest Process Next");
+            Console.WriteLine("\tNummber of processes in this round " + processes.Count);
+            while (counter < processes.Peek().arrivalTime)
+                counter++;
+            foreach (var p in collection)
+                p.serviceTime = p.CPU.Dequeue();
+            while (collection.Count != 0)
             {
-                while (counter < sample.Peek().arrivalTime)
-                    counter++;
-                for (int i = 0; i < sample.Count; i++)
+                for (int i = 0; i < collection.Count; i++)
                 {
-                    if (sample.ElementAt(i).arrivalTime <= counter)
-                    {
-                        process = sample.Dequeue();
-                        finishedProcesses.Add(process);
-                        Console.WriteLine("Process " + process.PID + " has finished");
-                    }
-                    else
-                    {
-
-                    }
+                    if (collection[i].arrivalTime <= counter)
+                        temp.Add(collection[i]);
                 }
-
+                foreach (var p in temp)
+                {
+                    p.waitTime = counter - p.arrivalTime;
+                    p.computeRatio();
+                }
+                var highest = temp.Max(x => x.ratio);
+                process = temp.First(x => x.ratio == highest);
+                
+                counter += process.serviceTime;
+                process.serviceTime -= process.serviceTime;
+                Console.WriteLine("Process " + process.PID + " has finished");
+                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
+                {
+                    nonEmptyProcesses.Add(process);
+                }
+                else
+                {
+                    finishedProcesses.Add(process);
+                }
+                collection.Remove(process);
+                temp.Clear();
             }
-            
-            //ration = (wait time + service time) / service time
-            return null;
+            return nonEmptyProcesses;
         }
 
         //round robin algorithm - Hannah
