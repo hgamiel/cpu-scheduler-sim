@@ -95,53 +95,29 @@ namespace CPU_Scheduler_Simulation
         }
 
         //shortest-process-next algorithm - Wilo
-        public List<PCB> spn(Queue<PCB> list,bool CPUburst)
+        public List<PCB> spn(Queue<PCB> processes ,bool CPUburst)
         {
-            List<PCB> processes = new List<PCB>(list);
-            Console.WriteLine("--Begin Shortest Process Next");
-            int counterVar = 0;
             List<PCB> nonEmptyProcesses = new List<PCB>();
-            List<PCB> tempList = new List<PCB>();
-            PCB process = new PCB();
-            while (counterVar < processes[0].arrivalTime) {
-                counterVar++;
-            }
-                
-            while (processes.Count != 0)
+            var list = processes.ToList();
+            int counter = 0;
+            Collection<PCB> collection = new Collection<PCB>(list);
+            List<PCB> temp = new List<PCB>();
+            var process = new PCB();
+            while (counter < processes.Peek().arrivalTime)
+                counter++;
+            while (collection.Count != 0)
             {
-                for (int i = 0; i < processes.Count; i++)
+                for (int i = 0; i < collection.Count; i++)
                 {
-                    if (processes.ElementAt(i).arrivalTime <= counterVar)
-                    {
-                        tempList.Add(processes[i]);
-                        processes.RemoveAt(i);
-                    }
+                    if (collection[i].arrivalTime <= counter)
+                        temp.Add(collection[i]);
                 }
-
-                process = tempList[0];
-                var k = 0;
-                if (tempList.Count > 1)
-                {
-                    for (int i = 1; i < tempList.Count; i++)
-                    {
-                        var tempProcess = tempList[i];
-                        tempProcess.serviceTime = tempProcess.CPU.Dequeue();
-                        if (tempProcess.serviceTime < process.serviceTime)
-                        {
-                            process = tempProcess;
-                            k = i;
-                        }
-                        else
-                        {
-                            tempProcess.CPU.Enqueue(tempProcess.serviceTime);
-                        }
-                    }
-                }
-                else 
-                    process.serviceTime = process.CPU.Dequeue();
-                counterVar += process.serviceTime;
+                var min = temp.Min(x => x.serviceTime);
+                process = temp.First(x => x.serviceTime == min);
+                process.serviceTime = process.CPU.Dequeue();
+                counter += process.serviceTime;
                 process.serviceTime -= process.serviceTime;
-                tempList.RemoveAt(k);
+                Console.WriteLine("Process " + process.PID + " has finished");
                 if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
                 {
                     nonEmptyProcesses.Add(process);
@@ -150,43 +126,10 @@ namespace CPU_Scheduler_Simulation
                 {
                     finishedProcesses.Add(process);
                 }
-                
-                for (int i = 0; i < tempList.Count; i++)
-                    processes.Add(tempList[i]);
-                tempList.Clear();
-                Console.WriteLine("Process " + process.PID + " has finished");
-                
+                collection.Remove(process);
+                temp.Clear();
             }
-
-            return nonEmptyProcesses; 
-            //var list = processes.ToList();
-            //int counter = 0;
-            //Collection<PCB> test = new Collection<PCB>(list);
-            //List<PCB> temp = new List<PCB>();
-            //var process = new PCB();
-            //while (test.Count != 0)
-            //{
-            //    for (int i = 0; i < test.Count; i++)
-            //    {
-            //        if (test[i].arrivalTime <= counter)
-            //            temp.Add(test[i]);
-            //    }
-            //    var min = temp.Min(x => x.serviceTime);
-            //    process = temp.Single(x => x.serviceTime == min);
-            //    counter += process.serviceTime;
-            //    process.serviceTime -= process.serviceTime;
-            //    Console.WriteLine("Process " + process.name + " has finished");
-            //    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
-            //    {
-            //        nonEmptyProcesses.Add(process);
-            //    }
-            //    else
-            //    {
-            //        finishedProcesses.Add(process);
-            //    }
-            //    test.Remove(process);
-            //    temp.Clear();
-            
+            return nonEmptyProcesses;
         }
 
         //shortest-remaining-time algorithm - Brady

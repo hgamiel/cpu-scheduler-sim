@@ -84,7 +84,7 @@ namespace CPU_Scheduler_Simulation
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();
             
-            var integers = new List<int> { 0, 4, 5, 7, 8};
+            var integers = new List<int> { 1 };
             var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);
             List<PCB> copy = new List<PCB>();
             
