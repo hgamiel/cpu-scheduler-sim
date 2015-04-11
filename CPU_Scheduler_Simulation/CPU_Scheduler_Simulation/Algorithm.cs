@@ -27,7 +27,7 @@ namespace CPU_Scheduler_Simulation
         // first-come-first-serve algorithm - non-preemptive
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
-            Console.WriteLine(data.algorithms[0], processes.Count, CPUburst);   // output a line at the beginning of the algorithm
+            Console.WriteLine(data.introAlgString(data.algorithms[0], processes.Count, CPUburst));   // output a line at the beginning of the algorithm
             counter = 0;
             numProcesses = processes.Count;
             int service;                        // gives the initial service of a process
@@ -76,7 +76,7 @@ namespace CPU_Scheduler_Simulation
         // shortest-process-next algorithm - non-preemptive
         public List<PCB> spn(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.algorithms[1], processes.Count, CPUburst);
+            Console.WriteLine(data.introAlgString(data.algorithms[1], processes.Count, CPUburst));
             nonEmptyProcesses.Clear();
             var list = processes.ToList();  // convert queue to list
             counter = 0;
@@ -127,7 +127,7 @@ namespace CPU_Scheduler_Simulation
         // shortest-remaining-time algorithm - preemptive
         public List<PCB> srt(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.algorithms[2], processes.Count, CPUburst);
+            Console.WriteLine(data.introAlgString(data.algorithms[2], processes.Count, CPUburst));
             counter = 0;
             numProcesses = processes.Count;
             var List = processes.ToList();
@@ -227,7 +227,7 @@ namespace CPU_Scheduler_Simulation
         // highest-response-ratio-next algorithm - non-preemptive
         public List<PCB> hrrn(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.algorithms[3], processes.Count, CPUburst);
+            Console.WriteLine(data.introAlgString(data.algorithms[3], processes.Count, CPUburst));
             nonEmptyProcesses.Clear();
             var list = processes.ToList();
             counter = 0;
@@ -359,21 +359,33 @@ namespace CPU_Scheduler_Simulation
             return nonEmptyProcesses;
         }
 
-        // priority algorithm - non-preemptive
+        // priority algorithm - non-preemptive - aging solution
         public List<PCB> priority(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.algorithms[5], processes.Count, CPUburst);
-            List<PCB> temp = new List<PCB>(processes);
+            Console.WriteLine(data.introAlgString(data.algorithms[5], processes.Count, CPUburst));
+            List<PCB> temp = new List<PCB>();
+            var list = processes.ToList();
+            Collection<PCB> collection = new Collection<PCB>(list);
             nonEmptyProcesses.Clear();
             counter = 0;
             numProcesses = processes.Count;
-            temp = temp.OrderBy(x => x.priorityNumber).ToList();    // we only care about the priority number of the list
+
+            //temp = temp.OrderBy(x => x.priorityNumber).ToList();    // we only care about the priority number of the list
 
             while (counter < processes.Peek().arrivalTime)
                 counter++;
-            for (int i = 0; i < processes.Count(); ++i)
+
+            while (collection.Count != 0)
             {
-                process = temp[i];
+                for (int i = 0; i < collection.Count; i++)
+                {
+                    if (collection[i].arrivalTime <= counter)
+                        temp.Add(collection[i]);
+                }
+
+                // get the lowest priority from the query
+                var lowest = temp.Min(x => x.priorityNumber);
+                process = temp.First(x => x.priorityNumber == lowest);
                 process.serviceTime = process.CPU.Dequeue();
                 process.beginServiceTime = process.serviceTime;
                 if (process.responseTime == -1)
@@ -391,6 +403,16 @@ namespace CPU_Scheduler_Simulation
                     process.determineTRTS(process.beginServiceTime);
                     finishedProcesses.Add(process);
                 }
+                collection.Remove(process);
+                // in helping with starvation, we just lower the priority number so it comes up faster
+                foreach (var p in collection)
+                {
+                    if (p.priorityNumber - 5 <= 0)
+                        p.priorityNumber = 0;
+                    else
+                        p.priorityNumber -= 5;
+                }
+                temp.Clear();
             }
             timeCounter += counter;
             Console.WriteLine(data.outroAlgString(data.algorithms[5], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
@@ -400,7 +422,7 @@ namespace CPU_Scheduler_Simulation
         // version 1 feedback with quantum = 1 - preemptive
         public List<PCB> v1Feedback(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.algorithms[6], processes.Count, CPUburst);
+            Console.WriteLine(data.introAlgString(data.algorithms[6], processes.Count, CPUburst));
 
             int quantum = 1;
             var finished = false;           // flag to tell when algorithm is complete
@@ -518,10 +540,10 @@ namespace CPU_Scheduler_Simulation
             return nonEmptyProcesses;
         }
 
-        //version 2 feedback with quantum = 2^i 
+        //version 2 feedback with quantum = 2^i - aging solution
         public List<PCB> v2Feedback(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.algorithms[7], processes.Count, CPUburst);
+            Console.WriteLine(data.introAlgString(data.algorithms[7], processes.Count, CPUburst));
             var finished = false;
             counter = 0;
             var startIndex = 0;

@@ -113,6 +113,7 @@ namespace CPU_Scheduler_Simulation
                 nonEmptyProcesses = nonEmptyProcesses.OrderBy(p => p.arrivalTime).ToList();     // order the non-empty processes by arrival time so it is easier to process
                 if (CPUburst && currCPU.waitingCPU.Count != 0) // if it's time to process the CPU bursts of processes
                 {
+                    
                     Console.WriteLine("~IN CPU BURST");
                     // runs algorithm depending on numbers in the switchAlgs list
                     switch (switchAlg)
@@ -132,14 +133,16 @@ namespace CPU_Scheduler_Simulation
                                     switchAlg = (switchAlg + 1) % 9;
                                     continue; // will ignore rest of do/while and go through again with updated value for switch statement
                     }
+                    index++;
+                    if (index > 8)
+                        index = 0;
                     currCPU.waitingIO.Clear();
                     nonEmptyProcesses = nonEmptyProcesses.OrderBy(p => p.arrivalTime).ToList();
 
                     // add processes from CPU queue to IO queue to be processed
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                         currCPU.waitingIO.Enqueue(nonEmptyProcesses[i]);
-
-                    switchAlg = switchAlgs[++index];    // move on to the next algorithm
+                    switchAlg = switchAlgs[index];    // move on to the next algorithm
                     Console.ReadKey();
                 }
                 else if (currCPU.waitingIO.Count != 0)// if it's time to process the IO bursts of processes
