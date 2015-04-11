@@ -95,22 +95,27 @@ namespace CPU_Scheduler_Simulation
         }
 
         //shortest-process-next algorithm - Wilo
-        public List<PCB> spn(Queue<PCB> processes,bool CPUburst)
+        public List<PCB> spn(Queue<PCB> list,bool CPUburst)
         {
-
+            List<PCB> processes = new List<PCB>(list);
             Console.WriteLine("--Begin Shortest Process Next");
             int counterVar = 0;
             List<PCB> nonEmptyProcesses = new List<PCB>();
             List<PCB> tempList = new List<PCB>();
             PCB process = new PCB();
-            while (counterVar < processes.Peek().arrivalTime)
+            while (counterVar < processes[0].arrivalTime) {
                 counterVar++;
+            }
+                
             while (processes.Count != 0)
             {
                 for (int i = 0; i < processes.Count; i++)
                 {
                     if (processes.ElementAt(i).arrivalTime <= counterVar)
-                        tempList.Add(processes.Dequeue());
+                    {
+                        tempList.Add(processes[i]);
+                        processes.RemoveAt(i);
+                    }
                 }
 
                 process = tempList[0];
@@ -126,12 +131,17 @@ namespace CPU_Scheduler_Simulation
                             process = tempProcess;
                             k = i;
                         }
+                        else
+                        {
+                            tempProcess.CPU.Enqueue(tempProcess.serviceTime);
+                        }
                     }
-                    tempList.RemoveAt(k);
                 }
-                process.serviceTime = process.CPU.Dequeue();
+                else 
+                    process.serviceTime = process.CPU.Dequeue();
                 counterVar += process.serviceTime;
                 process.serviceTime -= process.serviceTime;
+                tempList.RemoveAt(k);
                 if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
                 {
                     nonEmptyProcesses.Add(process);
@@ -142,10 +152,10 @@ namespace CPU_Scheduler_Simulation
                 }
                 
                 for (int i = 0; i < tempList.Count; i++)
-                    processes.Enqueue(tempList[i]);
+                    processes.Add(tempList[i]);
                 tempList.Clear();
-                Console.WriteLine("Process " + process.name + " has finished");
-
+                Console.WriteLine("Process " + process.PID + " has finished");
+                
             }
 
             return nonEmptyProcesses; 
@@ -202,10 +212,33 @@ namespace CPU_Scheduler_Simulation
         //highest-response-ratio-next algorithm - Wilo
         public List<PCB> hrrn(Queue<PCB> processes)
         {
-
+            Console.WriteLine("-- Begin Highest Response Ratio Next");
+            Console.WriteLine("\tNummber of processes in this round " + sample.Count);
             int counter = 0;
-            bool finish = false;
+            List<PCB> nonEmptyProcesses = new List<PCB>();
+            List<PCB> tempList = new List<PCB>();
+            PCB process = new PCB();
+          
+            while (sample.Count !=0)
+            {
+                while (counter < sample.Peek().arrivalTime)
+                    counter++;
+                for (int i = 0; i < sample.Count; i++)
+                {
+                    if (sample.ElementAt(i).arrivalTime <= counter)
+                    {
+                        process = sample.Dequeue();
+                        finishedProcesses.Add(process);
+                        Console.WriteLine("Process " + process.PID + " has finished");
+                    }
+                    else
+                    {
 
+                    }
+                }
+
+            }
+            
             //ration = (wait time + service time) / service time
             return null;
         }
