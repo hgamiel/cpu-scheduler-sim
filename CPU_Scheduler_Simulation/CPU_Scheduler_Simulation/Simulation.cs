@@ -83,18 +83,20 @@ namespace CPU_Scheduler_Simulation
             Console.WriteLine("Simulation beginning.\n");
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();
-            Scheduler simScheduler = new Scheduler();
-            simScheduler.setQuantums(quantum1, quantum2);
-            simScheduler.numCPUs = 2;
+            
             var integers = new List<int> { 0, 4, 5, 7, 8};
             var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);
-            var copy = new List<PCB>(processTable);
+            List<PCB> copy = new List<PCB>();
+            
             foreach (var v in x)
             {
-                copy = simScheduler.loadBalancing(copy, v); // load balances the processes
+                Scheduler simScheduler = new Scheduler();
+                simScheduler.setQuantums(quantum1, quantum2);
+                simScheduler.numCPUs = 2;
+                copy = processTable.ConvertAll(pcb => (PCB)pcb.Clone()).ToList();
+                simScheduler.loadBalancing(processTable, v); // load balances the processes
                 endSim(processTable);
-                simScheduler.finishedProcesses.Clear();
-                copy = processTable;
+                processTable = copy;
             }
         }
 

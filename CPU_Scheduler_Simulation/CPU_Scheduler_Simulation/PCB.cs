@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CPU_Scheduler_Simulation
 {
-    public class PCB
+    //public interface ICloneable<T> { T Clone(); }
+    [Serializable]
+    public class PCB : ICloneable
     {
         public char name;               //testing purposes
         public int PID;                 //unique id to a PCB
@@ -33,6 +37,20 @@ namespace CPU_Scheduler_Simulation
             this.responseTime = -1; // this is to avoid checks where startTime could actually start at 0
         }
 
+        public object Clone()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                if (this.GetType().IsSerializable)
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(stream, this);
+                    stream.Position = 0;
+                    return formatter.Deserialize(stream);
+                }
+                return null;
+            }
+        }
         public void determineTurnaroundTime() {
             this.turnaroundTime = executionTime - arrivalTime;
         }
