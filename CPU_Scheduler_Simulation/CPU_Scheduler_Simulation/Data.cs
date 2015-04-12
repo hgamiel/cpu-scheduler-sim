@@ -41,10 +41,11 @@ namespace CPU_Scheduler_Simulation
             {1, "SHORTEST-PROCESS-NEXT"},
             {2, "SHORTEST-REMAINING-TIME"},
             {3, "HIGHEST-RESPONSE-RATIO-NEXT"},
-            {4, "ROUND ROBIN WITH"},
-            {5, "PRIORITY"},
-            {6, "FEEDBACK WITH QUANTUM = 1"},
-            {7, "FEEDBACK WITH QUANTUM = 2^i"}
+            {4, "ROUND ROBIN WITH LOW QUANTUM"},
+            {5, "ROUND ROBIN WITH HIGH QUANTUM"},
+            {6, "PRIORITY"},
+            {7, "FEEDBACK WITH QUANTUM = 1"},
+            {8, "FEEDBACK WITH QUANTUM = 2^i"}
         };
 
         // output data string
@@ -104,11 +105,20 @@ namespace CPU_Scheduler_Simulation
             var str = "";
             for (int i = 0; i < scheduler.numCPUs; i++)
             {
-                str += "Total time spent in CPU #" + (i + 1) + ": " + scheduler.cpus[i].algorithms.timeCounter;
-                str += "\tProcessor Utilization: " + scheduler.cpus[i].utilization;
+                str += "Total time spent in CPU #" + (i + 1) + ": " + scheduler.cpus[i].algorithms.timeCounter + "\n";
+                str += "\tProcessor Utilization: " + scheduler.cpus[i].utilization + "%\n";
             }
-            str += "---------------------------------------------------";
+            str += "---------------------------------------------------\n";
             str += "Total time spent across all CPUs: " + scheduler.calcTotalTime();
+            return str;
+        }
+
+        public String currentRun(IList<int> v)
+        {
+            //Console.WriteLine("Current run: " + String.Join(",",v));
+            var str = "Current Run: \n";
+            foreach (var i in v)
+                str += "\t" + algorithms[i] + "\n";
             return str;
         }
     }

@@ -17,6 +17,7 @@ namespace CPU_Scheduler_Simulation
         public string filepath;                             // in the same folder as the solution file
         public bool debugStatements = false;
         List<PCB> copy = new List<PCB>();                   // holds a copy of the original list, processTable
+        Data data = new Data();
         
         public Simulation() { }     // default constructor
 
@@ -92,7 +93,7 @@ namespace CPU_Scheduler_Simulation
             var k = 0;
             foreach (var v in x)
             {
-                Console.WriteLine("Current run: " + String.Join(",",v));
+                Console.WriteLine(data.currentRun(v));
                 // create a new scheduler every time we start the scheduler
                 Scheduler simScheduler = new Scheduler();
                 simScheduler.setQuantums(quantum1, quantum2);                       // set the quantums
@@ -108,8 +109,7 @@ namespace CPU_Scheduler_Simulation
         //ends the simulation
         public void endSim(List<PCB> list, Scheduler scheduler) {
             Console.WriteLine("Simulation complete.\n");
-            Data data = new Data();
-            data.endSimOutput(scheduler);
+            Console.WriteLine(data.endSimOutput(scheduler));
             Statistics stats = new Statistics(list, scheduler);        // object that holds all of the stats
             stats.runStatistics();
             Console.ReadKey();

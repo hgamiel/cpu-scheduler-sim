@@ -97,9 +97,9 @@ namespace CPU_Scheduler_Simulation
                 runCPU(cpus[i]);
 
                 // calculate processor utilization
-                var totalTime = cpus[i].algorithms.timeCounter;
-                var totalContext = cpus[i].algorithms.totalContextSwitch;
-                cpus[i].utilization = (totalTime - totalContext) / totalTime;
+                var totalTime = (double)cpus[i].algorithms.timeCounter;
+                var totalContext = (double)cpus[i].algorithms.totalContextSwitch;
+                cpus[i].utilization = Math.Round(((totalTime - totalContext) / totalTime)*100, 3);
                 averageContextSwitchTime += totalContext;
 
                 // calculate throughput
