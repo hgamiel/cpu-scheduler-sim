@@ -245,23 +245,9 @@ namespace CPU_Scheduler_Simulation
             return average;
         }
 
-        public List<double> determineAverageThroughput()
+        public void determineAverageThroughput()
         {
-            List<double> throughput = new List<double>(9);
-            for (int i = 0; i < scheduler.cpus.Count; i++)
-            {
-                var total = 0;
-                var count = 0;
-                var cpu = scheduler.cpus[i];
-                for (int j = 0; j < cpu.algorithms.throughput.Count; j++)
-                {
-                    var algThroughput = cpu.algorithms.throughput[j];
-                    total = algThroughput.Sum();
-                    count = algThroughput.Count;
-                    throughput[j] += total;
-                }
-            }
-            return throughput;
+            
         }
 
     }

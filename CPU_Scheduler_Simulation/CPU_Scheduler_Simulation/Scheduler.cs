@@ -16,7 +16,7 @@ namespace CPU_Scheduler_Simulation
         public int numCPUs;
         public int q1; // quantum 1 (rr)
         public int q2; // quantum 2 (rr
-
+        public double averageContextSwitchTime = 0;
         public Scheduler() { }  // default contructor
 
         // initial quantum values
@@ -76,8 +76,16 @@ namespace CPU_Scheduler_Simulation
             {
                 Console.WriteLine("~~~~ BEGIN CPU "+(i+1)+" ~~~~");
                 runCPU(cpus[i]);
+                //calculate processor utilization
+                var totalTime = cpus[i].algorithms.timeCounter;
+                var totalContext = cpus[i].algorithms.totalContextSwitch;
+                cpus[i].utilization = (totalTime - totalContext) / totalTime;
+                averageContextSwitchTime += totalContext;
                 Console.WriteLine("~~~~ END CPU "+(i+1)+" ~~~~\n");
             }
+
+            //calculate the average context switch time
+            averageContextSwitchTime = averageContextSwitchTime / cpus.Count;
             
             // add the process from the cpu algorithms to the finished processes
             foreach (var c in cpus)
