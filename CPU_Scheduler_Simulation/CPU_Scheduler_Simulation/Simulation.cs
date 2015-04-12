@@ -108,13 +108,8 @@ namespace CPU_Scheduler_Simulation
         //ends the simulation
         public void endSim(List<PCB> list, Scheduler scheduler) {
             Console.WriteLine("Simulation complete.\n");
-            for (int i = 0; i < scheduler.numCPUs; i++)
-            {
-                Console.WriteLine("Total time spent in CPU #" + (i+1) + ": " + scheduler.cpus[i].algorithms.timeCounter);
-            }
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("Total time spent across all CPUs: " + scheduler.calcTotalTime());
-
+            Data data = new Data();
+            data.endSimOutput(scheduler);
             Statistics stats = new Statistics(list, scheduler);        // object that holds all of the stats
             stats.runStatistics();
             Console.ReadKey();

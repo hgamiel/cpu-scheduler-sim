@@ -10,6 +10,7 @@ namespace CPU_Scheduler_Simulation
     public class Algorithm
     {
         public int timeCounter = 0;         // total time to process all of the processes
+        public int timeIO = 0;              // time spent in IO 
         public int contextSwitchCost = 1;   // cost of switching between processes. assumption: cost is one per switch
         public int totalContextSwitch = 0;
         int counter = 0;                    // local time for an algorithm
@@ -44,7 +45,7 @@ namespace CPU_Scheduler_Simulation
 
                 process = processes.Dequeue();                                          // dequeue from the list of processes
                 service = (CPUburst) ? process.CPU.Dequeue() : process.IO.Dequeue();    // depends on whether we are in CPU or IO burst phase
-
+                    
                 // check if response time is not already calculated
                 if (process.responseTime == -1)
                     process.responseTime = counter;
@@ -65,7 +66,8 @@ namespace CPU_Scheduler_Simulation
                 }
             } while (processes.Count != 0);
 
-            timeCounter += counter;         // add local time to total time
+            timeCounter += counter;             // add local time to total time
+            if (CPUburst) timeIO += counter;    // if this was in IO phase, we need to calculate the time processor spent in IO
             // output ending of algorithm
             Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 

@@ -10,6 +10,7 @@ namespace CPU_Scheduler_Simulation
     {
         // default constructor
         public Data() { }
+
         // create some sample data
         public Queue<PCB> sample = new Queue<PCB>
         (
@@ -51,7 +52,7 @@ namespace CPU_Scheduler_Simulation
             double avgWait, double minWait, double maxWait,
             double avgTurn, double minTurn, double maxTurn,
             double avgExec, double minExec, double maxExec,
-            double avgTRTS)
+            double avgTRTS, double throughput, double speedup, double contextSwitch)
         {
             return "Average response time: " + avgResp + "\n"
                 + "\tMinimum response time: " + minResp + "\n"
@@ -66,6 +67,9 @@ namespace CPU_Scheduler_Simulation
                 + "\tMinimum execution time: " + minExec + "\n"
                 + "\tMaximum execution time: " + maxExec + "\n"
                 + "Ratio of turnaround time / service time: " + avgTRTS + "\n"
+                + "Average throughput across all CPUs: "  + throughput + "\n"
+                + "Average context switch time across all CPUs: " + contextSwitch + "\n"
+                + "Speedup: " + speedup + "\n"
             ;
         }
 
@@ -95,9 +99,17 @@ namespace CPU_Scheduler_Simulation
                 + "\tNumber of processes to be serviced this round: " + numProcesses;
         }
 
-        public String outputAlgThroughput(List<List<int>> algorithmThroughputs)
+        public String endSimOutput(Scheduler scheduler)
         {
-            return "";
+            var str = "";
+            for (int i = 0; i < scheduler.numCPUs; i++)
+            {
+                str += "Total time spent in CPU #" + (i + 1) + ": " + scheduler.cpus[i].algorithms.timeCounter;
+                str += "\tProcessor Utilization: " + scheduler.cpus[i].utilization;
+            }
+            str += "---------------------------------------------------";
+            str += "Total time spent across all CPUs: " + scheduler.calcTotalTime();
+            return str;
         }
     }
 }

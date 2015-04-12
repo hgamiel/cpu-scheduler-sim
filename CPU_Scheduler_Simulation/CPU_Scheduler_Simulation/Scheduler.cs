@@ -14,9 +14,12 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> finishedProcesses = new List<PCB>();
         public IList<int> switchAlgs;
         public int numCPUs;
-        public int q1; // quantum 1 (rr)
-        public int q2; // quantum 2 (rr
-        public double averageContextSwitchTime = 0;
+        public int q1;                                          // quantum 1 (rr)
+        public int q2;                                          // quantum 2 (rr)
+        public double averageContextSwitchTime;            // average context switch time over all cpus
+        public double averageThroughput;                    // average throughput over all cpus
+        public double speedup;                              // using amdahls law: 1/[(1-f)+(f/n)], where (1-f) is percent serial
+        public int schedulerTime;                               // total time spent across all cpus
         public Scheduler() { }  // default contructor
 
         // initial quantum values
@@ -69,9 +72,25 @@ namespace CPU_Scheduler_Simulation
             return sum;
         }
 
+        public void calculateSpeedUp(Double f)
+        {
+            speedup = Math.Round(1 / ((1 - f) + (f / numCPUs)), 3);
+        }
+
+        public void calculateThroughput()
+        {
+            var temp = 0.0;
+            foreach (var cpu in cpus)
+            {
+                temp = cpu.throughput;
+            }
+            averageThroughput = temp / numCPUs;
+        }
+
         // run the cpus that run the algorithms
         public void runCPUs()
         {
+            var waitingIO = 0.0;
             for (int i = 0; i < cpus.Count; i++)
             {
                 Console.WriteLine("~~~~ BEGIN CPU "+(i+1)+" ~~~~");
@@ -84,14 +103,25 @@ namespace CPU_Scheduler_Simulation
                 averageContextSwitchTime += totalContext;
 
                 // calculate throughput
-                var numFinishedProcesses = cpus[i].algorithms.finishedProcesses.Count
-                cpus[i].throughput = numFinishedProcesses / totalTime;
+                var numFinishedProcesses = cpus[i].algorithms.finishedProcesses.Count;
+                cpus[i].throughput = numFinishedProcesses;
+                
+                // get the time spent in IO
+                waitingIO += cpus[i].algorithms.timeIO;
 
                 Console.WriteLine("~~~~ END CPU "+(i+1)+" ~~~~\n");
             }
 
-            //calculate the average context switch time
-            averageContextSwitchTime = averageContextSwitchTime / cpus.Count;
+            // calculate the average context switch time
+            averageContextSwitchTime = averageContextSwitchTime / numCPUs;
+
+            // calculate speedup
+            double time = (double)calcTotalTime();
+            var percentTimeSpentInCPU = (time - waitingIO) / time;
+            calculateSpeedUp(percentTimeSpentInCPU);
+
+            // calculate throughput
+            calculateThroughput();
             
             // add the process from the cpu algorithms to the finished processes
             foreach (var c in cpus)
