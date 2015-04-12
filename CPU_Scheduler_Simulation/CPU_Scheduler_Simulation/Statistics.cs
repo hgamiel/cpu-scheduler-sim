@@ -244,11 +244,5 @@ namespace CPU_Scheduler_Simulation
 
             return average;
         }
-
-        public void determineAverageThroughput()
-        {
-            
-        }
-
     }
 }

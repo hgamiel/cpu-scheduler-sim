@@ -76,11 +76,17 @@ namespace CPU_Scheduler_Simulation
             {
                 Console.WriteLine("~~~~ BEGIN CPU "+(i+1)+" ~~~~");
                 runCPU(cpus[i]);
-                //calculate processor utilization
+
+                // calculate processor utilization
                 var totalTime = cpus[i].algorithms.timeCounter;
                 var totalContext = cpus[i].algorithms.totalContextSwitch;
                 cpus[i].utilization = (totalTime - totalContext) / totalTime;
                 averageContextSwitchTime += totalContext;
+
+                // calculate throughput
+                var numFinishedProcesses = cpus[i].algorithms.finishedProcesses.Count
+                cpus[i].throughput = numFinishedProcesses / totalTime;
+
                 Console.WriteLine("~~~~ END CPU "+(i+1)+" ~~~~\n");
             }
 
