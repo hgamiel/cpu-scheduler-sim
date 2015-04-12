@@ -113,13 +113,7 @@ namespace CPU_Scheduler_Simulation
             Statistics stats = new Statistics(list, scheduler);        // object that holds all of the stats
             stats.runStatistics();
             Console.ReadKey();
-            writeStatsToFile();
-        }
-
-        // output stats to file for viewing
-        public void writeStatsToFile()
-        {
-            
+            data.writeStatsToFile(stats);
         }
     }
 }
