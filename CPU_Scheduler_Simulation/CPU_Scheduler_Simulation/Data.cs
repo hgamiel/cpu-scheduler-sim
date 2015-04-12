@@ -94,5 +94,10 @@ namespace CPU_Scheduler_Simulation
             return "--BEGIN " + algName + " " + quantum + "\n"
                 + "\tNumber of processes to be serviced this round: " + numProcesses;
         }
+
+        public String outputAlgThroughput(List<List<int>> algorithmThroughputs)
+        {
+            return "";
+        }
     }
 }

@@ -13,7 +13,6 @@ namespace CPU_Scheduler_Simulation
         public int contextSwitchCost = 1;   // cost of switching between processes. assumption: cost is one per switch
         int counter = 0;                    // local time for an algorithm
         int numProcesses = 0;               // the number of processes in the beginning of an algorithm
-        public List<int> throughput = new List<int>();       // number of processes that the algorithm finishes on each run
         public int currentThroughput = 0;
         bool debugStatements = false;       // if debugging is needed
         public Data data = new Data();      // data object to use for string output
@@ -68,6 +67,7 @@ namespace CPU_Scheduler_Simulation
 
             timeCounter += counter;         // add local time to total time
             currentThroughput = numProcesses - nonEmptyProcesses.Count;
+            throughput[0].Add(currentThroughput);
             // output ending of algorithm
             Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 
@@ -122,7 +122,9 @@ namespace CPU_Scheduler_Simulation
                 temp.Clear();
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[1], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            currentThroughput = numProcesses - nonEmptyProcesses.Count;
+            throughput[1].Add(currentThroughput);
+            Console.WriteLine(data.outroAlgString(data.algorithms[1], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -222,7 +224,9 @@ namespace CPU_Scheduler_Simulation
                 tempList.Clear();   // clear the list so we can use it again
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[2], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            currentThroughput = numProcesses - nonEmptyProcesses.Count;
+            throughput[2].Add(currentThroughput);
+            Console.WriteLine(data.outroAlgString(data.algorithms[2], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -284,7 +288,9 @@ namespace CPU_Scheduler_Simulation
                 temp.Clear();
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[3], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            currentThroughput = numProcesses - nonEmptyProcesses.Count;
+            throughput[3].Add(currentThroughput);
+            Console.WriteLine(data.outroAlgString(data.algorithms[3], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -355,8 +361,9 @@ namespace CPU_Scheduler_Simulation
             } while ((processes.Count != 0 && currProcesses.Count == 0) || (processes.Count == 0 && currProcesses.Count != 0) || (processes.Count != 0 && currProcesses.Count != 0));
 
             timeCounter += counter;
-
-            Console.WriteLine(data.outroAlgString(data.algorithms[4], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            currentThroughput = numProcesses - nonEmptyProcesses.Count;
+            throughput[4].Add(currentThroughput);
+            Console.WriteLine(data.outroAlgString(data.algorithms[4], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 
             return nonEmptyProcesses;
         }
@@ -417,7 +424,9 @@ namespace CPU_Scheduler_Simulation
                 temp.Clear();
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[5], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            currentThroughput = numProcesses - nonEmptyProcesses.Count;
+            throughput[5].Add(currentThroughput);
+            Console.WriteLine(data.outroAlgString(data.algorithms[5], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -538,7 +547,9 @@ namespace CPU_Scheduler_Simulation
                 contextSwitchCost++;
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[7], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            currentThroughput = numProcesses - nonEmptyProcesses.Count;
+            throughput[6].Add(currentThroughput);
+            Console.WriteLine(data.outroAlgString(data.algorithms[6], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -662,7 +673,9 @@ namespace CPU_Scheduler_Simulation
                 contextSwitchCost++;
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[7], counter, (numProcesses - nonEmptyProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            currentThroughput = numProcesses - nonEmptyProcesses.Count;
+            throughput[7].Add(currentThroughput);
+            Console.WriteLine(data.outroAlgString(data.algorithms[7], counter, currentThroughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
     }

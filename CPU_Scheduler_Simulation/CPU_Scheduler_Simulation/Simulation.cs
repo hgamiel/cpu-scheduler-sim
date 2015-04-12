@@ -84,7 +84,7 @@ namespace CPU_Scheduler_Simulation
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();           // order the processes by arrival time
             
-            var integers = new List<int> { 4, 5, 6};                 // for all test cases
+            var integers = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8};                 // for all test cases
             // var integers = new List<int> { 6 };                                      // for single algortihm processing
             var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);  // create all permutations of the integers list - will run through 9! runs of the simulation
             List<PCB> copy = new List<PCB>();
@@ -99,23 +99,23 @@ namespace CPU_Scheduler_Simulation
                 simScheduler.numCPUs = 2;                                           // set the number of CPUs
                 copy = processTable.ConvertAll(pcb => (PCB)pcb.Clone()).ToList();   // create a copy of the original list
                 simScheduler.loadBalancing(processTable, v);                        // load balances the processes
-                endSim(processTable);                                               // output the data
+                endSim(processTable, simScheduler);                                               // output the data
                 processTable = copy;                                                // reset the processTable with original list in copy
                 Console.ReadKey();
             }
         }
 
         //ends the simulation
-        public void endSim(List<PCB> list) {
+        public void endSim(List<PCB> list, Scheduler scheduler) {
             Console.WriteLine("Simulation complete.\n");
-            for (int i = 0; i < SimScheduler.numCPUs; i++)
+            for (int i = 0; i < scheduler.numCPUs; i++)
             {
-                Console.WriteLine("Total time spent in CPU #" + (i+1) + ": " + SimScheduler.cpus[i].algorithms.timeCounter);
+                Console.WriteLine("Total time spent in CPU #" + (i+1) + ": " + scheduler.cpus[i].algorithms.timeCounter);
             }
             Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("Total time spent across all CPUs: " + SimScheduler.calcTotalTime());
+            Console.WriteLine("Total time spent across all CPUs: " + scheduler.calcTotalTime());
 
-            Statistics stats = new Statistics(list);        // object that holds all of the stats
+            Statistics stats = new Statistics(list, scheduler);        // object that holds all of the stats
             stats.runStatistics();
             Console.ReadKey();
             writeStatsToFile();

@@ -10,19 +10,21 @@ namespace CPU_Scheduler_Simulation
     public class Statistics
     {
         public List<PCB> finishedProcesses = new List<PCB>();   // finished processes from the algorithms
+        Scheduler scheduler = new Scheduler();
         public Data data = new Data();
 
         // data collection
-        int avgResponseTime;
-        int avgWaitTime;
-        int avgTurnaroundTime;
-        int avgExecutionTime;
-        int avgTRTS;
+        double avgResponseTime;
+        double avgWaitTime;
+        double avgTurnaroundTime;
+        double avgExecutionTime;
+        double avgTRTS;
 
         // constructor
-        public Statistics(List<PCB> processes)
+        public Statistics(List<PCB> processes, Scheduler scheduler)
         {
-            finishedProcesses = processes;
+            this.finishedProcesses = processes;
+            this.scheduler = scheduler;
         }
 
         // computes and outputs all of the statistics
@@ -104,7 +106,7 @@ namespace CPU_Scheduler_Simulation
             return max;
         }
 
-        public int determineAverageResponseTime()
+        public double determineAverageResponseTime()
         {
             int sum = 0;
             int average;
@@ -120,7 +122,7 @@ namespace CPU_Scheduler_Simulation
 
         }
 
-        public int determineAverageWaitTime()
+        public double determineAverageWaitTime()
         {
             int sum = 0;
             int average;
@@ -136,7 +138,7 @@ namespace CPU_Scheduler_Simulation
 
         }
 
-        public int determineAverageTurnaroundTime()
+        public double determineAverageTurnaroundTime()
         {
             int sum = 0;
             int average;
@@ -179,7 +181,7 @@ namespace CPU_Scheduler_Simulation
             return max;
         }
 
-        public int determineAverageExecutionTime()
+        public double determineAverageExecutionTime()
         {
             int sum = 0;
             int average;
@@ -223,7 +225,7 @@ namespace CPU_Scheduler_Simulation
         }
 
         // determine average turnaround time / service time
-        public int determineAverageTRTS() {
+        public double determineAverageTRTS() {
 
             int sum = 0;
             int average;
@@ -241,6 +243,25 @@ namespace CPU_Scheduler_Simulation
             average = (sum > 0) ? sum / countTRTS : 0;
 
             return average;
+        }
+
+        public List<double> determineAverageThroughput()
+        {
+            List<double> throughput = new List<double>(9);
+            for (int i = 0; i < scheduler.cpus.Count; i++)
+            {
+                var total = 0;
+                var count = 0;
+                var cpu = scheduler.cpus[i];
+                for (int j = 0; j < cpu.algorithms.throughput.Count; j++)
+                {
+                    var algThroughput = cpu.algorithms.throughput[j];
+                    total = algThroughput.Sum();
+                    count = algThroughput.Count;
+                    throughput[j] += total;
+                }
+            }
+            return throughput;
         }
 
     }
