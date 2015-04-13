@@ -15,7 +15,7 @@ namespace CPU_Scheduler_Simulation
         public int totalContextSwitch = 0;
         int counter = 0;                    // local time for an algorithm
         int numProcesses = 0;               // the number of processes in the beginning of an algorithm
-        bool debugStatements = true;       // if debugging is needed
+        bool debugStatements = false;       // if debugging is needed
         public Data data = new Data();      // data object to use for string output
         PCB process = new PCB();            // temporary holder for a process
         public List<PCB> finishedProcesses = new List<PCB>();   // global list of finished processes for data processing
@@ -102,30 +102,34 @@ namespace CPU_Scheduler_Simulation
                     if (collection[i].arrivalTime <= counter)
                         temp.Add(collection[i]);
                 }
-
-                var min = temp.Min(x => x.serviceTime);             // calculate the minimum
-                process = temp.First(x => x.serviceTime == min);    // choose the process that has the minimum
-                process.serviceTime = process.CPU.Dequeue();
-                process.beginServiceTime = process.serviceTime;
-                if (process.responseTime == -1)
-                    process.responseTime = counter;
-                counter += process.serviceTime;
-                counter += contextSwitchCost;
-                totalContextSwitch += contextSwitchCost;
-                process.serviceTime -= process.serviceTime;
-                process.waitTime = counter - process.arrivalTime;
-                // Console.WriteLine("Process " + process.PID + " has finished");
-                if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
-                    nonEmptyProcesses.Add(process);
+                if (temp.Count == 0)
+                    counter++;
                 else
                 {
-                    process.executionTime = counter + timeCounter;
-                    process.determineTurnaroundTime();
-                    process.determineTRTS(process.beginServiceTime);
-                    finishedProcesses.Add(process);
+                    var min = temp.Min(x => x.serviceTime);             // calculate the minimum
+                    process = temp.First(x => x.serviceTime == min);    // choose the process that has the minimum
+                    process.serviceTime = process.CPU.Dequeue();
+                    process.beginServiceTime = process.serviceTime;
+                    if (process.responseTime == -1)
+                        process.responseTime = counter;
+                    counter += process.serviceTime;
+                    counter += contextSwitchCost;
+                    totalContextSwitch += contextSwitchCost;
+                    process.serviceTime -= process.serviceTime;
+                    process.waitTime = counter - process.arrivalTime;
+                    // Console.WriteLine("Process " + process.PID + " has finished");
+                    if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
+                        nonEmptyProcesses.Add(process);
+                    else
+                    {
+                        process.executionTime = counter + timeCounter;
+                        process.determineTurnaroundTime();
+                        process.determineTRTS(process.beginServiceTime);
+                        finishedProcesses.Add(process);
+                    }
+                    collection.Remove(process);     // remove the process we have already computed
+                    temp.Clear();
                 }
-                collection.Remove(process);     // remove the process we have already computed
-                temp.Clear();
             }
             timeCounter += counter;
             var throughput = numProcesses - nonEmptyProcesses.Count;
