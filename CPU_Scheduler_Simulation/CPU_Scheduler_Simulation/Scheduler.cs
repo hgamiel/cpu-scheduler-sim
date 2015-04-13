@@ -43,8 +43,8 @@ namespace CPU_Scheduler_Simulation
         {
             switchAlgs = v;
             addCPUs();
-            var numProcesses = processes.Count;     // number of processors
-            // assigning each half of the number of processors to each processor
+            var numProcesses = processes.Count;     // number of processes
+            // assigning each processer an "even" amount (depends on # of CPUs)
             int counter = 0;
             for (int i = 0; i < numProcesses; i++)
             {
@@ -181,7 +181,7 @@ namespace CPU_Scheduler_Simulation
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                         currCPU.readyIO.Enqueue(nonEmptyProcesses[i]);
                     switchAlg = switchAlgs[index];    // move on to the next algorithm
-                    Console.ReadKey();
+                    //Console.ReadKey();
                 }
                 else if (currCPU.readyIO.Count != 0)// if it's time to process the IO bursts of processes
                 {

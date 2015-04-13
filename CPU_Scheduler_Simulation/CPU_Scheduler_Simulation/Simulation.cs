@@ -26,7 +26,7 @@ namespace CPU_Scheduler_Simulation
         {
             Console.WriteLine("--BEGIN FILE I/O");
             filename = "processes.dat";
-            Directory.SetCurrentDirectory(@"..\..\..\"); // default is \bin\Debug -> this sets the current directory up a few folders
+            //Directory.SetCurrentDirectory(@"..\..\..\"); // default is \bin\Debug -> this sets the current directory up a few folders
             filepath = Path.Combine(Environment.CurrentDirectory, filename);
 
             Console.WriteLine("\tFile + Path: {0}", filepath);
@@ -65,13 +65,16 @@ namespace CPU_Scheduler_Simulation
             for (int i = 3; i < values.Length; i++) // since bursts start at the 4th column (index 3 in an array), we start reading in bursts there
             {
                 var burst = Convert.ToInt32(values[i]); // burst time
-                if (i % 2 != 0) // if in an odd column, then it's a CPU burst
+                if (burst != 0)
                 {
-                    process.CPU.Enqueue(burst); // add CPU burst to the process' CPU burst list
-                }
-                else // then it's in an even column, so it's an I/O burst
-                {
-                    process.IO.Enqueue(burst); // add I/O burst to the process' I/O burst list
+                    if (i % 2 != 0) // if in an odd column, then it's a CPU burst
+                    {
+                        process.CPU.Enqueue(burst); // add CPU burst to the process' CPU burst list
+                    }
+                    else // then it's in an even column, so it's an I/O burst
+                    {
+                        process.IO.Enqueue(burst); // add I/O burst to the process' I/O burst list
+                    }
                 }
             }
             processTable.Add(process); // adds process to process table
@@ -82,6 +85,7 @@ namespace CPU_Scheduler_Simulation
         //sets up the scheduler and runs the simulation
         public void startSim(List<int> quantum1, List<int> quantum2) {
             Console.WriteLine("Simulation beginning.\n");
+            data.writeRandomProcessesToFile();
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();           // order the processes by arrival time
             
