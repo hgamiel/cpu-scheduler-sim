@@ -1,8 +1,0 @@
-C:\Users\tglasser15\Documents\GitHub\cpu-scheduler-sim\CPU_Scheduler_Simulation\CPU_Scheduler_Simulation\bin\Debug\CPU_Scheduler_Simulation.exe.config
-C:\Users\tglasser15\Documents\GitHub\cpu-scheduler-sim\CPU_Scheduler_Simulation\CPU_Scheduler_Simulation\bin\Debug\CPU_Scheduler_Simulation.exe
-C:\Users\tglasser15\Documents\GitHub\cpu-scheduler-sim\CPU_Scheduler_Simulation\CPU_Scheduler_Simulation\bin\Debug\CPU_Scheduler_Simulation.pdb
-C:\Users\tglasser15\Documents\GitHub\cpu-scheduler-sim\CPU_Scheduler_Simulation\CPU_Scheduler_Simulation\bin\Debug\Combinatorics.dll
-C:\Users\tglasser15\Documents\GitHub\cpu-scheduler-sim\CPU_Scheduler_Simulation\CPU_Scheduler_Simulation\bin\Debug\Combinatorics.xml
-C:\Users\tglasser15\Documents\GitHub\cpu-scheduler-sim\CPU_Scheduler_Simulation\CPU_Scheduler_Simulation\obj\Debug\CPU_Scheduler_Simulation.csprojResolveAssemblyReference.cache
-C:\Users\tglasser15\Documents\GitHub\cpu-scheduler-sim\CPU_Scheduler_Simulation\CPU_Scheduler_Simulation\obj\Debug\CPU_Scheduler_Simulation.exe
-C:\Users\tglasser15\Documents\GitHub\cpu-scheduler-sim\CPU_Scheduler_Simulation\CPU_Scheduler_Simulation\obj\Debug\CPU_Scheduler_Simulation.pdb
