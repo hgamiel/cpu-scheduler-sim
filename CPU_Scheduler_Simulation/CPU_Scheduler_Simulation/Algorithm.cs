@@ -54,7 +54,10 @@ namespace CPU_Scheduler_Simulation
 
                 process.waitTime += counter - process.arrivalTime;                      // time when process is not active
                 counter += service;                                                     // time spent of process gets added to local time
-
+                if (debugStatements && process.waitTime < 0)
+                {
+                    Console.WriteLine("WAIT TIME IS NEGATIVE AT PROCESS ID {0} IN {1}.", process.PID, ((CPUburst) ? "CPUburst" : "IO burst"));
+                }
                 // if there are any IO or CPU service times left to compute
                 if ((CPUburst && process.IO.Count > 0) || (!CPUburst && process.CPU.Count > 0))
                     nonEmptyProcesses.Add(process);
