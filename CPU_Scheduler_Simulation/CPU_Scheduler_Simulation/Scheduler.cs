@@ -186,7 +186,7 @@ namespace CPU_Scheduler_Simulation
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                         currCPU.readyIO.Enqueue(nonEmptyProcesses[i]);
                     switchAlg = switchAlgs[index];    // move on to the next algorithm
-                    //Console.ReadKey();
+                    Console.ReadKey();
                 }
                 else if (currCPU.readyIO.Count != 0)// if it's time to process the IO bursts of processes
                 {
@@ -196,6 +196,7 @@ namespace CPU_Scheduler_Simulation
                     // move the IO processes to CPU processes to be processed
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                         currCPU.readyCPU.Enqueue(nonEmptyProcesses[i]);
+                    Console.ReadKey();
                 }
                 CPUburst = !CPUburst;
             } while ((currCPU.readyIO.Count != 0 && !CPUburst) || (currCPU.readyCPU.Count != 0 && CPUburst)); 

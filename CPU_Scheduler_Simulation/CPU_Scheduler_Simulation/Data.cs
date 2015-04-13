@@ -215,7 +215,7 @@ namespace CPU_Scheduler_Simulation
                 oXL.Visible = false;
                 oXL.UserControl = false;
                 //change save as to save after creating
-                oWB.SaveAs("C:\\Users\\tglasser15\\Documents\\Speedup.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+                oWB.SaveAs("C:\\Users\\hgamiel15\\Documents\\Speedup.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
                 false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
                 Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 
@@ -268,7 +268,7 @@ namespace CPU_Scheduler_Simulation
                 oXL.Visible = false;
                 oXL.UserControl = false;
                 //change save as to save after creating
-                string path = "C:\\Users\\tglasser15\\Documents\\";
+                string path = "C:\\Users\\hgamiel15\\Documents\\";
 
                 oWB.SaveAs((path + "processes.xls"), Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
                 false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
