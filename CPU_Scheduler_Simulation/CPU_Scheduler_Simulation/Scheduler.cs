@@ -43,8 +43,8 @@ namespace CPU_Scheduler_Simulation
         {
             switchAlgs = v;
             addCPUs();
-            var numProcesses = processes.Count;     // number of processors
-            // assigning each half of the number of processors to each processor
+            var numProcesses = processes.Count;     // number of processes
+            // assigning each processer an "even" amount (depends on # of CPUs)
             int counter = 0;
             for (int i = 0; i < numProcesses; i++)
             {
