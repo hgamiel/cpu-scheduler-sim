@@ -479,7 +479,7 @@ namespace CPU_Scheduler_Simulation
             {
                 counter++;
                 if (debugStatements)
-                    Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum) + " at time " + counter);
+                    Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter);
                 else
                     process.serveTime(quantum);
             }
@@ -522,7 +522,7 @@ namespace CPU_Scheduler_Simulation
                 counter++;
 
                 if (debugStatements)
-                    Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
+                    Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
                 else
                     process.serveTime(quantum);
 
