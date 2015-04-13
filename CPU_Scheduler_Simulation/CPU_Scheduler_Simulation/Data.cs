@@ -255,19 +255,33 @@ namespace CPU_Scheduler_Simulation
                 app.Quit();
                 Console.WriteLine("\tSave to csv complete.");
 
-                string filename = "processes.dat";
+                string filename = "processes.txt";
                 Directory.SetCurrentDirectory(@"..\..\..\"); // default is \bin\Debug -> this sets the current directory up a few folders
                 string filepath = Path.Combine(Environment.CurrentDirectory, filename);
 
                 try
                 {
                     System.IO.File.WriteAllText(filepath, System.IO.File.ReadAllText(path + "processes.csv").Replace(",", "\t"));
+                    Console.WriteLine("\tSave to .txt complete.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error converting from csv to txt: " + ex.ToString());
+                }
+
+                var filepath1 = Path.Combine(Environment.CurrentDirectory, "processes.dat");
+                var filepath2 = Path.Combine(Environment.CurrentDirectory, "processes.txt");
+
+                try
+                {
+                    System.IO.File.WriteAllText(filepath1, System.IO.File.ReadAllText(filepath2));
                     Console.WriteLine("\tSave to .dat complete.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error converting from csv to .dat: " + ex.ToString());
+                    Console.WriteLine("Error converting from txt to .dat: " + ex.ToString());
                 }
+
             }
             catch (Exception ex) { }
         }

@@ -65,13 +65,16 @@ namespace CPU_Scheduler_Simulation
             for (int i = 3; i < values.Length; i++) // since bursts start at the 4th column (index 3 in an array), we start reading in bursts there
             {
                 var burst = Convert.ToInt32(values[i]); // burst time
-                if (i % 2 != 0) // if in an odd column, then it's a CPU burst
+                if (burst != 0)
                 {
-                    process.CPU.Enqueue(burst); // add CPU burst to the process' CPU burst list
-                }
-                else // then it's in an even column, so it's an I/O burst
-                {
-                    process.IO.Enqueue(burst); // add I/O burst to the process' I/O burst list
+                    if (i % 2 != 0) // if in an odd column, then it's a CPU burst
+                    {
+                        process.CPU.Enqueue(burst); // add CPU burst to the process' CPU burst list
+                    }
+                    else // then it's in an even column, so it's an I/O burst
+                    {
+                        process.IO.Enqueue(burst); // add I/O burst to the process' I/O burst list
+                    }
                 }
             }
             processTable.Add(process); // adds process to process table
