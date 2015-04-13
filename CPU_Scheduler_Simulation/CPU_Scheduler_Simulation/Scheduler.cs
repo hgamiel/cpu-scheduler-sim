@@ -19,7 +19,10 @@ namespace CPU_Scheduler_Simulation
         public double averageThroughput;                    // average throughput over all cpus
         public double speedup;                              // using amdahls law: 1/[(1-f)+(f/n)], where (1-f) is percent serial
         public int schedulerTime;                               // total time spent across all cpus
-        public List<double> averageAlgThroughput = new List<double>(9); // average throughput of each algorithm across cpus
+        public List<double> averageAlgThroughput = new List<double>
+            {
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+            }; // average throughput of each algorithm across cpus
         public Scheduler() { }  // default contructor
 
         // initial quantum values

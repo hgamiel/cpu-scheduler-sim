@@ -54,8 +54,13 @@ namespace CPU_Scheduler_Simulation
             double avgWait, double minWait, double maxWait,
             double avgTurn, double minTurn, double maxTurn,
             double avgExec, double minExec, double maxExec,
-            double avgTRTS, double throughput, double speedup, double contextSwitch)
+            double avgTRTS, List<double> throughput, double speedup, 
+            double contextSwitch)
         {
+            var str = "";
+            for (int i = 0; i < throughput.Count; i++)
+                str += "\t" + algorithms[i] + ": " + throughput[i] + "\n";
+
             return "Average response time: " + avgResp + "\n"
                 + "\tMinimum response time: " + minResp + "\n"
                 + "\tMaximum response time: " + maxResp + "\n"
@@ -69,7 +74,8 @@ namespace CPU_Scheduler_Simulation
                 + "\tMinimum execution time: " + minExec + "\n"
                 + "\tMaximum execution time: " + maxExec + "\n"
                 + "Ratio of turnaround time / service time: " + avgTRTS + "\n"
-                + "Average throughput across all CPUs: "  + throughput + "\n"
+                + "Average throughput across all algorithms: \n"
+                + str
                 + "Average context switch time across all CPUs: " + contextSwitch + "\n"
                 + "Speedup: " + speedup + "\n"
             ;

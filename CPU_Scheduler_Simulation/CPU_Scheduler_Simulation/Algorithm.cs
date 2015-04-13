@@ -20,7 +20,10 @@ namespace CPU_Scheduler_Simulation
         PCB process = new PCB();            // temporary holder for a process
         public List<PCB> finishedProcesses = new List<PCB>();   // global list of finished processes for data processing
         List<PCB> nonEmptyProcesses = new List<PCB>();          // the list to return if there are still processes left to process
-        public List<double> throughputList = new List<double>(9);    // throughput for each algorithm
+        public List<double> throughputList = new List<double>
+            {
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+            };    // throughput for each algorithm
 
         // default constructor
         public Algorithm() { }

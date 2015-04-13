@@ -36,7 +36,7 @@ namespace CPU_Scheduler_Simulation
                 determineAverageWaitTime(), determineMinWaitTime(), determineMaxWaitTime(),
                 determineAverageTurnaroundTime(), determineMinTurnaroundTime(), determineMaxTurnaroundTime(),
                 determineAverageExecutionTime(), determineMinExecutionTime(), determineMaxExecutionTime(),
-                determineAverageTRTS(), scheduler.averageThroughput, scheduler.speedup, scheduler.averageContextSwitchTime
+                determineAverageTRTS(), scheduler.averageAlgThroughput, scheduler.speedup, scheduler.averageContextSwitchTime
                 )
             );
 
