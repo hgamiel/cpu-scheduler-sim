@@ -80,39 +80,41 @@ namespace CPU_Scheduler_Simulation
         }
 
         //sets up the scheduler and runs the simulation
-        public void startSim(int quantum1, int quantum2) {
+        public void startSim(List<int> quantum1, List<int> quantum2) {
             Console.WriteLine("Simulation beginning.\n");
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();           // order the processes by arrival time
             
             var integers = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8};                 // for all test cases
-            // var integers = new List<int> { 6 };                                      // for single algortihm processing
-            var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);  // create all permutations of the integers list - will run through 9! runs of the simulation
-            List<PCB> copy = new List<PCB>();
 
-            foreach (var v in x)
+            //var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);  // create all permutations of the integers list - will run through 9! runs of the simulation
+            List<PCB> copy = new List<PCB>();
+            List<int> numCPU = new List<int> { 2, 3, 4 };
+            //foreach (var v in integers)
+            for (int i = 0; i < quantum1.Count; i++)
             {
-                Console.WriteLine(data.currentRun(v));
+                Console.WriteLine(data.currentRun(integers));
                 // create a new scheduler every time we start the scheduler
                 Scheduler simScheduler = new Scheduler();
-                simScheduler.setQuantums(quantum1, quantum2);                       // set the quantums
-                simScheduler.numCPUs = 2;                                           // set the number of CPUs
+                simScheduler.setQuantums(quantum1[i], quantum2[i]);                       // set the quantums
+                simScheduler.numCPUs = numCPU[0];                                           // set the number of CPUs
                 copy = processTable.ConvertAll(pcb => (PCB)pcb.Clone()).ToList();   // create a copy of the original list
-                simScheduler.loadBalancing(processTable, v);                        // load balances the processes
-                endSim(processTable, simScheduler);                                               // output the data
+                simScheduler.loadBalancing(processTable, integers);                        // load balances the processes
+                endSim(processTable, simScheduler, integers);                                               // output the data
                 processTable = copy;                                                // reset the processTable with original list in copy
                 Console.ReadKey();
             }
+            // data.writeStatsToFile();
         }
 
         //ends the simulation
-        public void endSim(List<PCB> list, Scheduler scheduler) {
+        public void endSim(List<PCB> list, Scheduler scheduler, IList<int> v) {
             Console.WriteLine("Simulation complete.\n");
             Console.WriteLine(data.endSimOutput(scheduler));
             Statistics stats = new Statistics(list, scheduler);        // object that holds all of the stats
             stats.runStatistics();
             Console.ReadKey();
-            data.writeStatsToFile(stats);
+            data.addToLists(stats, v);
         }
     }
 }

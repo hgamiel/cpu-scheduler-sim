@@ -9,8 +9,41 @@ namespace CPU_Scheduler_Simulation
 {
     public class Data
     {
+        // graphs
+        List<List<int>> quantums = new List<List<int>>();
+        List<double> avgTurnaround = new List<double>();
+        List<double> avgResponse = new List<double>();
+        List<double> avgWait = new List<double>();
+        List<List<double>> throughput = new List<List<double>>();
+        List<int> numCPUs = new List<int>();
+        List<double> speedup = new List<double>();
+
+        // table
+        List<String> orderings = new List<String>();
+        List<double> contextSwitch = new List<double>();
+        List<List<double>> cpuUtilization = new List<List<double>>();
+        List<double> avgExecution = new List<double>();
+
         // default constructor
         public Data() { }
+
+        public void addToLists(Statistics stats, IList<int> v)
+        {
+            avgTurnaround.Add(stats.avgTurnaroundTime);
+            avgResponse.Add(stats.avgResponseTime);
+            avgWait.Add(stats.avgWaitTime);
+            speedup.Add(stats.speedup);
+            contextSwitch.Add(stats.avgContext);
+            avgExecution.Add(stats.avgExecutionTime);
+            cpuUtilization.Add(stats.cpuUtilization);
+            throughput.Add(stats.throughput);
+            quantums.Add(stats.quantums);
+            // orderings
+            var str = "";
+            for (int i = 0; i < v.Count; i++)
+                str += algorithms[v[i]] + " ";
+            orderings.Add(str);
+        }
 
         // create some sample data
         public Queue<PCB> sample = new Queue<PCB>
@@ -38,15 +71,15 @@ namespace CPU_Scheduler_Simulation
         // dictionary to hold algorithm names and IDs that identify their switch number
         public Dictionary<int, String> algorithms = new Dictionary<int, String>()
         {
-            {0, "FIRST-COME-FIRST-SERVE"},
-            {1, "SHORTEST-PROCESS-NEXT"},
-            {2, "SHORTEST-REMAINING-TIME"},
-            {3, "HIGHEST-RESPONSE-RATIO-NEXT"},
-            {4, "ROUND ROBIN WITH LOW QUANTUM"},
-            {5, "ROUND ROBIN WITH HIGH QUANTUM"},
-            {6, "PRIORITY"},
-            {7, "FEEDBACK WITH QUANTUM = 1"},
-            {8, "FEEDBACK WITH QUANTUM = 2^i"}
+            {8, "FIRST-COME-FIRST-SERVE"},
+            {0, "SHORTEST-PROCESS-NEXT"},
+            {1, "SHORTEST-REMAINING-TIME"},
+            {2, "HIGHEST-RESPONSE-RATIO-NEXT"},
+            {3, "ROUND ROBIN WITH LOW QUANTUM"},
+            {4, "ROUND ROBIN WITH HIGH QUANTUM"},
+            {5, "PRIORITY"},
+            {6, "FEEDBACK WITH QUANTUM = 1"},
+            {7, "FEEDBACK WITH QUANTUM = 2^i"}
         };
 
         // output data string
@@ -158,35 +191,13 @@ namespace CPU_Scheduler_Simulation
                 oSheet.get_Range("A1", "D1").VerticalAlignment =
                     Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
 
-                List<int> quantum = new List<int> {
-                    5, 10, 15, 20, 25
-                };
-
-                List<int> turnaround = new List<int> {
-                    5, 6, 7, 9, 10
-                };
-
-                List<int> response = new List<int> {
-                    5, 9, 15, 20, 42
-                };
-
-                List<int> waitTime = new List<int> {
-                    13, 15, 43, 56, 67
-                };
-
                 // Create an array to multiple values at once.
                 int[,] saNames = new int[5, 2];
-
-                saNames[0, 0] = 5;
-                saNames[1, 0] = 5;
-                saNames[2, 0] = 5;
-                saNames[3, 0] = 5;
-
 
                 //Fill A2:B6 with an array of values (First and Last Names).
                 oSheet.get_Range("A2", "A6").Value2 = saNames;
                 oRng = oSheet.get_Range("A2", "A6");
-                oRng.NumberFormat = "0";
+                oRng.NumberFormat = "0.00";
 
                 //AutoFit columns A:D.
                 oRng = oSheet.get_Range("A1", "D1");
@@ -195,7 +206,7 @@ namespace CPU_Scheduler_Simulation
                 oXL.Visible = false;
                 oXL.UserControl = false;
                 //change save as to save after creating
-                oWB.SaveAs("C:\\Users\\tglasser15\\Documents\\test505.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+                oWB.SaveAs("C:\\Users\\tglasser15\\Documents\\Three_Averages.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
                 false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
                 Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 
