@@ -174,6 +174,7 @@ namespace CPU_Scheduler_Simulation
                 // compare the queried process with the current process
                 if (process.serviceTime >= tempProcess.serviceTime)
                 {
+                    process.alreadyProcessed = true;
                     counter += contextSwitchCost;
                     totalContextSwitch += contextSwitchCost;
                     process = tempProcess;
@@ -223,6 +224,7 @@ namespace CPU_Scheduler_Simulation
 
                         if (!tempProcess.alreadyProcessed)
                         {
+                            process.alreadyProcessed = true;
                             tempProcess.alreadyProcessed = true;
                             process.serviceTime = process.CPU.Dequeue();
                             process.beginServiceTime = process.serviceTime;
