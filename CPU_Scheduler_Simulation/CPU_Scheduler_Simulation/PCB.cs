@@ -75,7 +75,7 @@ namespace CPU_Scheduler_Simulation
 
         // deiterates process service time
         public String serveTime(double q) {
-            this.serviceTime -= (int)q;
+            this.serviceTime = (this.serviceTime - (int)q < 0) ? 0 : this.serviceTime - (int)q;
             return Convert.ToString(this.serviceTime);
         }
 

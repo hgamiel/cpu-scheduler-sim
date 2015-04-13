@@ -31,7 +31,7 @@ namespace CPU_Scheduler_Simulation
         // first-come-first-serve algorithm - non-preemptive
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
-            Console.WriteLine(data.introAlgString(data.algorithms[0], processes.Count, CPUburst));   // output a line at the beginning of the algorithm
+            Console.WriteLine(data.introAlgString(data.algorithms[8], processes.Count, CPUburst));   // output a line at the beginning of the algorithm
             counter = 0;
             numProcesses = processes.Count;
             int service;                        // gives the initial service of a process
@@ -449,7 +449,7 @@ namespace CPU_Scheduler_Simulation
         {
             Console.WriteLine(data.introAlgString(data.algorithms[6], processes.Count, CPUburst));
 
-            int quantum = 1;
+            int quantum = 50;
             var finished = false;           // flag to tell when algorithm is complete
             counter = 0;            
             var startIndex = 0;             // start index of the ready queues
@@ -508,7 +508,7 @@ namespace CPU_Scheduler_Simulation
                 }
 
                 //if inbetween queues are empty, move along until we get to next queue that has elements
-                while (rq[startIndex].Count == 0)
+                while (rq[startIndex].Count == 0 && startIndex < rq.Count - 1)
                     startIndex++;
 
                 //take the process of the current queue
@@ -558,7 +558,7 @@ namespace CPU_Scheduler_Simulation
                     startIndex++;
 
                 //incorporate the context switch cost when switching between processes
-                contextSwitchCost++;
+                counter += contextSwitchCost;
                 totalContextSwitch += contextSwitchCost;
             }
             timeCounter += counter;
@@ -629,7 +629,7 @@ namespace CPU_Scheduler_Simulation
                     }
                 }
 
-                while (rq[startIndex].Count == 0)
+                while (rq[startIndex].Count == 0 && startIndex < rq.Count - 1)
                     startIndex++;
 
                 process = rq[startIndex].Dequeue();
@@ -685,7 +685,7 @@ namespace CPU_Scheduler_Simulation
                 if (rq[--startIndex].Count == 0)
                     startIndex++;
 
-                contextSwitchCost++;
+                counter += contextSwitchCost;
                 totalContextSwitch += contextSwitchCost;
             }
             timeCounter += counter;
