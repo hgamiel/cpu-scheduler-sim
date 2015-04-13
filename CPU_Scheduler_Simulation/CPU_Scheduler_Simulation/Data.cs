@@ -243,8 +243,8 @@ namespace CPU_Scheduler_Simulation
                 {
                     idCount += 1;
                     priorityNum = rnd.Next(1, 1000);
-                    arrivalTime = rnd.Next(2000);
-                    numBursts = rnd.Next(1, 10);
+                    arrivalTime = rnd.Next(1, 2000);
+                    numBursts = rnd.Next(1, 20);
 
                     oSheet.Cells[p,1] = idCount;
                     oSheet.Cells[p,2] = priorityNum;
