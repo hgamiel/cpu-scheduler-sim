@@ -304,7 +304,9 @@ namespace CPU_Scheduler_Simulation
                 }
 
             }
-            catch (Exception ex) { }
+            catch (Exception ex) {
+                Console.WriteLine("Exception: {0}" + ex.ToString());
+            }
         }
 
     }
