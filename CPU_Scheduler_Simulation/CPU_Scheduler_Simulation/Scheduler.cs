@@ -59,19 +59,14 @@ namespace CPU_Scheduler_Simulation
         public void addCPUs()
         {
             for (int i = 0; i < numCPUs; i++)
-            {
                 cpus.Add(new CPU());
-            }
         }
 
         public int calcTotalTime() // returns the total time spent across both CPUs
         {
             int sum = 0;
             for (int i = 0; i < numCPUs; i++)
-            {
                 sum += cpus[i].algorithms.timeCounter;
-            }
-            
             return sum;
         }
 
@@ -87,9 +82,7 @@ namespace CPU_Scheduler_Simulation
             {
                 var list = cpu.algorithms.throughputList;
                 for (int i = 0; i < list.Count; i++)
-                {
                     averageAlgThroughput[i] += list[i];
-                }
             }
 
             for (int i = 0; i < averageAlgThroughput.Count; i++)
@@ -136,9 +129,7 @@ namespace CPU_Scheduler_Simulation
             foreach (var c in cpus)
             {
                 foreach (var p in c.algorithms.finishedProcesses)
-                {
                     finishedProcesses.Add(p);
-                }
             }
         }
 
@@ -146,10 +137,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> resetTempCounters(List<PCB> processes)
         {
             foreach (var p in processes)
-            {
                 p.resetTempCounters();
-            }
-
             return processes;
         }
 
@@ -171,15 +159,15 @@ namespace CPU_Scheduler_Simulation
                     // runs algorithm depending on numbers in the switchAlgs list
                     switch (switchAlg)
                     {
-                        case 0: nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.readyCPU, CPUburst); break;
-                        case 1: nonEmptyProcesses = currCPU.algorithms.spn(currCPU.readyCPU, CPUburst); break;
-                        case 2: nonEmptyProcesses = currCPU.algorithms.srt(currCPU.readyCPU, CPUburst); break;
-                        case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.readyCPU, CPUburst); break;
-                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.readyCPU, q1, index); break;
-                        case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.readyCPU, q2, index); break;
-                        case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.readyCPU, CPUburst); break;
-                        case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.readyCPU, CPUburst); break;
-                        case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.readyCPU, CPUburst); break; 
+                        case 8: nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.readyCPU, CPUburst); break;
+                        case 0: nonEmptyProcesses = currCPU.algorithms.spn(currCPU.readyCPU, CPUburst); break;
+                        case 1: nonEmptyProcesses = currCPU.algorithms.srt(currCPU.readyCPU, CPUburst); break;
+                        case 2: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.readyCPU, CPUburst); break;
+                        case 3: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.readyCPU, q1, index); break;
+                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.readyCPU, q2, index); break;
+                        case 5: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.readyCPU, CPUburst); break;
+                        case 6: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.readyCPU, CPUburst); break;
+                        case 7: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.readyCPU, CPUburst); break; 
 
                         default: Console.WriteLine("Algorithm at index " + switchAlg + " does not exist (yet); Skipping algorithm...\n");
                                     switchAlg = (switchAlg + 1) % 9;

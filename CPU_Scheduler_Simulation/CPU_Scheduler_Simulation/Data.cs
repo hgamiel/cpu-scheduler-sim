@@ -10,8 +10,41 @@ namespace CPU_Scheduler_Simulation
 {
     public class Data
     {
+        // graphs
+        List<List<int>> quantums = new List<List<int>>();
+        List<double> avgTurnaround = new List<double>();
+        List<double> avgResponse = new List<double>();
+        List<double> avgWait = new List<double>();
+        List<List<double>> throughput = new List<List<double>>();
+        List<int> numCPUs = new List<int>();
+        List<double> speedup = new List<double>();
+
+        // table
+        List<String> orderings = new List<String>();
+        List<double> contextSwitch = new List<double>();
+        List<List<double>> cpuUtilization = new List<List<double>>();
+        List<double> avgExecution = new List<double>();
+
         // default constructor
         public Data() { }
+
+        public void addToLists(Statistics stats, IList<int> v)
+        {
+            avgTurnaround.Add(stats.avgTurnaroundTime);
+            avgResponse.Add(stats.avgResponseTime);
+            avgWait.Add(stats.avgWaitTime);
+            speedup.Add(stats.speedup);
+            contextSwitch.Add(stats.avgContext);
+            avgExecution.Add(stats.avgExecutionTime);
+            cpuUtilization.Add(stats.cpuUtilization);
+            throughput.Add(stats.throughput);
+            quantums.Add(stats.quantums);
+            // orderings
+            var str = "";
+            for (int i = 0; i < v.Count; i++)
+                str += algorithms[v[i]] + " ";
+            orderings.Add(str);
+        }
 
         // create some sample data
         public Queue<PCB> sample = new Queue<PCB>
@@ -39,15 +72,15 @@ namespace CPU_Scheduler_Simulation
         // dictionary to hold algorithm names and IDs that identify their switch number
         public Dictionary<int, String> algorithms = new Dictionary<int, String>()
         {
-            {0, "FIRST-COME-FIRST-SERVE"},
-            {1, "SHORTEST-PROCESS-NEXT"},
-            {2, "SHORTEST-REMAINING-TIME"},
-            {3, "HIGHEST-RESPONSE-RATIO-NEXT"},
-            {4, "ROUND ROBIN WITH LOW QUANTUM"},
-            {5, "ROUND ROBIN WITH HIGH QUANTUM"},
-            {6, "PRIORITY"},
-            {7, "FEEDBACK WITH QUANTUM = 1"},
-            {8, "FEEDBACK WITH QUANTUM = 2^i"}
+            {8, "FIRST-COME-FIRST-SERVE"},
+            {0, "SHORTEST-PROCESS-NEXT"},
+            {1, "SHORTEST-REMAINING-TIME"},
+            {2, "HIGHEST-RESPONSE-RATIO-NEXT"},
+            {3, "ROUND ROBIN WITH LOW QUANTUM"},
+            {4, "ROUND ROBIN WITH HIGH QUANTUM"},
+            {5, "PRIORITY"},
+            {6, "FEEDBACK WITH QUANTUM = 1"},
+            {7, "FEEDBACK WITH QUANTUM = 2^i"}
         };
 
         // output data string
@@ -149,10 +182,10 @@ namespace CPU_Scheduler_Simulation
                 oSheet = (Microsoft.Office.Interop.Excel._Worksheet)oWB.ActiveSheet;
 
                 //Add table headers going cell by cell.
-                oSheet.Cells[1, 1] = "First Name";
-                oSheet.Cells[1, 2] = "Last Name";
-                oSheet.Cells[1, 3] = "Full Name";
-                oSheet.Cells[1, 4] = "Salary";
+                oSheet.Cells[1, 1] = "Quantum";
+                oSheet.Cells[1, 2] = "Average Turnaround Time";
+                oSheet.Cells[1, 3] = "Average Response Time";
+                oSheet.Cells[1, 4] = "Average Wait Time";
 
                 //Format A1:D1 as bold, vertical alignment = center.
                 oSheet.get_Range("A1", "D1").Font.Bold = true;
@@ -160,25 +193,12 @@ namespace CPU_Scheduler_Simulation
                     Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
 
                 // Create an array to multiple values at once.
-                string[,] saNames = new string[5, 2];
-
-                saNames[0, 0] = "John";
-                saNames[0, 1] = "Smith";
-                saNames[1, 0] = "Tom";
-
-                saNames[4, 1] = "Johnson";
+                int[,] saNames = new int[5, 2];
 
                 //Fill A2:B6 with an array of values (First and Last Names).
-                oSheet.get_Range("A2", "B6").Value2 = saNames;
-
-                //Fill C2:C6 with a relative formula (=A2 & " " & B2).
-                oRng = oSheet.get_Range("C2", "C6");
-                oRng.Formula = "=A2 & \" \" & B2";
-
-                //Fill D2:D6 with a formula(=RAND()*100000) and apply format.
-                oRng = oSheet.get_Range("D2", "D6");
-                oRng.Formula = "=RAND()*100000";
-                oRng.NumberFormat = "$0.00";
+                oSheet.get_Range("A2", "A6").Value2 = saNames;
+                oRng = oSheet.get_Range("A2", "A6");
+                oRng.NumberFormat = "0.00";
 
                 //AutoFit columns A:D.
                 oRng = oSheet.get_Range("A1", "D1");
@@ -187,12 +207,17 @@ namespace CPU_Scheduler_Simulation
                 oXL.Visible = false;
                 oXL.UserControl = false;
                 //change save as to save after creating
+<<<<<<< HEAD
+                oWB.SaveAs("C:\\Users\\tglasser15\\Documents\\Three_Averages.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+=======
                 oWB.SaveAs("C:\\Users\\hgamiel15\\Documents\\test505.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+>>>>>>> 218368597e19ea9cb7b95ba6f83ef4a02fb3da70
                 false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
                 Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 
                 oWB.Close();
-            } catch (Exception ex) {}
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
         public void writeRandomProcessesToFile()
         {

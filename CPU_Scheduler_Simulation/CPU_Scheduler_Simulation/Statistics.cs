@@ -14,11 +14,17 @@ namespace CPU_Scheduler_Simulation
         public Data data = new Data();
 
         // data collection
-        double avgResponseTime;
-        double avgWaitTime;
-        double avgTurnaroundTime;
-        double avgExecutionTime;
-        double avgTRTS;
+        public double avgResponseTime;
+        public double avgWaitTime;
+        public double avgTurnaroundTime;
+        public double avgExecutionTime;
+        public double avgTRTS;
+        public double speedup;
+        public double avgContext;
+        public List<double> cpuUtilization = new List<double>();
+        public List<double> throughput = new List<double>();
+        public int numCPUs;
+        public List<int> quantums = new List<int>();
 
         // constructor
         public Statistics(List<PCB> processes, Scheduler scheduler)
@@ -45,7 +51,17 @@ namespace CPU_Scheduler_Simulation
             avgExecutionTime = determineAverageExecutionTime();
             avgTRTS = determineAverageTRTS();
             avgWaitTime = determineAverageWaitTime();
-            
+            speedup = scheduler.speedup;
+            avgContext = scheduler.averageContextSwitchTime;
+            for (int i = 0; i < scheduler.cpus.Count; i++)
+                cpuUtilization.Add(scheduler.cpus[i].utilization);
+            // average throughput
+            for (int i = 0; i < scheduler.averageAlgThroughput.Count; i++)
+                cpuUtilization.Add(scheduler.averageAlgThroughput[i]);
+            //numcpus
+            numCPUs = scheduler.numCPUs;
+            //quantums
+            quantums.Add(scheduler.q1); quantums.Add(scheduler.q2);
         }
 
         /* 
