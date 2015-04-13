@@ -26,7 +26,7 @@ namespace CPU_Scheduler_Simulation
         {
             Console.WriteLine("--BEGIN FILE I/O");
             filename = "processes.dat";
-            Directory.SetCurrentDirectory(@"..\..\..\"); // default is \bin\Debug -> this sets the current directory up a few folders
+            //Directory.SetCurrentDirectory(@"..\..\..\"); // default is \bin\Debug -> this sets the current directory up a few folders
             filepath = Path.Combine(Environment.CurrentDirectory, filename);
 
             Console.WriteLine("\tFile + Path: {0}", filepath);
@@ -82,6 +82,7 @@ namespace CPU_Scheduler_Simulation
         //sets up the scheduler and runs the simulation
         public void startSim(int quantum1, int quantum2) {
             Console.WriteLine("Simulation beginning.\n");
+            data.writeRandomProcessesToFile();
             readDataFiles(); // reads in processes in the .dat file
             processTable = processTable.OrderBy(p => p.arrivalTime).ToList();           // order the processes by arrival time
             

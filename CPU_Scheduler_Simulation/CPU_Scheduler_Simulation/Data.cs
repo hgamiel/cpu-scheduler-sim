@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
+using System.IO;
 
 namespace CPU_Scheduler_Simulation
 {
@@ -193,5 +194,83 @@ namespace CPU_Scheduler_Simulation
                 oWB.Close();
             } catch (Exception ex) {}
         }
+        public void writeRandomProcessesToFile()
+        {
+            Random rnd = new Random();
+
+            Microsoft.Office.Interop.Excel.Application oXL;
+            Microsoft.Office.Interop.Excel._Workbook oWB;
+            Microsoft.Office.Interop.Excel._Worksheet oSheet;
+            object misvalue = System.Reflection.Missing.Value;
+            try
+            {
+                Console.WriteLine("Creating processes...");
+                //Start Excel and get Application object.
+                oXL = new Microsoft.Office.Interop.Excel.Application();
+                oXL.Visible = true;
+
+                //Get a new workbook.
+                oWB = (Microsoft.Office.Interop.Excel._Workbook)(oXL.Workbooks.Add(""));
+                oSheet = (Microsoft.Office.Interop.Excel._Worksheet)oWB.ActiveSheet;
+
+                int idCount = 0;
+                int priorityNum = 0;
+                int arrivalTime = 0;
+                int numBursts = 0;
+
+                for(int p = 1; p <= 500; p++)
+                {
+                    idCount += 1;
+                    priorityNum = rnd.Next(1, 1000);
+                    arrivalTime = rnd.Next(2000);
+                    numBursts = rnd.Next(1, 10);
+
+                    oSheet.Cells[p,1] = idCount;
+                    oSheet.Cells[p,2] = priorityNum;
+                    oSheet.Cells[p,3] = arrivalTime;
+
+                    for (int i = 0; i < numBursts; i++)
+                    {
+                        oSheet.Cells[p, i+4] = rnd.Next(1, 1000);
+                    }
+
+                }
+
+                oXL.Visible = false;
+                oXL.UserControl = false;
+                //change save as to save after creating
+                string path = "C:\\Users\\hgamiel15\\Documents\\";
+
+                oWB.SaveAs((path + "processes.xls"), Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+                false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
+                Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+
+                oWB.Close();
+                Console.WriteLine("Finished creating processes.\n\tSave to xls complete.");
+
+                Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
+                Microsoft.Office.Interop.Excel.Workbook wb = app.Workbooks.Open(path+"processes.xls");
+                wb.SaveAs((path+"processes.csv"), Microsoft.Office.Interop.Excel.XlFileFormat.xlCSVWindows);
+                wb.Close(false);
+                app.Quit();
+                Console.WriteLine("\tSave to csv complete.");
+
+                string filename = "processes.dat";
+                Directory.SetCurrentDirectory(@"..\..\..\"); // default is \bin\Debug -> this sets the current directory up a few folders
+                string filepath = Path.Combine(Environment.CurrentDirectory, filename);
+
+                try
+                {
+                    System.IO.File.WriteAllText(filepath, System.IO.File.ReadAllText(path + "processes.csv").Replace(",", "\t"));
+                    Console.WriteLine("\tSave to .dat complete.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error converting from csv to .dat: " + ex.ToString());
+                }
+            }
+            catch (Exception ex) { }
+        }
+
     }
 }
