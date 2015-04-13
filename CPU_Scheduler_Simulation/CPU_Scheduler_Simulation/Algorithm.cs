@@ -74,7 +74,7 @@ namespace CPU_Scheduler_Simulation
             var throughput = numProcesses - nonEmptyProcesses.Count;
             throughputList[0] += throughput;
             // output ending of algorithm
-            Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            Console.WriteLine(data.outroAlgString(data.algorithms[8], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 
             // return the processes that need to be computed
             return nonEmptyProcesses;
@@ -449,7 +449,7 @@ namespace CPU_Scheduler_Simulation
         {
             Console.WriteLine(data.introAlgString(data.algorithms[6], processes.Count, CPUburst));
 
-            int quantum = 50;
+            int quantum = 1;
             var finished = false;           // flag to tell when algorithm is complete
             counter = 0;            
             var startIndex = 0;             // start index of the ready queues
