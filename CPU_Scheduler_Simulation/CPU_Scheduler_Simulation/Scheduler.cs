@@ -9,7 +9,6 @@ namespace CPU_Scheduler_Simulation
 {
     public class Scheduler
     {
-        // this simulation will be using two processors
         public List<CPU> cpus = new List<CPU>();
         public List<PCB> finishedProcesses = new List<PCB>();
         public IList<int> switchAlgs;
@@ -20,6 +19,7 @@ namespace CPU_Scheduler_Simulation
         public double averageThroughput;                    // average throughput over all cpus
         public double speedup;                              // using amdahls law: 1/[(1-f)+(f/n)], where (1-f) is percent serial
         public int schedulerTime;                               // total time spent across all cpus
+        public List<double> averageAlgThroughput = new List<double>(9); // average throughput of each algorithm across cpus
         public Scheduler() { }  // default contructor
 
         // initial quantum values
@@ -79,12 +79,18 @@ namespace CPU_Scheduler_Simulation
 
         public void calculateThroughput()
         {
-            var temp = 0.0;
+
             foreach (var cpu in cpus)
             {
-                temp = cpu.throughput;
+                var list = cpu.algorithms.throughputList;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    averageAlgThroughput[i] += list[i];
+                }
             }
-            averageThroughput = temp / numCPUs;
+
+            for (int i = 0; i < averageAlgThroughput.Count; i++)
+                averageAlgThroughput[i] = averageAlgThroughput[i] / numCPUs;
         }
 
         // run the cpus that run the algorithms
@@ -104,7 +110,7 @@ namespace CPU_Scheduler_Simulation
 
                 // calculate throughput
                 var numFinishedProcesses = cpus[i].algorithms.finishedProcesses.Count;
-                cpus[i].throughput = numFinishedProcesses;
+                // cpus[i].throughput = numFinishedProcesses;
                 
                 // get the time spent in IO
                 waitingIO += cpus[i].algorithms.timeIO;
@@ -149,8 +155,7 @@ namespace CPU_Scheduler_Simulation
         {
             int index = 0;                                  // index for switchin ghte algoritms
             int switchAlg = switchAlgs[index];              // starting algorithm
-            bool CPUburst = true;                           // if we are on CPU phase
-            bool flagRobin = false;                         // if we are doing the first or second round robin
+            bool CPUburst = true;                           // if we are on 
             List<PCB> nonEmptyProcesses = new List<PCB>();  // TEST
             do
             {
@@ -167,8 +172,8 @@ namespace CPU_Scheduler_Simulation
                         case 1: nonEmptyProcesses = currCPU.algorithms.spn(currCPU.readyCPU, CPUburst); break;
                         case 2: nonEmptyProcesses = currCPU.algorithms.srt(currCPU.readyCPU, CPUburst); break;
                         case 3: nonEmptyProcesses = currCPU.algorithms.hrrn(currCPU.readyCPU, CPUburst); break;
-                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.readyCPU, q1); break;
-                        case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.readyCPU, q2); break;
+                        case 4: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.readyCPU, q1, index); break;
+                        case 5: nonEmptyProcesses = currCPU.algorithms.rr(currCPU.readyCPU, q2, index); break;
                         case 6: nonEmptyProcesses = currCPU.algorithms.priority(currCPU.readyCPU, CPUburst); break;
                         case 7: nonEmptyProcesses = currCPU.algorithms.v1Feedback(currCPU.readyCPU, CPUburst); break;
                         case 8: nonEmptyProcesses = currCPU.algorithms.v2Feedback(currCPU.readyCPU, CPUburst); break; 
@@ -177,9 +182,7 @@ namespace CPU_Scheduler_Simulation
                                     switchAlg = (switchAlg + 1) % 9;
                                     continue; // will ignore rest of do/while and go through again with updated value for switch statement
                     }
-                    index++;
-                    if (index > 8)
-                        index = 0;
+                    index = (index + 1) % 9;
                     currCPU.readyIO.Clear();
                     nonEmptyProcesses = nonEmptyProcesses.OrderBy(p => p.arrivalTime).ToList();
 

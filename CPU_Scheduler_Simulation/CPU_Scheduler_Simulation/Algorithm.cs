@@ -20,8 +20,7 @@ namespace CPU_Scheduler_Simulation
         PCB process = new PCB();            // temporary holder for a process
         public List<PCB> finishedProcesses = new List<PCB>();   // global list of finished processes for data processing
         List<PCB> nonEmptyProcesses = new List<PCB>();          // the list to return if there are still processes left to process
-        
-        // age solution - when switching from readyIO to waitingCPU, organize the queue to put the oldest processes first
+        public List<double> throughputList = new List<double>(9);    // throughput for each algorithm
 
         // default constructor
         public Algorithm() { }
@@ -68,8 +67,11 @@ namespace CPU_Scheduler_Simulation
 
             timeCounter += counter;             // add local time to total time
             if (CPUburst) timeIO += counter;    // if this was in IO phase, we need to calculate the time processor spent in IO
+
+            var throughput = numProcesses - nonEmptyProcesses.Count;
+            throughputList[0] += throughput;
             // output ending of algorithm
-            Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 
             // return the processes that need to be computed
             return nonEmptyProcesses;
@@ -123,7 +125,9 @@ namespace CPU_Scheduler_Simulation
                 temp.Clear();
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[1], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            var throughput = numProcesses - nonEmptyProcesses.Count;
+            throughputList[1] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[1], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -225,7 +229,9 @@ namespace CPU_Scheduler_Simulation
                 tempList.Clear();   // clear the list so we can use it again
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[2], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            var throughput = numProcesses - nonEmptyProcesses.Count;
+            throughputList[2] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[2], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -288,12 +294,14 @@ namespace CPU_Scheduler_Simulation
                 temp.Clear();
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[3], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            var throughput = numProcesses - nonEmptyProcesses.Count;
+            throughputList[3] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[3], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
         // round robin algorithm - preemptive
-        public List<PCB> rr(Queue<PCB> processes, int quantum)
+        public List<PCB> rr(Queue<PCB> processes, int quantum, int index)
         {
             Console.WriteLine(data.rrString(data.algorithms[4], quantum, processes.Count));
             counter = 0;
@@ -360,7 +368,10 @@ namespace CPU_Scheduler_Simulation
             } while ((processes.Count != 0 && currProcesses.Count == 0) || (processes.Count == 0 && currProcesses.Count != 0) || (processes.Count != 0 && currProcesses.Count != 0));
 
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[4], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            var throughput = numProcesses - nonEmptyProcesses.Count;
+            if (index == 4) throughputList[4] += throughput;        // if we are in the first version of round robin
+            else throughputList[5] += throughput;                   // if we are in the second version of round robin
+            Console.WriteLine(data.outroAlgString(data.algorithms[4], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 
             return nonEmptyProcesses;
         }
@@ -422,7 +433,9 @@ namespace CPU_Scheduler_Simulation
                 temp.Clear();
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[5], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            var throughput = numProcesses - nonEmptyProcesses.Count;
+            throughputList[6] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[5], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -544,7 +557,9 @@ namespace CPU_Scheduler_Simulation
                 totalContextSwitch += contextSwitchCost;
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[6], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            var throughput = numProcesses - nonEmptyProcesses.Count;
+            throughputList[7] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[6], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
@@ -669,7 +684,9 @@ namespace CPU_Scheduler_Simulation
                 totalContextSwitch += contextSwitchCost;
             }
             timeCounter += counter;
-            Console.WriteLine(data.outroAlgString(data.algorithms[7], counter, (numProcesses - finishedProcesses.Count), nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            var throughput = numProcesses - nonEmptyProcesses.Count;
+            throughputList[8] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[7], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
     }
