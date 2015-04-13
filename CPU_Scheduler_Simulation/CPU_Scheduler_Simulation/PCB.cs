@@ -38,6 +38,8 @@ namespace CPU_Scheduler_Simulation
             this.lastTimeProcessed = 0;
             this.waitTime = 0;
             this.responseTime = -1; // this is to avoid checks where startTime could actually start at 0
+            this.start = 0;
+            this.stop = 0;
         }
 
         // deep copy of lists
@@ -71,6 +73,8 @@ namespace CPU_Scheduler_Simulation
         public void resetTempCounters () {
             this.lastTimeProcessed = 0;
             this.beginServiceTime = 0;
+            this.start = 0;
+            this.stop = 0;
         }
 
         // deiterates process service time

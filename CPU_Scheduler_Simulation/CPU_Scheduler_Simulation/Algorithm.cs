@@ -599,6 +599,8 @@ namespace CPU_Scheduler_Simulation
             if (process.responseTime == -1)
                 process.responseTime = counter;
             process.waitTime += counter;
+            if (process.waitTime < 0)
+                Console.WriteLine();
 
             while (counter != processes.Peek().arrivalTime)
             {
@@ -628,6 +630,8 @@ namespace CPU_Scheduler_Simulation
                             process.responseTime = counter;
                         }
                         process.waitTime += counter;
+                        if (process.waitTime < 0)
+                            Console.WriteLine();
                         startIndex = 0;
                         rq[startIndex].Enqueue(process);
 

@@ -176,7 +176,6 @@ namespace CPU_Scheduler_Simulation
                     index = (index + 1) % 9;
                     currCPU.readyIO.Clear();
                     nonEmptyProcesses = nonEmptyProcesses.OrderBy(p => p.arrivalTime).ToList();
-
                     // add processes from CPU queue to IO queue to be processed
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                         currCPU.readyIO.Enqueue(nonEmptyProcesses[i]);
@@ -188,7 +187,6 @@ namespace CPU_Scheduler_Simulation
                     Console.WriteLine("~IN I/O BURST");
                     nonEmptyProcesses = currCPU.algorithms.fcfs(currCPU.readyIO, CPUburst); // will always run FCFS in IO burst
                     currCPU.readyCPU.Clear();
-
                     // move the IO processes to CPU processes to be processed
                     for (int i = 0; i < nonEmptyProcesses.Count; i++)
                         currCPU.readyCPU.Enqueue(nonEmptyProcesses[i]);
