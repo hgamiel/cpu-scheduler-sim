@@ -15,7 +15,7 @@ namespace CPU_Scheduler_Simulation
         public int totalContextSwitch = 0;
         int counter = 0;                    // local time for an algorithm
         int numProcesses = 0;               // the number of processes in the beginning of an algorithm
-        bool debugStatements = false;       // if debugging is needed
+        bool debugStatements = true;       // if debugging is needed
         public Data data = new Data();      // data object to use for string output
         PCB process = new PCB();            // temporary holder for a process
         public List<PCB> finishedProcesses = new List<PCB>();   // global list of finished processes for data processing
@@ -31,7 +31,7 @@ namespace CPU_Scheduler_Simulation
         // first-come-first-serve algorithm - non-preemptive
         public List<PCB> fcfs(Queue<PCB> processes, bool CPUburst) // CPUburst is bool so we know to access the IO burst or CPU burst of the process
         {
-            Console.WriteLine(data.introAlgString(data.algorithms[0], processes.Count, CPUburst));   // output a line at the beginning of the algorithm
+            Console.WriteLine(data.introAlgString(data.algorithms[8], processes.Count, CPUburst));   // output a line at the beginning of the algorithm
             counter = 0;
             numProcesses = processes.Count;
             int service;                        // gives the initial service of a process
@@ -72,9 +72,9 @@ namespace CPU_Scheduler_Simulation
             if (CPUburst) timeIO += counter;    // if this was in IO phase, we need to calculate the time processor spent in IO
 
             var throughput = numProcesses - nonEmptyProcesses.Count;
-            throughputList[0] += throughput;
+            throughputList[8] += throughput;
             // output ending of algorithm
-            Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            Console.WriteLine(data.outroAlgString(data.algorithms[8], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 
             // return the processes that need to be computed
             return nonEmptyProcesses;
@@ -83,7 +83,7 @@ namespace CPU_Scheduler_Simulation
         // shortest-process-next algorithm - non-preemptive
         public List<PCB> spn(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.introAlgString(data.algorithms[1], processes.Count, CPUburst));
+            Console.WriteLine(data.introAlgString(data.algorithms[0], processes.Count, CPUburst));
             nonEmptyProcesses.Clear();
             var list = processes.ToList();  // convert queue to list
             counter = 0;
@@ -129,15 +129,15 @@ namespace CPU_Scheduler_Simulation
             }
             timeCounter += counter;
             var throughput = numProcesses - nonEmptyProcesses.Count;
-            throughputList[1] += throughput;
-            Console.WriteLine(data.outroAlgString(data.algorithms[1], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            throughputList[0] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[0], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
         // shortest-remaining-time algorithm - preemptive
         public List<PCB> srt(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.introAlgString(data.algorithms[2], processes.Count, CPUburst));
+            Console.WriteLine(data.introAlgString(data.algorithms[1], processes.Count, CPUburst));
             counter = 0;
             numProcesses = processes.Count;
             var List = processes.ToList();
@@ -235,15 +235,15 @@ namespace CPU_Scheduler_Simulation
             }
             timeCounter += counter;
             var throughput = numProcesses - nonEmptyProcesses.Count;
-            throughputList[2] += throughput;
-            Console.WriteLine(data.outroAlgString(data.algorithms[2], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            throughputList[1] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[1], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
         // highest-response-ratio-next algorithm - non-preemptive
         public List<PCB> hrrn(Queue<PCB> processes, bool CPUburst)
         {
-            Console.WriteLine(data.introAlgString(data.algorithms[3], processes.Count, CPUburst));
+            Console.WriteLine(data.introAlgString(data.algorithms[2], processes.Count, CPUburst));
             nonEmptyProcesses.Clear();
             var list = processes.ToList();
             counter = 0;
@@ -300,15 +300,15 @@ namespace CPU_Scheduler_Simulation
             }
             timeCounter += counter;
             var throughput = numProcesses - nonEmptyProcesses.Count;
-            throughputList[3] += throughput;
-            Console.WriteLine(data.outroAlgString(data.algorithms[3], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            throughputList[2] += throughput;
+            Console.WriteLine(data.outroAlgString(data.algorithms[2], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
 
         // round robin algorithm - preemptive
         public List<PCB> rr(Queue<PCB> processes, int quantum, int index)
         {
-            Console.WriteLine(data.rrString(data.algorithms[4], quantum, processes.Count));
+            Console.WriteLine(data.rrString(data.algorithms[3], quantum, processes.Count));
             counter = 0;
             int serveTimeLeftOnProcess;
             int calcTimeSpentOnProcess;
@@ -374,9 +374,9 @@ namespace CPU_Scheduler_Simulation
 
             timeCounter += counter;
             var throughput = numProcesses - nonEmptyProcesses.Count;
-            if (index == 4) throughputList[4] += throughput;        // if we are in the first version of round robin
-            else throughputList[5] += throughput;                   // if we are in the second version of round robin
-            Console.WriteLine(data.outroAlgString(data.algorithms[4], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
+            if (index == 4) throughputList[3] += throughput;        // if we are in the first version of round robin
+            else throughputList[4] += throughput;                   // if we are in the second version of round robin
+            Console.WriteLine(data.outroAlgString(data.algorithms[3], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
 
             return nonEmptyProcesses;
         }
@@ -439,7 +439,7 @@ namespace CPU_Scheduler_Simulation
             }
             timeCounter += counter;
             var throughput = numProcesses - nonEmptyProcesses.Count;
-            throughputList[6] += throughput;
+            throughputList[5] += throughput;
             Console.WriteLine(data.outroAlgString(data.algorithms[5], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
@@ -447,8 +447,9 @@ namespace CPU_Scheduler_Simulation
         // version 1 feedback with quantum = 1 - preemptive
         public List<PCB> v1Feedback(Queue<PCB> processes, bool CPUburst)
         {
+            //Queue<PCB> processes = data.sample;
             Console.WriteLine(data.introAlgString(data.algorithms[6], processes.Count, CPUburst));
-
+            
             int quantum = 1;
             var finished = false;           // flag to tell when algorithm is complete
             counter = 0;            
@@ -459,7 +460,7 @@ namespace CPU_Scheduler_Simulation
 
             //create a list of queues
             List<Queue<PCB>> rq = new List<Queue<PCB>>();
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 rq.Add(new Queue<PCB>());
             }
@@ -478,7 +479,7 @@ namespace CPU_Scheduler_Simulation
             {
                 counter++;
                 if (debugStatements)
-                    Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter);
+                    Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum) + " at time " + counter);
                 else
                     process.serveTime(quantum);
             }
@@ -492,7 +493,7 @@ namespace CPU_Scheduler_Simulation
                 //if a process has arrived, get the process and start our index of queues back at 0
                 if (processes.Count != 0)
                 {
-                    if (counter == processes.Peek().arrivalTime)
+                    if (counter >= processes.Peek().arrivalTime)
                     {
                         process = processes.Dequeue();
                         process.serviceTime = process.CPU.Dequeue();
@@ -521,7 +522,7 @@ namespace CPU_Scheduler_Simulation
                 counter++;
 
                 if (debugStatements)
-                    Console.WriteLine("Process " + process.PID + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
+                    Console.WriteLine("Process " + process.name + " service time is " + process.serveTime(quantum) + " at time " + counter + " and wait time is " + process.waitTime);
                 else
                     process.serveTime(quantum);
 
@@ -542,7 +543,7 @@ namespace CPU_Scheduler_Simulation
                     if (localFinishedProcesses == numProcesses)
                         finished = true;
 
-                    if (debugStatements) Console.WriteLine("Process " + process.PID + " finished at time " + process.executionTime);
+                    if (debugStatements) Console.WriteLine("Process " + process.name + " finished at time " + process.executionTime);
 
                     continue;
                 }
@@ -551,19 +552,19 @@ namespace CPU_Scheduler_Simulation
                 if ((startIndex + 1) == rq.Count)
                     rq.Add(new Queue<PCB>());
 
-                rq[++startIndex].Enqueue(process);
+                rq[startIndex+1].Enqueue(process);
 
                 //if there are no processes in this queue, then we move to the next queue
-                if (rq[--startIndex].Count == 0)
+                if (rq[startIndex].Count == 0)
                     startIndex++;
 
                 //incorporate the context switch cost when switching between processes
-                contextSwitchCost++;
+                counter += contextSwitchCost;
                 totalContextSwitch += contextSwitchCost;
             }
             timeCounter += counter;
             var throughput = numProcesses - nonEmptyProcesses.Count;
-            throughputList[7] += throughput;
+            throughputList[6] += throughput;
             Console.WriteLine(data.outroAlgString(data.algorithms[6], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
@@ -685,12 +686,12 @@ namespace CPU_Scheduler_Simulation
                 if (rq[--startIndex].Count == 0)
                     startIndex++;
 
-                contextSwitchCost++;
+                counter += contextSwitchCost;
                 totalContextSwitch += contextSwitchCost;
             }
             timeCounter += counter;
             var throughput = numProcesses - nonEmptyProcesses.Count;
-            throughputList[8] += throughput;
+            throughputList[7] += throughput;
             Console.WriteLine(data.outroAlgString(data.algorithms[7], counter, throughput, nonEmptyProcesses.Count, finishedProcesses.Count, timeCounter));
             return nonEmptyProcesses;
         }
