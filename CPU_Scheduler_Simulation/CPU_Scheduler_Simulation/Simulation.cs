@@ -101,14 +101,14 @@ namespace CPU_Scheduler_Simulation
                 // create a new scheduler every time we start the scheduler
                 Scheduler simScheduler = new Scheduler();
                 simScheduler.setQuantums(quantum1[i], quantum2[i]);                       // set the quantums
-                simScheduler.numCPUs = numCPU[0];                                           // set the number of CPUs
+                simScheduler.numCPUs = numCPU[i];                                           // set the number of CPUs
                 copy = processTable.ConvertAll(pcb => (PCB)pcb.Clone()).ToList();   // create a copy of the original list
                 simScheduler.loadBalancing(processTable, integers);                        // load balances the processes
                 endSim(processTable, simScheduler, integers);                                               // output the data
                 processTable = copy;                                                // reset the processTable with original list in copy
-                Console.ReadKey();
+                //Console.ReadKey();
             }
-            // data.writeStatsToFile();
+            data.writeStatsToFile();
         }
 
         //ends the simulation
@@ -117,7 +117,7 @@ namespace CPU_Scheduler_Simulation
             Console.WriteLine(data.endSimOutput(scheduler));
             Statistics stats = new Statistics(list, scheduler);        // object that holds all of the stats
             stats.runStatistics();
-            Console.ReadKey();
+            //Console.ReadKey();
             data.addToLists(stats, v);
         }
     }

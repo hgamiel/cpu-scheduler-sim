@@ -85,8 +85,14 @@ namespace CPU_Scheduler_Simulation
                     averageAlgThroughput[i] += list[i];
             }
 
-            for (int i = 0; i < averageAlgThroughput.Count; i++)
-                averageAlgThroughput[i] = averageAlgThroughput[i] / numCPUs;
+            foreach (var cpu in cpus)
+            {
+                var list = cpu.algorithms.throughputList;
+                for (int i = 0; i < averageAlgThroughput.Count; i++)
+                    averageAlgThroughput[i] = averageAlgThroughput[i] / cpu.algorithms.timeCounter;
+            }
+
+            
         }
 
         // run the cpus that run the algorithms

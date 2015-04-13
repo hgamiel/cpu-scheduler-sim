@@ -42,7 +42,7 @@ namespace CPU_Scheduler_Simulation
             // orderings
             var str = "";
             for (int i = 0; i < v.Count; i++)
-                str += algorithms[v[i]] + " ";
+                str += algorithms[v[i]] + ", ";
             orderings.Add(str);
         }
 
@@ -164,7 +164,7 @@ namespace CPU_Scheduler_Simulation
         }
 
         //source: http://stackoverflow.com/questions/23041021/how-to-write-some-data-to-excel-file-xlsx
-        public void writeStatsToFile(Statistics stats)
+        public void writeStatsToFile()
         {
             Microsoft.Office.Interop.Excel.Application oXL;
             Microsoft.Office.Interop.Excel._Workbook oWB;
@@ -183,31 +183,33 @@ namespace CPU_Scheduler_Simulation
 
                 //Add table headers going cell by cell.
                 oSheet.Cells[1, 1] = "Quantum";
-                oSheet.Cells[1, 2] = "Average Turnaround Time";
-                oSheet.Cells[1, 3] = "Average Response Time";
-                oSheet.Cells[1, 4] = "Average Wait Time";
+                oSheet.Cells[1, 2] = "Number of CPUs";
+                oSheet.Cells[1, 3] = "Speedup";
 
                 //Format A1:D1 as bold, vertical alignment = center.
-                oSheet.get_Range("A1", "D1").Font.Bold = true;
-                oSheet.get_Range("A1", "D1").VerticalAlignment =
-                    Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
+                oSheet.get_Range("A1", "C1").Font.Bold = true;
+                oSheet.get_Range("A1", "C1").VerticalAlignment =
+                Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
 
                 // Create an array to multiple values at once.
-                int[,] saNames = new int[5, 2];
+                String[,] q = new String[10,2];
+                double[,] values = new double[10, 2];
 
-                //Fill A2:B6 with an array of values (First and Last Names).
-                oSheet.get_Range("A2", "A6").Value2 = saNames;
-                oRng = oSheet.get_Range("A2", "A6");
-                oRng.NumberFormat = "0.00";
-
-                //AutoFit columns A:D.
-                oRng = oSheet.get_Range("A1", "D1");
+                for (int i = 0; i < speedup.Count; i++)
+                {
+                    var quantum = quantums[i];
+                    var str = Convert.ToString(quantum[0]) + ", " + Convert.ToString(quantum[1]);
+                    oSheet.Cells[i+2, 1] = str;
+                    oSheet.Cells[i + 2, j + 2] = speedup[i];
+                }
+           
+                oRng = oSheet.get_Range("A1", "C1");
                 oRng.EntireColumn.AutoFit();
 
                 oXL.Visible = false;
                 oXL.UserControl = false;
                 //change save as to save after creating
-                oWB.SaveAs("C:\\Users\\tglasser15\\Documents\\Three_Averages.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+                oWB.SaveAs("C:\\Users\\tglasser15\\Documents\\Speedup.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
                 false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
                 Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 
@@ -260,7 +262,7 @@ namespace CPU_Scheduler_Simulation
                 oXL.Visible = false;
                 oXL.UserControl = false;
                 //change save as to save after creating
-                string path = "C:\\Users\\hgamiel15\\Documents\\";
+                string path = "C:\\Users\\tglasser15\\Documents\\";
 
                 oWB.SaveAs((path + "processes.xls"), Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
                 false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,

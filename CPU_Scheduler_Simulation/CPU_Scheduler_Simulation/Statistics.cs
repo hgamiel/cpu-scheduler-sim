@@ -57,7 +57,7 @@ namespace CPU_Scheduler_Simulation
                 cpuUtilization.Add(scheduler.cpus[i].utilization);
             // average throughput
             for (int i = 0; i < scheduler.averageAlgThroughput.Count; i++)
-                cpuUtilization.Add(scheduler.averageAlgThroughput[i]);
+                throughput.Add(scheduler.averageAlgThroughput[i]);
             //numcpus
             numCPUs = scheduler.numCPUs;
             //quantums
