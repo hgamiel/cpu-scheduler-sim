@@ -509,7 +509,7 @@ namespace CPU_Scheduler_Simulation
                 }
 
                 //if inbetween queues are empty, move along until we get to next queue that has elements
-                while (rq[startIndex].Count == 0)
+                while (rq[startIndex].Count == 0 && startIndex < rq.Count - 1)
                     startIndex++;
 
                 //take the process of the current queue
@@ -630,7 +630,7 @@ namespace CPU_Scheduler_Simulation
                     }
                 }
 
-                while (rq[startIndex].Count == 0)
+                while (rq[startIndex].Count == 0 && startIndex < rq.Count - 1)
                     startIndex++;
 
                 process = rq[startIndex].Dequeue();
