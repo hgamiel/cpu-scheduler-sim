@@ -182,20 +182,17 @@ namespace CPU_Scheduler_Simulation
                 oSheet = (Microsoft.Office.Interop.Excel._Worksheet)oWB.ActiveSheet;
 
                 //Add table headers going cell by cell.
-                //oSheet.Cells[1, 1] = "Quantum";
-                //oSheet.Cells[1, 2] = "Number of CPUs";
-                //oSheet.Cells[1, 3] = "Speedup";
-
-                for (int i = 0; i < quantums.Count; i++)
-                {
-                    var quantum = quantums[i];
-                    var str = Convert.ToString(quantum[0]) + ", " + Convert.ToString(quantum[1]);
-                    oSheet.Cells[1, i + 1] = str;
-                }
+                oSheet.Cells[1, 1] = "Different Order of Algorithms";
+                oSheet.Cells[1, 2] = "Average Turnaround Time";
+                oSheet.Cells[1, 3] = "Average Response Time";
+                oSheet.Cells[1, 4] = "Average Wait Time";
+                oSheet.Cells[1, 5] = "Average Context Switch Time";
+                oSheet.Cells[1, 6] = "Average Average Execution Time";
+                oSheet.Cells[1, 7] = "Speedup";
 
                 //Format A1:D1 as bold, vertical alignment = center.
-                oSheet.get_Range("A1", "C1").Font.Bold = true;
-                oSheet.get_Range("A1", "C1").VerticalAlignment =
+                oSheet.get_Range("A1", "G1").Font.Bold = true;
+                oSheet.get_Range("A1", "G1").VerticalAlignment =
                 Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
 
                 // Create an array to multiple values at once.
@@ -204,18 +201,23 @@ namespace CPU_Scheduler_Simulation
 
                 for (int i = 0; i < speedup.Count; i++)
                 {
-                    
-                    //oSheet.Cells[i+2, 1] = str;
-                    //oSheet.Cells[i + 2, j + 2] = speedup[i];
+
+                    oSheet.Cells[i + 2, 1] = orderings[i];
+                    oSheet.Cells[i + 2, 2] = avgTurnaround[i];
+                    oSheet.Cells[i + 2, 3] = avgResponse[i];
+                    oSheet.Cells[i + 2, 4] = avgWait[i];
+                    oSheet.Cells[i + 2, 5] = contextSwitch[i];
+                    oSheet.Cells[i + 2, 6] = avgExecution[i];
+                    oSheet.Cells[i + 2, 7] = speedup[i];
                 }
            
-                oRng = oSheet.get_Range("A1", "C1");
+                oRng = oSheet.get_Range("A1", "G1");
                 oRng.EntireColumn.AutoFit();
 
                 oXL.Visible = false;
                 oXL.UserControl = false;
                 //change save as to save after creating
-                oWB.SaveAs("C:\\Users\\tglasser15\\Documents\\Speedup.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+                oWB.SaveAs("C:\\Users\\tglasser15\\Documents\\Total.xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
                 false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
                 Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 

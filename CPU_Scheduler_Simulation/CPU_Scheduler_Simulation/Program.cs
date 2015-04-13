@@ -10,8 +10,8 @@ namespace CPU_Scheduler_Simulation
     {
         static void Main(string[] args)
         {
-            List<int> quantum1 = new List<int> { 450};
-            List<int> quantum2 = new List<int> { 650};
+            List<int> quantum1 = new List<int> { 100, 200 };
+            List<int> quantum2 = new List<int> { 200, 300 };
             //int quantum1 = 10;    // change the quantums for round robin
             //int quantum2 = 20;
             Simulation simulation = new Simulation();   //create a simulation object
