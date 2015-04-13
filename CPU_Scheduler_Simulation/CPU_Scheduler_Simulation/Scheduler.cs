@@ -59,19 +59,14 @@ namespace CPU_Scheduler_Simulation
         public void addCPUs()
         {
             for (int i = 0; i < numCPUs; i++)
-            {
                 cpus.Add(new CPU());
-            }
         }
 
         public int calcTotalTime() // returns the total time spent across both CPUs
         {
             int sum = 0;
             for (int i = 0; i < numCPUs; i++)
-            {
                 sum += cpus[i].algorithms.timeCounter;
-            }
-            
             return sum;
         }
 
@@ -87,9 +82,7 @@ namespace CPU_Scheduler_Simulation
             {
                 var list = cpu.algorithms.throughputList;
                 for (int i = 0; i < list.Count; i++)
-                {
                     averageAlgThroughput[i] += list[i];
-                }
             }
 
             for (int i = 0; i < averageAlgThroughput.Count; i++)
@@ -136,9 +129,7 @@ namespace CPU_Scheduler_Simulation
             foreach (var c in cpus)
             {
                 foreach (var p in c.algorithms.finishedProcesses)
-                {
                     finishedProcesses.Add(p);
-                }
             }
         }
 
@@ -146,10 +137,7 @@ namespace CPU_Scheduler_Simulation
         public List<PCB> resetTempCounters(List<PCB> processes)
         {
             foreach (var p in processes)
-            {
                 p.resetTempCounters();
-            }
-
             return processes;
         }
 

@@ -90,7 +90,6 @@ namespace CPU_Scheduler_Simulation
             var x = new Permutations<int>(integers, GenerateOption.WithoutRepetition);  // create all permutations of the integers list - will run through 9! runs of the simulation
             List<PCB> copy = new List<PCB>();
 
-            var k = 0;
             foreach (var v in x)
             {
                 Console.WriteLine(data.currentRun(v));
